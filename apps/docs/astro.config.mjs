@@ -5,9 +5,12 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: 'My Docs',
+			title: '',
+			logo: {
+				src: './src/assets/light-logo.svg',
+			},
 			social: {
-				github: 'https://github.com/withastro/starlight',
+				github: 'https://github.com/realworld-angular/realworld-angular',
 			},
 			sidebar: [
 				{
@@ -21,7 +24,15 @@ export default defineConfig({
 					label: 'Reference',
 					autogenerate: { directory: 'reference' },
 				},
+				{
+					label: 'Trade-offs', link: '/tradeoffs',
+				}
 			],
+			components: {
+				ThemeSelect: './src/components/ThemeSelect.astro',
+				ThemeProvider: './src/components/ThemeProvider.astro',
+			},
+
 		}),
 	],
 });
