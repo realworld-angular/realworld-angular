@@ -29,12 +29,18 @@ model Event {
   description String
   date        DateTime
   location    String
-  community   Community @relation(fields: [communityId], references: [id])
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
   communityId Int
+  createdBy   User      @relation("createdEvents", fields: [createdById], references: [id])
+  createdById Int
+  updatedBy   User?     @relation("updatedEvents", fields: [updatedById], references: [id])
+  updatedById Int?
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
+  id            Int     @id @default(autoincrement())
+  email         String  @unique
+  password      String
+  createdEvents Event[] @relation("createdEvents")
+  updatedEvents Event[] @relation("updatedEvents")
 }

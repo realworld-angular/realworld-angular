@@ -16,6 +16,11 @@ export default defineEventHandler({
                     connect: {
                         id: parseInt(id)
                     }
+                },
+                createdBy: {
+                    connect: {
+                        id: event.context.user.id
+                    }
                 }
             },
             select: {

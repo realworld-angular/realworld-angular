@@ -11,7 +11,13 @@ export default defineEventHandler({
                 id: parseInt(eventId)
             },
             data: {
-                ...body
+                ...body,
+                updatedBy: {
+                    connect: {
+                        id: event.context.user.id
+                    }
+                }
+
             }
         });
     }
