@@ -52,6 +52,22 @@ importers:
         specifier: ^5.16.2
         version: 5.16.2
 
+  apps/api-testing:
+    dependencies:
+      uuidv4:
+        specifier: ^6.2.13
+        version: 6.2.13
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@playwright/test':
+        specifier: ^1.45.2
+        version: 1.45.2
+      '@types/node':
+        specifier: ^20.14.11
+        version: 20.14.11
+
   apps/docs:
     dependencies:
       '@astrojs/check':
@@ -1901,6 +1917,14 @@ packages:
       tslib: 2.6.2
     dev: true
 
+  /@playwright/test@1.45.2:
+    resolution: {integrity: sha512-JxG9eq92ET75EbVi3s+4sYbcG7q72ECeZNbdBlaMkGcNbiDQ4cAi8U2QP5oKkOx+1gpaiL1LDStmzCaEM1Z6fQ==}
+    engines: {node: '>=18'}
+    hasBin: true
+    dependencies:
+      playwright: 1.45.2
+    dev: true
+
   /@prisma/client@5.16.2(prisma@5.16.2):
     resolution: {integrity: sha512-+1lmkhR9gHWcTC5oghm2ZKpWljyWdzfazCVlLKUWXVmwHSf52g81aZ8qb6Km5Bs025yBi7puLp3qSLEvktoUtw==}
     engines: {node: '>=16.13'}
@@ -2310,6 +2334,12 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
+  /@types/node@20.14.11:
+    resolution: {integrity: sha512-kprQpL8MMeszbz6ojB5/tU8PLN4kesnN8Gjzw349rDlNgsSzg90lAVj3llK99Dh7JON+t9AuscPPFW6mPbTnSA==}
+    dependencies:
+      undici-types: 5.26.5
+    dev: true
+
   /@types/normalize-package-data@2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
     dev: true
@@ -2334,6 +2364,10 @@ packages:
 
   /@types/unist@3.0.2:
     resolution: {integrity: sha512-dqId9J8K/vGi5Zr7oo212BGii5m3q5Hxlkwy3WpYuKPklmBEvsbMYYyLxAQpSffdLl/gdW0XUpKWFvYmyoWCoQ==}
+    dev: false
+
+  /@types/uuid@8.3.4:
+    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
     dev: false
 
   /@typescript-eslint/eslint-plugin@6.17.0(@typescript-eslint/parser@6.17.0)(eslint@8.57.0)(typescript@5.3.3):
@@ -4963,6 +4997,14 @@ packages:
   /fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
     dev: true
+
+  /fsevents@2.3.2:
+    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
 
   /fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -7617,6 +7659,22 @@ packages:
       pathe: 1.1.2
     dev: true
 
+  /playwright-core@1.45.2:
+    resolution: {integrity: sha512-ha175tAWb0dTK0X4orvBIqi3jGEt701SMxMhyujxNrgd8K0Uy5wMSwwcQHtyB4om7INUkfndx02XnQ2p6dvLDw==}
+    engines: {node: '>=18'}
+    hasBin: true
+    dev: true
+
+  /playwright@1.45.2:
+    resolution: {integrity: sha512-ReywF2t/0teRvNBpfIgh5e4wnrI/8Su8ssdo5XsQKpjxJj+jspm00jSoz9BTg91TT0c9HRjXO7LBNVrgYj9X0g==}
+    engines: {node: '>=18'}
+    hasBin: true
+    dependencies:
+      playwright-core: 1.45.2
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
   /pluralize@8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
@@ -9451,6 +9509,18 @@ packages:
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+
+  /uuid@8.3.2:
+    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
+    dev: false
+
+  /uuidv4@6.2.13:
+    resolution: {integrity: sha512-AXyzMjazYB3ovL3q051VLH06Ixj//Knx7QnUSi1T//Ie3io6CpsPu9nVMOx5MoLWh6xV0B9J0hIaxungxXUbPQ==}
+    dependencies:
+      '@types/uuid': 8.3.4
+      uuid: 8.3.2
+    dev: false
 
   /validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}

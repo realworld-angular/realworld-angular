@@ -1,0 +1,20 @@
+{
+  "name": "api-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.45.2",
+    "@types/node": "^20.14.11"
+  },
+  "dependencies": {
+    "uuidv4": "^6.2.13",
+    "zod": "^3.23.8"
+  }
+}
