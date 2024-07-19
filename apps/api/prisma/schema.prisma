@@ -14,11 +14,23 @@ datasource db {
 }
 
 model Community {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String   @unique
+  id        Int             @id @default(autoincrement())
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  name      String          @unique
+  members   CommunityRole[]
   Event     Event[]
+}
+
+model CommunityRole {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  role        Role
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  communityId Int
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
 }
 
 model Event {
@@ -38,9 +50,17 @@ model Event {
 }
 
 model User {
-  id            Int     @id @default(autoincrement())
-  email         String  @unique
+  id            Int             @id @default(autoincrement())
+  email         String          @unique
   password      String
-  createdEvents Event[] @relation("createdEvents")
-  updatedEvents Event[] @relation("updatedEvents")
+  createdEvents Event[]         @relation("createdEvents")
+  updatedEvents Event[]         @relation("updatedEvents")
+  roles         CommunityRole[]
+}
+
+enum Role {
+  ADMIN
+  MODERATOR
+  MEMBER
+  USER
 }
