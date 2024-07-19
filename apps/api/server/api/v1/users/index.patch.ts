@@ -3,17 +3,20 @@ import {userSchema} from "~/schemas/users/user.schema";
 export default defineEventHandler({
     onRequest: [useCheckAuth('required')],
     handler: async (event) => {
-        const {email, password} = await readValidatedBody(event, userSchema.parse);
+        //TODO add authorization explicit check
+        let {email, password} = await readValidatedBody(event, userSchema.partial().parse);
 
-        const hashedPassword = await useHashPassword(password);
+        if (password) {
+            password = await useHashPassword(password);
+        }
 
         return usePrisma().user.update({
             where: {
                 id: event.context.user.id
             },
             data: {
-                email,
-                password: hashedPassword
+                ...(email ? {email} : {}),
+                ...(password? {password}: {})
             },
             select: {
                 id: true,

@@ -7,7 +7,7 @@ export const useCheckAuth = (mode: 'optional' | 'required') => (event) => {
 
     if (!token && mode === 'required') {
         throw createError({
-            status: 403,
+            status: 401,
             statusMessage: 'Unauthorized',
             message: 'Missing authentication token'
         });
