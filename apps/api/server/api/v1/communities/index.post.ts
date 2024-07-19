@@ -2,20 +2,24 @@ export default defineEventHandler({
     onRequest: [useCheckAuth('required')],
     handler: async (event) => {
         const {name} = await readBody(event);
-        const community = await usePrisma().community.create({
+        return usePrisma().community.create({
             data: {
                 name,
+                members: {
+                    create: {
+                        role: 'ADMIN',
+                        user: {
+                            connect: {
+                                id: event.context.user.id
+                            }
+                        }
+                    }
+                }
+            },
+            select: {
+                id: true,
+                name: true
             }
         });
-
-        const role = await usePrisma().communityRole.create({
-            data: {
-                role: 'ADMIN',
-                communityId: community.id,
-                userId: event.context.user.id
-            }
-        });
-
-        return community;
     }
 });
