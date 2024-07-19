@@ -11,16 +11,17 @@
     "prisma:generate": "npx prisma generate"
   },
   "devDependencies": {
+    "@prisma/extension-optimize": "^0.10.0",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",
     "eslint": "^8",
     "nitropack": "latest",
-    "prisma": "^5.16.2"
+    "prisma": "^5.17.0"
   },
   "dependencies": {
-    "@prisma/client": "^5.16.2",
+    "@prisma/client": "^5.17.0",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2"
   }
