@@ -1,4 +1,4 @@
-import {userSchema} from "~/schemas/user/user.schema";
+import {userSchema} from "~/schemas/users/user.schema";
 
 export default defineEventHandler({
     onRequest: [useCheckAuth('required')],

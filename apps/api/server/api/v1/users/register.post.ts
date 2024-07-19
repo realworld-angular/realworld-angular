@@ -1,4 +1,4 @@
-import {userRegisterSchema} from "~/schemas/user/user-register.schema";
+import {userRegisterSchema} from "~/schemas/users/user-register.schema";
 
 export default defineEventHandler(async (event) => {
     const {email, password} = await readValidatedBody(event, userRegisterSchema.parse);

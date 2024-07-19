@@ -18,6 +18,19 @@ model Community {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String   @unique
+  Event     Event[]
+}
+
+model Event {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  name        String
+  description String
+  date        DateTime
+  location    String
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId Int
 }
 
 model User {

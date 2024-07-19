@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import {userSchema} from "~/schemas/user/user.schema";
+import {userSchema} from "~/schemas/users/user.schema";
 
 export default defineEventHandler(async (event) => {
     const { email, password } = await readValidatedBody(event, userSchema.parse);
