@@ -19,3 +19,9 @@ model Community {
   updatedAt DateTime @updatedAt
   name      String   @unique
 }
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+}
