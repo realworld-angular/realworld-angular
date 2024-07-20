@@ -5,6 +5,7 @@ export default defineEventHandler({
         return usePrisma().community.create({
             data: {
                 name,
+                isPublic: false,
                 members: {
                     create: {
                         role: 'ADMIN',
