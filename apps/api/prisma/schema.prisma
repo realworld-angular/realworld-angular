@@ -35,28 +35,72 @@ model CommunityRole {
 }
 
 model Event {
-  id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  name        String
+  id                      Int                       @id @default(autoincrement())
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  name                    String
+  description             String
+  date                    DateTime
+  location                String
+  community               Community                 @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  communityId             Int
+  createdBy               User                      @relation("createdEvents", fields: [createdById], references: [id])
+  createdById             Int
+  updatedBy               User?                     @relation("updatedEvents", fields: [updatedById], references: [id])
+  updatedById             Int?
+  CallForPapers           CallForPapers[]
+  CallForPapersFormat     CallForPapersFormat[]
+  CallForPapersSubmission CallForPapersSubmission[]
+}
+
+model CallForPapers {
+  id          Int                   @id @default(autoincrement())
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  title       String
   description String
-  date        DateTime
-  location    String
-  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
-  communityId Int
-  createdBy   User      @relation("createdEvents", fields: [createdById], references: [id])
-  createdById Int
-  updatedBy   User?     @relation("updatedEvents", fields: [updatedById], references: [id])
-  updatedById Int?
+  deadline    DateTime
+  event       Event                 @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId     Int
+  formats     CallForPapersFormat[]
+}
+
+model CallForPapersFormat {
+  id                      Int                       @id @default(autoincrement())
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  name                    String
+  description             String
+  duration                Int
+  event                   Event                     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId                 Int
+  CallForPapers           CallForPapers?            @relation(fields: [callForPapersId], references: [id])
+  callForPapersId         Int?
+  CallForPapersSubmission CallForPapersSubmission[]
+}
+
+model CallForPapersSubmission {
+  id          Int                 @id @default(autoincrement())
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  title       String
+  description String
+  format      CallForPapersFormat @relation(fields: [formatId], references: [id], onDelete: Cascade)
+  formatId    Int
+  event       Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId     Int
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  email         String          @unique
-  password      String
-  createdEvents Event[]         @relation("createdEvents")
-  updatedEvents Event[]         @relation("updatedEvents")
-  roles         CommunityRole[]
+  id                      Int                       @id @default(autoincrement())
+  email                   String                    @unique
+  password                String
+  createdEvents           Event[]                   @relation("createdEvents")
+  updatedEvents           Event[]                   @relation("updatedEvents")
+  roles                   CommunityRole[]
+  CallForPapersSubmission CallForPapersSubmission[]
 }
 
 enum Role {
