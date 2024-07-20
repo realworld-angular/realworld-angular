@@ -7,6 +7,6 @@ export default defineEventHandler({
             }
         });
 
-        sendNoContent(event, 204)
+        sendNoContent(event, 204);
     }
 });
