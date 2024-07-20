@@ -15,12 +15,16 @@ datasource db {
 }
 
 model Community {
-  id        Int             @id @default(autoincrement())
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
-  name      String          @unique
-  members   CommunityRole[]
-  Event     Event[]
+  id               Int               @id @default(autoincrement())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  name             String            @unique
+  isPublic         Boolean           @default(false)
+  interests        String[]
+  members          CommunityRole[]
+  Event            Event[]
+  socialMediaLinks SocialMediaLink[]
+  logoUrl          String?
 }
 
 model CommunityRole {
@@ -32,6 +36,23 @@ model CommunityRole {
   communityId Int
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
+}
+
+enum SocialMediaType {
+  FACEBOOK
+  TWITTER
+  INSTAGRAM
+  LINKEDIN
+  YOUTUBE
+  OTHER
+}
+
+model SocialMediaLink {
+  id          Int             @id @default(autoincrement())
+  url         String
+  type        SocialMediaType
+  communityId Int
+  community   Community       @relation(fields: [communityId], references: [id])
 }
 
 model Event {
