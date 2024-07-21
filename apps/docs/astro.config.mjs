@@ -2,6 +2,7 @@ import {defineConfig} from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 import tailwind from "@astrojs/tailwind";
+import starlightBlog from 'starlight-blog'
 
 // https://astro.build/config
 export default defineConfig({
@@ -31,13 +32,17 @@ export default defineConfig({
             link: '/tradeoffs'
         }],
         components: {
-            ThemeSelect: './src/components/ThemeSelect.astro',
             ThemeProvider: './src/components/ThemeProvider.astro'
         },
         customCss: [
             // Path to your Tailwind base styles:
             './src/styles/tailwind.css',
+            './src/styles/shame.css',
         ],
+        plugins: [starlightBlog({
+            title: 'News',
+            prefix: 'news'
+        })]
     }),
         tailwind({
             // Disable the default base styles:
