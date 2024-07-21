@@ -1,3 +1,7 @@
 starlight-theme-select {
     display:none;
 }
+
+.site-title span {
+    display:none;
+}

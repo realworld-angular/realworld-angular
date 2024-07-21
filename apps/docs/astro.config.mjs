@@ -7,7 +7,7 @@ import starlightBlog from 'starlight-blog'
 // https://astro.build/config
 export default defineConfig({
     integrations: [starlight({
-        title: '',
+        title: 'RealWorld Angular',
         logo: {
             src: './src/assets/light-logo.svg'
         },
