@@ -1,7 +1,13 @@
 starlight-theme-select {
-    display:none;
+    visibility: hidden;
+    width: 0;
 }
 
 .site-title span {
     display:none;
+}
+
+.right-group div:nth-child(2) {
+    border-inline-end: 0;
+    padding-inline-end: 0;
 }
