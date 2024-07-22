@@ -1,7 +1,6 @@
 ---
 title: Announcing RealWorld Angular
 date: 2024-07-22
-draft: true
 excerpt: "I’m thrilled to announce a new open-source project, RealWorld Angular, a spin-off of the RealWorld project that focuses on providing comprehensive example apps and showcasing Angular libraries to offer a more realistic environment for demonstrating technical aspects and best practices in Angular development."
 authors:
   name: Gerome Grignon
