@@ -8,7 +8,8 @@
     "preview": "node .output/server/index.mjs",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:studio": "npx prisma studio",
-    "prisma:generate": "npx prisma generate"
+    "prisma:generate": "npx prisma generate",
+    "prisma:format": "npx prisma format"
   },
   "devDependencies": {
     "@prisma/extension-optimize": "^0.10.0",
