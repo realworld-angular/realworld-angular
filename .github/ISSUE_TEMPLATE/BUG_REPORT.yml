@@ -1,0 +1,32 @@
+name: 🐞 Bug report
+description: Report a bug in the RealWorld Angular project
+title: '[Bug]: '
+labels:
+  - bug
+body:
+  - type: dropdown
+    attributes:
+      label: Relevant scope
+      description: What is the scope of this request?
+      options:
+        - Documentation
+        - API
+        - API Testing
+        - 'Other: describe below'
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Description
+      description: A clear and concise description of the problem
+    validations:
+      required: true
+  - type: dropdown
+    id: contribute
+    attributes:
+      label: Do you want to contribute with a pull request?
+      options:
+        - 'Yes'
+        - 'No'
+    validations:
+      required: true

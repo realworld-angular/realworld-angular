@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussions
+    url: https://github.com/orgs/realworld-angular/discussions
+    about: Have a question or want to discuss something?
+  - name: Angular template repository
+    url: https://github.com/realworld-angular/realworld-angular-template
+    about: Issues and feature requests for the Angular template repository

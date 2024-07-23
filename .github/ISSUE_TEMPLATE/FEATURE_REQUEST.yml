@@ -1,0 +1,41 @@
+name: 🚀 Feature request
+description: Suggest a feature for RealWorld Angular project
+title: '[Feature Request]:'
+body:
+  - type: markdown
+    attributes:
+      value: '# Feature Request'
+  - type: dropdown
+    attributes:
+      label: Relevant Scope
+      description: What is the scope of this request?
+      options:
+        - Documentation
+        - API
+        - API Testing
+        - 'Other: describe below'
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Description
+      description: ' <!-- ✍️--> '
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Describe the solution you'd like
+      description: If you have a solution in mind, please describe it.
+  - type: textarea
+    attributes:
+      label: Describe alternatives you've considered
+      description: Have you considered any alternative solutions or workarounds?
+  - type: dropdown
+    id: contribute
+    attributes:
+      label: Do you want to contribute with a pull request?
+      options:
+        - 'Yes'
+        - 'No'
+    validations:
+      required: true
