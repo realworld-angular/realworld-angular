@@ -19,7 +19,7 @@ export default defineConfig({
                 tag: 'meta',
                 attrs: {
                     property: 'og:image',
-                    content: './src/assets/og-image.jpg'
+                    content: './og-image.jpg'
                 }
             }
         ],
