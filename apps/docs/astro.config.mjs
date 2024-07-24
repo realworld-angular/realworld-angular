@@ -14,6 +14,15 @@ export default defineConfig({
         social: {
             github: 'https://github.com/realworld-angular/realworld-angular'
         },
+        head: [
+            {
+                tag: 'meta',
+                attrs: {
+                    property: 'og:image',
+                    content: './src/assets/og-image.jpg'
+                }
+            }
+        ],
         sidebar: [{
             label: 'Guides',
             items: [
