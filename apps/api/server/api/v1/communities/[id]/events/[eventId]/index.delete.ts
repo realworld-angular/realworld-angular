@@ -3,10 +3,12 @@ export default defineEventHandler({
     handler: async (event) => {
         const eventId = getRouterParam(event, 'eventId');
 
-        return usePrisma().event.delete({
+        await usePrisma().event.delete({
             where: {
                 id: parseInt(eventId)
             }
         });
+
+        sendNoContent(event, 204);
     }
 });

@@ -3,7 +3,9 @@ import {eventSchema} from "~/schemas/events/event.schema";
 export default defineEventHandler({
     onRequest: [useCheckAuth('required')],
     handler: async (event) => {
-        const id = getRouterParam(event, 'eventId');
+        // TODO : add authorization logic for the community admin
+
+        const id = getRouterParam(event, 'id');
         const {name, description, date, location} = await readValidatedBody(event, eventSchema.parse);
 
         return usePrisma().event.create({

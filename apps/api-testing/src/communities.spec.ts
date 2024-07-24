@@ -3,7 +3,7 @@ import {uuid} from "uuidv4";
 import {createUser} from "./utils/users.util";
 
 test.describe('Communities', () => {
-    test.describe('Create', () => {
+    test.describe('POST /api/v1/communities', () => {
         test('SHOULD create a community', async ({request}) => {
             const email = `rwa-email-${uuid()}@gmail.com`;
             const password = `rwa-password-${uuid()}`;
@@ -36,13 +36,36 @@ test.describe('Communities', () => {
 
         // TODO test if the user is an admin
     });
-
-    test.describe('Members', () => {
-        test('SHOULD remove a user from a community', async ({request}) => {
+    test.describe('GET /api/v1/communities', () => {
+        test('SHOULD get all communities', async ({request}) => {
             const email = `rwa-email-${uuid()}@gmail.com`;
             const password = `rwa-password-${uuid()}`;
             const response = await createUser(request, email, password, password);
-            const {id, token} = await response.json();
+            const {token} = await response.json();
+
+            await request.post('http://localhost:3000/api/v1/communities', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                data: {
+                    name: `rwa-community-${uuid()}`
+                }
+            });
+
+            const communityResponse = await request.get('http://localhost:3000/api/v1/communities');
+            const data = await communityResponse.json();
+
+            expect(communityResponse.ok()).toBeTruthy();
+            expect(communityResponse.status()).toBe(200);
+            expect(data.length).toBeGreaterThan(0);
+        });
+    });
+    test.describe('GET /api/v1/communities/{communityId}', () => {
+        test('SHOULD get a community', async ({request}) => {
+            const email = `rwa-email-${uuid()}@gmail.com`;
+            const password = `rwa-password-${uuid()}`;
+            const response = await createUser(request, email, password, password);
+            const {token} = await response.json();
 
             const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
                 headers: {
@@ -53,16 +76,92 @@ test.describe('Communities', () => {
                 }
             });
 
-            const communityData = await communityResponse.json();
+            const communityId = (await communityResponse.json()).id;
 
-            const deletionResponse = await request.delete(`http://localhost:3000/api/v1/communities/${communityData.id}/members/${id}`, {
+            const singleCommunityResponse = await request.get(`http://localhost:3000/api/v1/communities/${communityId}`);
+
+            expect(singleCommunityResponse.ok()).toBeTruthy();
+            expect(singleCommunityResponse.status()).toBe(200);
+        });
+    });
+    test.describe('PATCH /api/v1/communities/{communityId}', () => {
+        test('SHOULD update a community', async ({request}) => {
+            const email = `rwa-email-${uuid()}@gmail.com`;
+            const password = `rwa-password-${uuid()}`;
+            const response = await createUser(request, email, password, password);
+            const {token} = await response.json();
+
+            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                data: {
+                    name: `rwa-community-${uuid()}`
+                }
+            });
+
+            const communityId = (await communityResponse.json()).id;
+
+            const updatedName = `rwa-community-${uuid()}`;
+            const updatedCommunityResponse = await request.patch(`http://localhost:3000/api/v1/communities/${communityId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                data: {
+                    name: updatedName
+                }
+            });
+
+            expect(updatedCommunityResponse.ok()).toBeTruthy();
+            expect(updatedCommunityResponse.status()).toBe(200);
+
+            const updatedCommunity = await updatedCommunityResponse.json();
+
+            expect(updatedCommunity.name).toBe(updatedName);
+        });
+        test('SHOULD throw an error if there is no token', async ({request}) => {
+            const response = await request.patch('http://localhost:3000/api/v1/communities/1', {
+                data: {
+                    name: `rwa-community-${uuid()}`
+                }
+            });
+
+            expect(response.ok()).toBeFalsy();
+            expect(response.status()).toBe(401);
+        });
+    });
+    test.describe('DELETE /api/v1/communities/{communityId}', () => {
+        test('SHOULD delete a community', async ({request}) => {
+            const email = `rwa-email-${uuid()}@gmail.com`;
+            const password = `rwa-password-${uuid()}`;
+            const response = await createUser(request, email, password, password);
+            const {token} = await response.json();
+
+            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                data: {
+                    name: `rwa-community-${uuid()}`
+                }
+            });
+
+            const communityId = (await communityResponse.json()).id;
+
+            const deletedCommunityResponse = await request.delete(`http://localhost:3000/api/v1/communities/${communityId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
 
-            expect(deletionResponse.ok()).toBeTruthy();
-            expect(deletionResponse.status()).toBe(204);
+            expect(deletedCommunityResponse.ok()).toBeTruthy();
+            expect(deletedCommunityResponse.status()).toBe(204);
+        });
+        test('SHOULD throw an error if there is no token', async ({request}) => {
+            const response = await request.delete('http://localhost:3000/api/v1/communities/1');
+
+            expect(response.ok()).toBeFalsy();
+            expect(response.status()).toBe(401);
         });
     });
 });
