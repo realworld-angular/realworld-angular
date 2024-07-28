@@ -25,6 +25,7 @@ model Community {
   Event            Event[]
   socialMediaLinks SocialMediaLink[]
   logoUrl          String?
+  polls            Poll[]            @relation("CommunityPoll")
 }
 
 model CommunityRole {
@@ -114,6 +115,45 @@ model CallForPapersSubmission {
   userId      Int
 }
 
+model Poll {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  communityId Int
+  community   Community    @relation("CommunityPoll", fields: [communityId], references: [id])
+  options     PollOption[] @relation("PollOptions")
+  votes       PollVote[]   @relation("PollVotes")
+  startDate   DateTime?
+  endDate     DateTime?
+}
+
+model PollOption {
+  id     Int        @id @default(autoincrement())
+  text   String
+  pollId Int
+  poll   Poll       @relation("PollOptions", fields: [pollId], references: [id], onDelete: Cascade)
+  votes  PollVote[] @relation("OptionVotes")
+  order  Int
+
+  @@unique(name: "orderConstraint", [pollId, order])
+  @@unique(name: "textConstraint", [pollId, text])
+}
+
+model PollVote {
+  id        Int        @id @default(autoincrement())
+  userId    Int
+  user      User       @relation("UserPollVote", fields: [userId], references: [id])
+  pollId    Int
+  poll      Poll       @relation("PollVotes", fields: [pollId], references: [id], onDelete: Cascade)
+  optionId  Int
+  option    PollOption @relation("OptionVotes", fields: [optionId], references: [id])
+  createdAt DateTime   @default(now())
+
+  @@unique([userId, pollId, optionId])
+}
+
 model User {
   id                      Int                       @id @default(autoincrement())
   email                   String                    @unique
@@ -122,6 +162,7 @@ model User {
   updatedEvents           Event[]                   @relation("updatedEvents")
   roles                   CommunityRole[]
   CallForPapersSubmission CallForPapersSubmission[]
+  votes                   PollVote[]                @relation("UserPollVote")
 }
 
 enum Role {
