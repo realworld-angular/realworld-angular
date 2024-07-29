@@ -10,7 +10,7 @@ test.describe('Events', () => {
             const response = await createUser(request, email, password, password);
             const {token} = await response.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -21,7 +21,7 @@ test.describe('Events', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            await request.post(`http://localhost:3000/api/v1/communities/${communityId}/events`, {
+            await request.post(`/api/v1/communities/${communityId}/events`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -33,7 +33,7 @@ test.describe('Events', () => {
                 }
             });
 
-            const eventsResponse = await request.get(`http://localhost:3000/api/v1/communities/${communityId}/events`, {
+            const eventsResponse = await request.get(`/api/v1/communities/${communityId}/events`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -50,7 +50,7 @@ test.describe('Events', () => {
             const response = await createUser(request, email, password, password);
             const {token} = await response.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -61,7 +61,7 @@ test.describe('Events', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const eventResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/events`, {
+            const eventResponse = await request.post(`/api/v1/communities/${communityId}/events`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -79,7 +79,7 @@ test.describe('Events', () => {
         test('SHOULD not create an event WHEN not authenticated', async ({request}) => {
             const communityId = 1;
 
-            const eventResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/events`, {
+            const eventResponse = await request.post(`/api/v1/communities/${communityId}/events`, {
                 data: {
                     name: `rwa-event-${uuid()}`,
                     description: `rwa-description-${uuid()}`,
@@ -99,7 +99,7 @@ test.describe('Events', () => {
             const response = await createUser(request, email, password, password);
             const {token} = await response.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -110,7 +110,7 @@ test.describe('Events', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const eventResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/events`, {
+            const eventResponse = await request.post(`/api/v1/communities/${communityId}/events`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -124,7 +124,7 @@ test.describe('Events', () => {
 
             const eventId = (await eventResponse.json()).id;
 
-            const event = await request.get(`http://localhost:3000/api/v1/communities/${communityId}/events/${eventId}`, {
+            const event = await request.get(`/api/v1/communities/${communityId}/events/${eventId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -141,7 +141,7 @@ test.describe('Events', () => {
             const response = await createUser(request, email, password, password);
             const {token} = await response.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -152,7 +152,7 @@ test.describe('Events', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const eventResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/events`, {
+            const eventResponse = await request.post(`/api/v1/communities/${communityId}/events`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -166,7 +166,7 @@ test.describe('Events', () => {
 
             const eventId = (await eventResponse.json()).id;
 
-            const updatedEvent = await request.patch(`http://localhost:3000/api/v1/communities/${communityId}/events/${eventId}`, {
+            const updatedEvent = await request.patch(`/api/v1/communities/${communityId}/events/${eventId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -189,7 +189,7 @@ test.describe('Events', () => {
             const response = await createUser(request, email, password, password);
             const {token} = await response.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -200,7 +200,7 @@ test.describe('Events', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const eventResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/events`, {
+            const eventResponse = await request.post(`/api/v1/communities/${communityId}/events`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -214,7 +214,7 @@ test.describe('Events', () => {
 
             const eventId = (await eventResponse.json()).id;
 
-            const deletedEvent = await request.delete(`http://localhost:3000/api/v1/communities/${communityId}/events/${eventId}`, {
+            const deletedEvent = await request.delete(`/api/v1/communities/${communityId}/events/${eventId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

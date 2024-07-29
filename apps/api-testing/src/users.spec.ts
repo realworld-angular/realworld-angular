@@ -54,7 +54,7 @@ test.describe('User', () => {
               const userResponse = await createUser(request, email, password, password);
 
               const userData = await userResponse.json();
-              const currentUserResponse = await request.get('http://localhost:3000/api/v1/users/me', {
+              const currentUserResponse = await request.get('/api/v1/users/me', {
                     headers: {
                         Authorization: `Bearer ${userData.token}`
                     }
@@ -75,7 +75,7 @@ test.describe('User', () => {
        });
 
        test('SHOULD throw an error if there is no token', async ({request}) => {
-                const response = await request.get('http://localhost:3000/api/v1/users/me');
+                const response = await request.get('/api/v1/users/me');
 
                 expect(response.ok()).toBeFalsy();
                 expect(response.status()).toBe(401);
@@ -88,7 +88,7 @@ test.describe('User', () => {
             const password = `rwa-password-${uuid()}`;
             await createUser(request, email, password, password);
 
-            const response = await request.post('http://localhost:3000/api/v1/users/login', {
+            const response = await request.post('/api/v1/users/login', {
                 data: {
                     email,
                     password
@@ -114,7 +114,7 @@ test.describe('User', () => {
             const password = `rwa-password-${uuid()}`;
             await createUser(request, email, password, password);
 
-            const response = await request.post('http://localhost:3000/api/v1/users/login', {
+            const response = await request.post('/api/v1/users/login', {
                 data: {
                     email,
                     password: `${password}-invalid`
@@ -134,7 +134,7 @@ test.describe('User', () => {
 
             const userData = await userResponse.json();
             const newEmail = `rwa-email-${uuid()}@gmail.com`;
-            const response = await request.patch('http://localhost:3000/api/v1/users', {
+            const response = await request.patch('/api/v1/users', {
                 headers: {
                     Authorization: `Bearer ${userData.token}`
                 },
@@ -158,7 +158,7 @@ test.describe('User', () => {
         });
 
         test('SHOULD throw an error if there is no token', async ({request}) => {
-            const response = await request.patch('http://localhost:3000/api/v1/users', {
+            const response = await request.patch('/api/v1/users', {
                 data: {
                     email: `rwa-email-${uuid()}@gmail.com`
                 }
@@ -176,7 +176,7 @@ test.describe('User', () => {
             const userResponse = await createUser(request, email, password, password);
 
             const userData = await userResponse.json();
-            const response = await request.delete('http://localhost:3000/api/v1/users', {
+            const response = await request.delete('/api/v1/users', {
                 headers: {
                     Authorization: `Bearer ${userData.token}`
                 }
@@ -187,7 +187,7 @@ test.describe('User', () => {
         });
 
         test('SHOULD throw an error if there is no token', async ({request}) => {
-            const response = await request.delete('http://localhost:3000/api/v1/users');
+            const response = await request.delete('/api/v1/users');
 
             expect(response.ok()).toBeFalsy();
             expect(response.status()).toBe(401);

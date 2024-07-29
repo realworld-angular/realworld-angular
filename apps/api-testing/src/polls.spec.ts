@@ -10,7 +10,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -21,7 +21,7 @@ test.describe('Polls', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const response = await request.get(`http://localhost:3000/api/v1/communities/${communityId}/polls`);
+            const response = await request.get(`/api/v1/communities/${communityId}/polls`);
 
             expect(response.ok()).toBeTruthy();
             expect(response.status()).toBe(200);
@@ -34,7 +34,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -45,7 +45,7 @@ test.describe('Polls', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const pollResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls`, {
+            const pollResponse = await request.post(`/api/v1/communities/${communityId}/polls`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -71,7 +71,7 @@ test.describe('Polls', () => {
             expect(pollResponse.status()).toBe(201);
         });
         test('SHOULD throw an error if there is no token', async ({request}) => {
-            const response = await request.post('http://localhost:3000/api/v1/communities/1/polls');
+            const response = await request.post('/api/v1/communities/1/polls');
 
             expect(response.ok()).toBeFalsy();
             expect(response.status()).toBe(401);
@@ -82,7 +82,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -93,7 +93,7 @@ test.describe('Polls', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const pollResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls`, {
+            const pollResponse = await request.post(`/api/v1/communities/${communityId}/polls`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -124,7 +124,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -137,7 +137,7 @@ test.describe('Polls', () => {
 
             const optionText = `rwa-option-${uuid()}`;
 
-            const pollResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls`, {
+            const pollResponse = await request.post(`/api/v1/communities/${communityId}/polls`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -169,7 +169,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -180,7 +180,7 @@ test.describe('Polls', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const pollResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls`, {
+            const pollResponse = await request.post(`/api/v1/communities/${communityId}/polls`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -212,7 +212,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -223,7 +223,7 @@ test.describe('Polls', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const pollResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls`, {
+            const pollResponse = await request.post(`/api/v1/communities/${communityId}/polls`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -252,7 +252,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -263,7 +263,7 @@ test.describe('Polls', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const pollResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls`, {
+            const pollResponse = await request.post(`/api/v1/communities/${communityId}/polls`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -287,7 +287,7 @@ test.describe('Polls', () => {
 
             const pollId = (await pollResponse.json()).id;
 
-            const response = await request.get(`http://localhost:3000/api/v1/communities/${communityId}/polls/${pollId}`);
+            const response = await request.get(`/api/v1/communities/${communityId}/polls/${pollId}`);
 
             expect(response.ok()).toBeTruthy();
             expect(response.status()).toBe(200);
@@ -300,7 +300,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -311,7 +311,7 @@ test.describe('Polls', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const pollResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls`, {
+            const pollResponse = await request.post(`/api/v1/communities/${communityId}/polls`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -335,7 +335,7 @@ test.describe('Polls', () => {
 
             const pollId = (await pollResponse.json()).id;
 
-            const response = await request.delete(`http://localhost:3000/api/v1/communities/${communityId}/polls/${pollId}`, {
+            const response = await request.delete(`/api/v1/communities/${communityId}/polls/${pollId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -352,7 +352,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -363,7 +363,7 @@ test.describe('Polls', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const pollResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls`, {
+            const pollResponse = await request.post(`/api/v1/communities/${communityId}/polls`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -387,7 +387,7 @@ test.describe('Polls', () => {
 
             const pollId = (await pollResponse.json()).id;
 
-            const response = await request.patch(`http://localhost:3000/api/v1/communities/${communityId}/polls/${pollId}`, {
+            const response = await request.patch(`/api/v1/communities/${communityId}/polls/${pollId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -418,7 +418,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -429,7 +429,7 @@ test.describe('Polls', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const pollResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls`, {
+            const pollResponse = await request.post(`/api/v1/communities/${communityId}/polls`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -449,7 +449,7 @@ test.describe('Polls', () => {
 
             const pollId = (await pollResponse.json()).id;
 
-            const response = await request.patch(`http://localhost:3000/api/v1/communities/${communityId}/polls/${pollId}`, {
+            const response = await request.patch(`/api/v1/communities/${communityId}/polls/${pollId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -478,7 +478,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -489,7 +489,7 @@ test.describe('Polls', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const pollResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls`, {
+            const pollResponse = await request.post(`/api/v1/communities/${communityId}/polls`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -513,7 +513,7 @@ test.describe('Polls', () => {
 
             const pollData = await pollResponse.json();
 
-            const voteResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls/${pollData.id}/vote`, {
+            const voteResponse = await request.post(`/api/v1/communities/${communityId}/polls/${pollData.id}/vote`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -531,7 +531,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -542,7 +542,7 @@ test.describe('Polls', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const pollResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls`, {
+            const pollResponse = await request.post(`/api/v1/communities/${communityId}/polls`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -566,7 +566,7 @@ test.describe('Polls', () => {
 
             const pollData = await pollResponse.json();
 
-            await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls/${pollData.id}/vote`, {
+            await request.post(`/api/v1/communities/${communityId}/polls/${pollData.id}/vote`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -575,7 +575,7 @@ test.describe('Polls', () => {
                 }
             });
 
-            const voteResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls/${pollData.id}/vote`, {
+            const voteResponse = await request.post(`/api/v1/communities/${communityId}/polls/${pollData.id}/vote`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -593,7 +593,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -604,7 +604,7 @@ test.describe('Polls', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const pollResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls`, {
+            const pollResponse = await request.post(`/api/v1/communities/${communityId}/polls`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -628,7 +628,7 @@ test.describe('Polls', () => {
 
             const pollData = await pollResponse.json();
 
-            const voteResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls/${pollData.id}/vote`, {
+            const voteResponse = await request.post(`/api/v1/communities/${communityId}/polls/${pollData.id}/vote`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -646,7 +646,7 @@ test.describe('Polls', () => {
             const userResponse = await createUser(request, email, password, password);
             const {token} = await userResponse.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -657,7 +657,7 @@ test.describe('Polls', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const pollResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls`, {
+            const pollResponse = await request.post(`/api/v1/communities/${communityId}/polls`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -681,7 +681,7 @@ test.describe('Polls', () => {
 
             const pollData = await pollResponse.json();
 
-            const voteResponse = await request.post(`http://localhost:3000/api/v1/communities/${communityId}/polls/${pollData.id}/vote`, {
+            const voteResponse = await request.post(`/api/v1/communities/${communityId}/polls/${pollData.id}/vote`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },

@@ -10,7 +10,7 @@ test.describe('Communities', () => {
             const response = await createUser(request, email, password, password);
             const {token} = await response.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -24,7 +24,7 @@ test.describe('Communities', () => {
         });
 
         test('SHOULD throw an error if there is no token', async ({request}) => {
-            const response = await request.post('http://localhost:3000/api/v1/communities', {
+            const response = await request.post('/api/v1/communities', {
                 data: {
                     name: `rwa-community-${uuid()}`
                 }
@@ -43,7 +43,7 @@ test.describe('Communities', () => {
             const response = await createUser(request, email, password, password);
             const {token} = await response.json();
 
-            await request.post('http://localhost:3000/api/v1/communities', {
+            await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -52,7 +52,7 @@ test.describe('Communities', () => {
                 }
             });
 
-            const communityResponse = await request.get('http://localhost:3000/api/v1/communities');
+            const communityResponse = await request.get('/api/v1/communities');
             const data = await communityResponse.json();
 
             expect(communityResponse.ok()).toBeTruthy();
@@ -67,7 +67,7 @@ test.describe('Communities', () => {
             const response = await createUser(request, email, password, password);
             const {token} = await response.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -78,7 +78,7 @@ test.describe('Communities', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const singleCommunityResponse = await request.get(`http://localhost:3000/api/v1/communities/${communityId}`);
+            const singleCommunityResponse = await request.get(`/api/v1/communities/${communityId}`);
 
             expect(singleCommunityResponse.ok()).toBeTruthy();
             expect(singleCommunityResponse.status()).toBe(200);
@@ -91,7 +91,7 @@ test.describe('Communities', () => {
             const response = await createUser(request, email, password, password);
             const {token} = await response.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -103,7 +103,7 @@ test.describe('Communities', () => {
             const communityId = (await communityResponse.json()).id;
 
             const updatedName = `rwa-community-${uuid()}`;
-            const updatedCommunityResponse = await request.patch(`http://localhost:3000/api/v1/communities/${communityId}`, {
+            const updatedCommunityResponse = await request.patch(`/api/v1/communities/${communityId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -120,7 +120,7 @@ test.describe('Communities', () => {
             expect(updatedCommunity.name).toBe(updatedName);
         });
         test('SHOULD throw an error if there is no token', async ({request}) => {
-            const response = await request.patch('http://localhost:3000/api/v1/communities/1', {
+            const response = await request.patch('/api/v1/communities/1', {
                 data: {
                     name: `rwa-community-${uuid()}`
                 }
@@ -137,7 +137,7 @@ test.describe('Communities', () => {
             const response = await createUser(request, email, password, password);
             const {token} = await response.json();
 
-            const communityResponse = await request.post('http://localhost:3000/api/v1/communities', {
+            const communityResponse = await request.post('/api/v1/communities', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -148,7 +148,7 @@ test.describe('Communities', () => {
 
             const communityId = (await communityResponse.json()).id;
 
-            const deletedCommunityResponse = await request.delete(`http://localhost:3000/api/v1/communities/${communityId}`, {
+            const deletedCommunityResponse = await request.delete(`/api/v1/communities/${communityId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -158,7 +158,7 @@ test.describe('Communities', () => {
             expect(deletedCommunityResponse.status()).toBe(204);
         });
         test('SHOULD throw an error if there is no token', async ({request}) => {
-            const response = await request.delete('http://localhost:3000/api/v1/communities/1');
+            const response = await request.delete('/api/v1/communities/1');
 
             expect(response.ok()).toBeFalsy();
             expect(response.status()).toBe(401);
