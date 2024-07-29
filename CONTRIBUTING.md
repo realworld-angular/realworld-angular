@@ -122,7 +122,7 @@ Open-source communication is asynchronous by design, so the more complete is eac
 
 This repository is using Turbo monorepo and includes the following applications. Each application has its own README file with instructions to run them locally:
 
-- [apps/docs](./apps/docs/README.md): The documentation website
+- [apps/docs](apps/old-docs/README.md): The documentation website
 - [apps/api](./apps/api/README.md): The API server
 - [app/api-testing](./apps/api-testing/README.md): The API testing suite
 

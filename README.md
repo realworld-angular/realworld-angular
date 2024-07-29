@@ -46,7 +46,7 @@ pnpm dev
 
 This repository is using Turbo monorepo and includes the following applications. Each application has its own README file with more details and specific instructions to run them locally and contribute:
 
-- [apps/docs](./apps/docs/README.md): The documentation website
+- [apps/docs](apps/old-docs/README.md): The documentation website
 - [apps/api](./apps/api/README.md): The API server
 - [app/api-testing](./apps/api-testing/README.md): The API testing suite
 
