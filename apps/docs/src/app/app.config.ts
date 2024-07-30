@@ -4,6 +4,7 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideFileRouter } from '@analogjs/router';
 import { provideContent, withMarkdownRenderer } from '@analogjs/content';
 import { withShikiHighlighter } from '@analogjs/content/shiki-highlighter';
+import {provideAnimationsAsync} from "@angular/platform-browser/animations/async";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,5 +13,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     provideClientHydration(),
     provideContent(withMarkdownRenderer(), withShikiHighlighter()),
+    provideAnimationsAsync()
   ],
 };

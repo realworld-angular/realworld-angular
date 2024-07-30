@@ -5,25 +5,28 @@ import { AsyncPipe } from '@angular/common';
 import PostAttributes from '../../post-attributes';
 
 @Component({
-  selector: 'app-blog-post',
+  selector: 'app-news-post',
   standalone: true,
   imports: [AsyncPipe, MarkdownComponent],
   template: `
     @if (post$ | async; as post) {
-    <article>
-      <img class="post__image" [src]="post.attributes.coverImage" />
+    <article class="prose dark:prose-invert m-auto pt-16 px-6">
+      <h1 class="text-5xl text-center edo">{{post.attributes.title}}</h1>
       <analog-markdown [content]="post.content" />
     </article>
     }
   `,
   styles: [
     `
-      .post__image {
-        max-height: 40vh;
+      .edo {
+        font-family: 'Edo', sans-serif;
       }
     `,
   ],
 })
-export default class HomeComponent {
-  readonly post$ = injectContent<PostAttributes>('slug');
+export default class NewsPostComponent {
+  readonly post$ = injectContent<PostAttributes>({
+    param: 'slug',
+    subdirectory: 'news'
+  });
 }
