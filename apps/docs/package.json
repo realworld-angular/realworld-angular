@@ -2,6 +2,7 @@
   "name": "docs",
   "version": "0.0.0",
   "type": "module",
+  "license": "(Apache-2.0 AND CC_BY_NC_4.0)",
   "private": true,
   "engines": {
     "node": ">=18.13.0"
