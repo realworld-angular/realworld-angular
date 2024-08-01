@@ -13,8 +13,6 @@
   },
   "devDependencies": {
     "@prisma/extension-optimize": "^0.10.0",
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",
     "eslint": "^8",
