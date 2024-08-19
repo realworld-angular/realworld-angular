@@ -10,11 +10,9 @@ This Turborepo includes the following packages/apps:
 
 ### Apps and Packages
 
-- `docs`: a documentation website built with [StarLight](https://starlight.astro.build/)
+- `docs`: a documentation website built with [Analog](https://analogjs.org/)
 - `api`: a Nitro application to serve the demo template API
-- `api-testing`: a PLaywright application to automate the testing of the API
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `api-testing`: a Playwright application to automate the testing of the API
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
@@ -44,9 +42,9 @@ pnpm dev
 
 ## Contributing
 
-This repository is using Turbo monorepo and includes the following applications. Each application has its own README file with more details and specific instructions to run them locally and contribute:
+This repository uses Turbo monorepo and includes the following applications. Each application has its own README file with more details and specific instructions to run them locally and contribute:
 
-- [apps/docs](apps/old-docs/README.md): The documentation website
+- [apps/docs](apps/docs/README.md): The documentation website
 - [apps/api](./apps/api/README.md): The API server
 - [app/api-testing](./apps/api-testing/README.md): The API testing suite
 
