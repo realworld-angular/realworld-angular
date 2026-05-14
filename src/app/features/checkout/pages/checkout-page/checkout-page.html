@@ -1,0 +1,103 @@
+<div class="checkout-page">
+  <div class="container">
+    <h1 class="checkout-page__title">Checkout</h1>
+
+    @if (cart.isEmpty()) {
+      <rw-empty-state
+        icon="empty-shopping-cart"
+        title="Your cart is empty"
+        text="Add pizza from a pizzeria menu before you can check out."
+      >
+        <a routerLink="/">Browse pizzerias</a>
+      </rw-empty-state>
+    } @else {
+      <div class="checkout-layout">
+        <section>
+          <h2 class="section-heading">Delivery details</h2>
+
+          <form [formRoot]="checkoutForm" class="checkout-form">
+            @if (checkoutForm().errors()[0]; as err) {
+              <rw-callout variant="error" [message]="err.message!" />
+            }
+
+            <fieldset class="address-fieldset">
+              <legend class="address-fieldset__legend">Delivery address</legend>
+              <rw-photon-location-field
+                label="City and country"
+                [formField]="checkoutForm.delivery.location"
+              />
+              <rw-input
+                label="Street address"
+                [formField]="checkoutForm.delivery.street"
+                placeholder="Street, number, building, floor…"
+              />
+            </fieldset>
+
+            <fieldset class="address-fieldset">
+              <legend class="address-fieldset__legend">Billing address</legend>
+              <label class="billing-toggle">
+                <input
+                  type="checkbox"
+                  class="billing-toggle__input"
+                 [formField]="checkoutForm.useSameAsBilling"
+                 />
+                 <span class="billing-toggle__label">
+                   Same as delivery address
+                   <span class="billing-toggle__hint">
+                     Uncheck to bill to a different address for this order.
+                   </span>
+                 </span>
+               </label>
+
+               @if (!model().useSameAsBilling) {
+                <div class="billing-fields">
+                  <rw-photon-location-field
+                    label="City and country"
+                    [formField]="checkoutForm.billing.location"
+                  />
+                  <rw-input
+                    label="Street address"
+                     [formField]="checkoutForm.billing.street"
+                    placeholder="Street, number, building, floor…"
+                  />
+                </div>
+              }
+            </fieldset>
+
+            <rw-textarea
+              label="Order notes"
+              [formField]="checkoutForm.notes"
+              placeholder="Any special instructions?"
+              [maxLength]="300"
+            />
+
+            <rw-button
+              class="submit-button"
+              type="submit"
+              [isLoading]="checkoutForm().submitting()"
+            >
+              Place order
+            </rw-button>
+          </form>
+        </section>
+
+        <aside class="checkout-summary">
+          <h2 class="section-heading">Order summary</h2>
+          <p class="summary-from">{{ cart.pizzeria()?.name }}</p>
+          <ul class="pizza-summary-list">
+            @for (item of cart.items(); track item.id) {
+              <li class="pizza-summary-line">
+                <span>{{ item.quantity }}× {{ item.pizza.name }}</span>
+                <span>€{{ item.totalPrice | number: '1.2-2' }}</span>
+              </li>
+            }
+          </ul>
+          <div class="summary-total">
+            <span>Total</span>
+            <strong>€{{ cart.totalPrice() | number: '1.2-2' }}</strong>
+          </div>
+        </aside>
+      </div>
+    }
+  </div>
+</div>

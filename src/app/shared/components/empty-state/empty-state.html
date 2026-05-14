@@ -1,0 +1,20 @@
+<div class="rw-empty-state" role="status">
+  @if (icon()) {
+    <img
+      class="rw-empty-state__icon"
+      [src]="'/icons/' + icon() + '.svg'"
+      alt=""
+      width="160"
+      height="160"
+      decoding="async"
+      aria-hidden="true"
+    />
+  }
+  @if (title()) {
+    <h2 class="rw-empty-state__title">{{ title() }}</h2>
+  }
+  <p class="rw-empty-state__message">{{ resolvedText() }}</p>
+  <div class="rw-empty-state__actions">
+    <ng-content />
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<rw-hero-banner />
+
+<section class="section">
+  <div class="container">
+    <div class="pizzerias-toolbar">
+      <label for="pizzeria-search" class="sr-only">Search pizzerias</label>
+      <input
+        id="pizzeria-search"
+        type="search"
+        class="pizzeria-search__input"
+        [(ngModel)]="searchInput"
+        placeholder="Search..."
+        autocomplete="off"
+      />
+    </div>
+
+    @if (pizzeriasResource.isLoading()) {
+      <div class="loading-center" aria-label="Loading pizzerias">
+        <rw-spinner />
+      </div>
+    } @else if (pizzeriasResource.error()) {
+      <rw-callout variant="error" message="Could not load pizzerias. Please try again." />
+    } @else if (pizzeriasResource.value()!.items.length === 0) {
+      @if (hasActiveSearch()) {
+        <rw-empty-state icon="folder-off" text="No pizzerias match your search." />
+      } @else {
+        <rw-empty-state icon="folder-off" text="No pizzerias yet. Check back soon!" />
+      }
+    } @else {
+      @let data = pizzeriasResource.value()!;
+      <ul class="pizzeria-grid" role="list">
+        @for (pizzeria of data.items; track pizzeria.id) {
+            <li>
+              <a [routerLink]="['/pizzerias', pizzeria.id]" class="pizzeria-card" aria-label="View {{ pizzeria.name }} pizzeria">
+                <div class="pizzeria-card__image-wrap">
+                  <img
+                    [ngSrc]="pizzeria.image | catalogImageUrl: 'pizzeria'"
+                    alt=""
+                    class="pizzeria-card__image"
+                    width="600"
+                    height="400"
+                    disableOptimizedSrcset
+                  />
+                </div>
+                <div class="pizzeria-card__body">
+                  <h3 class="pizzeria-card__name">{{ pizzeria.name }}</h3>
+                  <p class="pizzeria-card__location">{{ pizzeria.city }}, {{ pizzeria.country }}</p>
+                  <p class="pizzeria-card__meta">
+                    <span>{{ pizzeria._count.pizzas }} pizzas</span>
+                  </p>
+                </div>
+              </a>
+            </li>
+          }
+      </ul>
+
+      @if (data.totalPages > 1 && data.items.length > 0) {
+        <div class="pagination-wrap">
+          <rw-pagination
+            [currentPage]="currentPage()"
+            [totalPages]="data.totalPages"
+            (pageChange)="changePage($event)"
+          />
+        </div>
+      }
+    }
+  </div>
+</section>

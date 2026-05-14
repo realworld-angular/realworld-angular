@@ -1,0 +1,27 @@
+<fieldset class="option-group">
+  <legend class="option-group__label">
+    Size
+    @if (required()) {
+      <span class="field__required" aria-hidden="true">*</span>
+    }
+  </legend>
+  <div class="option-list" role="radiogroup">
+    @for (option of options(); track option.id) {
+      <label class="option-item" [class.option-item--selected]="isSelected(option)">
+        <input
+          type="radio"
+          class="sr-only"
+          [checked]="isSelected(option)"
+          (change)="toggle(option)"
+        />
+        <span class="option-item__label">{{ option.label }}</span>
+        @if (option.price > 0) {
+          <span class="option-item__price">+€{{ option.price | number: '1.2-2' }}</span>
+        }
+      </label>
+    }
+  </div>
+  @if (touched() && errors().length) {
+    <span class="field__error" role="alert">{{ errors()[0].message }}</span>
+  }
+</fieldset>

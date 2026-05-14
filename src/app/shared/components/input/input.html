@@ -1,0 +1,29 @@
+<div class="field" [class.field--error]="formField()().touched() && formField()().errors().length">
+  <label class="field__label">
+    @if (label()) {
+      {{ label() }}
+      @if (formField()().required()) {
+        <span class="field__required" aria-hidden="true">*</span>
+      }
+    }
+    <div class="field__control">
+      <input
+        [type]="type()"
+        [placeholder]="placeholder()"
+        [formField]="formField()"
+        [attr.autocomplete]="autocomplete() ?? null"
+        [attr.aria-describedby]="(formField()().touched() && formField()().errors().length) ? errorId : hint() ? hintId : null"
+        class="field__input"
+      />
+      <ng-content select="[rwInputSuffix]" />
+    </div>
+  </label>
+  @if (hint() && !(formField()().touched() && formField()().errors().length)) {
+    <span [id]="hintId" class="field__hint">{{ hint() }}</span>
+  }
+  @if (formField()().touched() && formField()().errors().length) {
+    <span [id]="errorId" class="field__error" role="alert">
+      {{ formField()().errors()[0].message }}
+    </span>
+  }
+</div>

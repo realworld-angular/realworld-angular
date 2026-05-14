@@ -1,0 +1,57 @@
+<div
+  class="field"
+  tabindex="0"
+  [class.field--error]="touched() && invalid()"
+  (keydown)="onContainerKeydown($event)"
+>
+  <label [for]="inputId" class="field__label">
+    {{ label() }}
+    @if (required()) {
+      <span class="field__required" aria-hidden="true">*</span>
+    }
+  </label>
+  <div class="photon-location__wrap">
+    <input
+      [id]="inputId"
+      type="text"
+      class="field__input"
+      [value]="query()"
+      (input)="onQueryInput($event)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+      [disabled]="disabled()"
+      [readonly]="readonly()"
+      placeholder="Start typing a city or place…"
+      autocomplete="off"
+      role="combobox"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-controls]="listboxId"
+      [attr.aria-activedescendant]="activeId()"
+    />
+    @if (isOpen() && (isLoading() || suggestions().length > 0)) {
+      <ul
+        [id]="listboxId"
+        class="photon-location__suggestions"
+        aria-label="Location suggestions"
+      >
+        @if (isLoading()) {
+          <li class="photon-location__hint" role="presentation">Searching…</li>
+        } @else {
+          @for (suggestion of suggestions(); track $index; let idx = $index) {
+            <li
+              [id]="optionId(idx)"
+              [class.photon-location__option--active]="idx === activeIndex()"
+              class="photon-location__option"
+              (mousedown)="pick($event, suggestion)"
+            >
+              {{ suggestion.label }}
+            </li>
+          }
+        }
+      </ul>
+    }
+  </div>
+  @if (touched() && invalid()) {
+    <span [id]="errorId" class="field__error" role="alert">{{ errors()[0].message }}</span>
+  }
+</div>

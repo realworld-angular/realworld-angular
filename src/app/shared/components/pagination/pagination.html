@@ -1,0 +1,54 @@
+@if (totalPages() > 1) {
+  <nav class="pagination" aria-label="Pagination">
+    <button
+      type="button"
+      class="pagination__btn pagination__btn--icon"
+      [disabled]="currentPage() <= 1"
+      [attr.aria-label]="'Previous page'"
+      (click)="pageChange.emit(currentPage() - 1)"
+    >
+      <img
+        src="/icons/chevron-left.svg"
+        alt=""
+        width="24"
+        height="24"
+        aria-hidden="true"
+        class="pagination__icon"
+      />
+    </button>
+
+    @for (page of visiblePages(); track page) {
+      @if (page === -1) {
+        <span class="pagination__ellipsis" aria-hidden="true">…</span>
+      } @else {
+        <button
+          type="button"
+          class="pagination__btn"
+          [class.pagination__btn--active]="page === currentPage()"
+          [attr.aria-label]="'Page ' + page"
+          [attr.aria-current]="page === currentPage() ? 'page' : null"
+          (click)="pageChange.emit(page)"
+        >
+          {{ page }}
+        </button>
+      }
+    }
+
+    <button
+      type="button"
+      class="pagination__btn pagination__btn--icon"
+      [disabled]="currentPage() >= totalPages()"
+      [attr.aria-label]="'Next page'"
+      (click)="pageChange.emit(currentPage() + 1)"
+    >
+      <img
+        src="/icons/chevron-right.svg"
+        alt=""
+        width="24"
+        height="24"
+        aria-hidden="true"
+        class="pagination__icon"
+      />
+    </button>
+  </nav>
+}

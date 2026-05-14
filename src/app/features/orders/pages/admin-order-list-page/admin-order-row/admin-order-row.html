@@ -1,0 +1,29 @@
+@let orderData = order();
+<td class="admin-table__cell-primary">{{ orderData.createdAt | date: 'dd MMM, HH:mm' }}</td>
+<td class="admin-table__cell-muted">{{ orderData.items.length }} pizza(s)</td>
+<td class="admin-table__cell-muted">€{{ orderData.total | number: '1.2-2' }}</td>
+<td><rw-status-badge [status]="orderData.status" /></td>
+<td class="admin-table__actions">
+  <span class="admin-table__actions-inline">
+    @if (orderData.status !== 'CANCELLED' && orderData.status !== 'DELIVERED') {
+      <button
+        type="button"
+        class="admin-action-link admin-icon-action"
+        aria-label="Mark order as delivered"
+        (click)="promptDeliverOrder()"
+      >
+        <img src="/icons/delivery.svg" alt="" width="20" height="20" aria-hidden="true" />
+      </button>
+    }
+    @if (orderData.status === 'PENDING') {
+      <button
+        type="button"
+        class="admin-action-delete admin-icon-action"
+        aria-label="Cancel pending order"
+        (click)="promptCancelOrder()"
+      >
+        <img src="/icons/cancel.svg" alt="" width="20" height="20" aria-hidden="true" />
+      </button>
+    }
+  </span>
+</td>

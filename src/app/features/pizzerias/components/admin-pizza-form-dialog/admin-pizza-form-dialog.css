@@ -1,0 +1,92 @@
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.admin-form__toppings {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin: 0;
+}
+
+.admin-form__toppings legend {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  padding: 0 var(--space-2);
+}
+
+.admin-form__topping-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+}
+
+.admin-form__topping-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-form__topping-price {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+/* rw-modal [slot=footer]: projected node; parent styles apply (encapsulation) */
+.admin-modal-footer {
+  /* Fill rw-modal .modal-footer row so space-between spans the full dialog width */
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.admin-modal-footer__pricing {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.admin-modal-footer__total-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+}
+
+.admin-modal-footer__total-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.admin-modal-footer__total-value {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-modal-footer__total-value--placeholder {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+}
+
+.admin-modal-footer__actions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-4);
+  flex-shrink: 0;
+}
+
+/* When the dialog is closed we omit the pricing column; keep buttons end-aligned. */
+.admin-modal-footer__actions:only-child {
+  margin-inline-start: auto;
+}

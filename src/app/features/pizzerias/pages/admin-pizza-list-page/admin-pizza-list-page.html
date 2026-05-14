@@ -1,0 +1,73 @@
+@if (deleteError()) {
+  <rw-callout variant="error" [message]="deleteError()" />
+}
+
+<div class="admin-tab-toolbar">
+  <rw-button (click)="openCreate()">+ Create pizza</rw-button>
+</div>
+
+@if (pizzasResource.isLoading()) {
+  <div class="loading-center" aria-label="Loading pizzas"><rw-spinner /></div>
+} @else if (pizzasResource.error()) {
+  <rw-callout variant="error" message="Could not load pizzas. Please try again." />
+} @else {
+  @let pizzas = pizzasResource.value()!;
+  @if (pizzas.length === 0) {
+    <rw-empty-state
+      icon="folder-off"
+      title="No pizzas yet"
+      text="Create pizzas to build the menu customers see when they order."
+    >
+      <rw-button (click)="openCreate()">Create your first pizza</rw-button>
+    </rw-empty-state>
+  } @else {
+    <section class="admin-table-section">
+      <div class="admin-table-scroll">
+        <table class="admin-table" aria-label="Pizzas">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Base price</th>
+              <th scope="col">Total price</th>
+              <th scope="col">Toppings</th>
+              <th scope="col" class="admin-table__actions-head"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (pizza of pizzas; track pizza.id) {
+              <tr [attr.aria-label]="'Pizza: ' + pizza.name">
+                <td class="admin-table__cell-primary" [attr.title]="pizza.name">{{ pizza.name }}</td>
+                <td class="admin-table__cell-muted">€{{ pizza.basePrice | number: '1.2-2' }}</td>
+                <td class="admin-table__cell-muted">€{{ menuListTotalPrice(pizza) | number: '1.2-2' }}</td>
+                <td class="admin-table__cell-toppings">
+                  {{ pizza.toppings.length ? toppingLabels(pizza) : '—' }}
+                </td>
+                <td class="admin-table__actions">
+                  <span class="admin-table__actions-inline">
+                    <button
+                      type="button"
+                      class="admin-action-link admin-icon-action"
+                      [attr.aria-label]="'Edit ' + pizza.name"
+                      (click)="openEdit(pizza)"
+                    >
+                      <img src="/icons/edit.svg" alt="" width="20" height="20" aria-hidden="true" />
+                    </button>
+                    <button
+                      type="button"
+                      class="admin-action-delete admin-icon-action"
+                      [disabled]="deletingId() === pizza.id"
+                      [attr.aria-label]="'Delete ' + pizza.name"
+                      (click)="promptDeletePizza(pizza)"
+                    >
+                      <img src="/icons/delete.svg" alt="" width="20" height="20" aria-hidden="true" />
+                    </button>
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+}

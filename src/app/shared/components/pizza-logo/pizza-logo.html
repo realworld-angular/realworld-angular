@@ -1,0 +1,20 @@
+<svg
+  [attr.width]="size()"
+  [attr.height]="size()"
+  viewBox="0 0 100 100"
+  xmlns="http://www.w3.org/2000/svg"
+  [attr.role]="label() ? 'img' : null"
+  [attr.aria-label]="label()"
+  [attr.aria-hidden]="label() ? null : true"
+  focusable="false"
+>
+  @for (slice of slices; track slice.index) {
+    <g
+      class="slice"
+      [class.slice--inverse]="whiteSliceIndex === slice.index"
+      [style.--i]="slice.index"
+    >
+      <path [attr.d]="slice.path" />
+    </g>
+  }
+</svg>

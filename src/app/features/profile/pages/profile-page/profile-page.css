@@ -1,0 +1,53 @@
+.profile-page {
+  padding: var(--space-10) 0;
+}
+
+.profile-page__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.profile-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.profile-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  min-width: 0;
+  flex: 1;
+}
+
+.profile-identity__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.profile-identity__name {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.profile-identity__email {
+  font-size: var(--text-sm);
+  font-style: italic;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.profile-actions {
+  display: flex;
+  flex-shrink: 0;
+}

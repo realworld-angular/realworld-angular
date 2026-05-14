@@ -1,0 +1,43 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <h1 class="auth-card__title">Welcome back</h1>
+    <p class="auth-card__subtitle">Log in to your account</p>
+
+    <form [formRoot]="loginForm" class="auth-form">
+      @if (loginForm().errors()[0]; as err) {
+        <rw-callout variant="error" [message]="err.message!" />
+      }
+      <rw-input
+        label="Email"
+        type="email"
+        autocomplete="email"
+        [formField]="loginForm.email"
+      />
+      <rw-input
+        label="Password"
+        [type]="showPassword.checked ? 'text' : 'password'"
+        autocomplete="current-password"
+        [formField]="loginForm.password"
+      >
+        <label rwInputSuffix class="password-toggle" [attr.aria-label]="showPassword.checked ? 'Hide password' : 'Show password'">
+          <input #showPassword type="checkbox" class="password-toggle__checkbox" />
+          <img
+            [src]="showPassword.checked ? '/icons/visibility-off.svg' : '/icons/visibility.svg'"
+            width="24"
+            height="24"
+            alt=""
+            aria-hidden="true"
+          />
+        </label>
+      </rw-input>
+      <rw-button type="submit" [isLoading]="loginForm().submitting()" class="btn--full">
+        Log in
+      </rw-button>
+    </form>
+
+    <p class="auth-card__footer">
+      Don't have an account?
+      <a routerLink="/auth/register">Create one</a>
+    </p>
+  </div>
+</div>

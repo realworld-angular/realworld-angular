@@ -1,0 +1,62 @@
+.orders-page {
+  padding: var(--space-10) 0;
+}
+
+.orders-page__title {
+  font-size: var(--text-2xl);
+  margin-block-end: var(--space-8);
+}
+
+
+.orders-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: box-shadow var(--transition-fast);
+  gap: var(--space-4);
+}
+
+.order-row:hover {
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+
+.order-row__pizzeria {
+  font-weight: var(--font-weight-semibold);
+}
+
+.order-row__meta {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-block-start: var(--space-1);
+}
+
+.order-row__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-shrink: 0;
+}
+
+.order-row__total {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+}
+
+.pagination-wrap {
+  margin-block-start: var(--space-8);
+}

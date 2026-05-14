@@ -1,0 +1,48 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  color: var(--color-accent);
+}
+
+.slice {
+  transform-origin: 50% 50%;
+  transform-box: view-box;
+}
+
+.slice path {
+  fill: currentColor;
+  stroke: transparent;
+  stroke-width: 1.75;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.slice--inverse path {
+  fill: transparent;
+}
+
+:host(.is-animated) .slice {
+  animation: pizza-slice-step 1.2s steps(6, end) infinite;
+  animation-delay: calc((5 - var(--i)) * -200ms);
+}
+
+@keyframes pizza-slice-step {
+  0%, 16.66% {
+    opacity: 0.15;
+    transform: scale(0.92);
+  }
+  16.67%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host(.is-animated) .slice {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

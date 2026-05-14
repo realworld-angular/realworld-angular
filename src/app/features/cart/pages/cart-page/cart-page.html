@@ -1,0 +1,137 @@
+<div class="cart-page">
+  <div class="container">
+    @if (cart.isEmpty()) {
+      <rw-empty-state
+        icon="empty-shopping-cart"
+        title="Your cart is empty"
+        text="Pick a pizzeria and add pizzas to get started."
+      />
+    } @else {
+      <div class="cart-layout">
+        <section class="cart-pizzas">
+          <div class="cart-pizzas__header">
+            <p class="cart-pizzas__from">
+              Ordering from
+              <strong>
+                <a
+                  [routerLink]="['/pizzerias', cart.pizzeria()!.id]"
+                >
+                  {{ cart.pizzeria()?.name }}
+                </a>
+              </strong>
+            </p>
+            <rw-button variant="outlined" size="sm" type="button" (click)="cart.clear()">
+              Clear cart
+            </rw-button>
+          </div>
+
+          <ul class="pizza-list" role="list">
+            @for (item of cart.items(); track item.id) {
+              <li class="pizza-row">
+                <div class="pizza-row__image-wrap">
+                  <img
+                    [ngSrc]="item.pizza.image | catalogImageUrl: 'pizza'"
+                    alt=""
+                    class="pizza-row__image"
+                    width="80"
+                    height="80"
+                    disableOptimizedSrcset
+                  />
+                </div>
+                <div>
+                  <p class="pizza-row__name">{{ item.pizza.name }}</p>
+@if (item.size || item.extraToppings.length > 0) {
+                    <p class="pizza-row__options">
+                      @if (item.size) {
+                        {{ item.size.label }}
+                      }
+                      @if (item.size && item.extraToppings.length > 0) {
+                        ,
+                      }
+                      {{ item.extraToppings.map(t => t.label).join(', ') }}
+                    </p>
+                  }
+                  <p class="pizza-row__price">€{{ item.totalPrice | number: '1.2-2' }}</p>
+                </div>
+                <div class="pizza-row__controls">
+                  <div class="qty-control" role="group">
+                    <button
+                      type="button"
+                      class="qty-btn"
+                      [disabled]="item.quantity <= 1"
+                      aria-label="Decrease quantity"
+                      (click)="cart.updateQuantity(item.id, item.quantity - 1)"
+                    >
+                      <img src="/icons/remove.svg" alt="" width="24" height="24" aria-hidden="true" />
+                    </button>
+                    <span class="qty-value">{{ item.quantity }}</span>
+                    <button
+                      type="button"
+                      class="qty-btn"
+                      aria-label="Increase quantity"
+                      (click)="cart.updateQuantity(item.id, item.quantity + 1)"
+                    >
+                      <img src="/icons/add.svg" alt="" width="24" height="24" aria-hidden="true" />
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    class="remove-btn"
+                    [attr.aria-label]="'Remove ' + item.pizza.name"
+                    (click)="cart.removeItem(item.id)"
+                  >
+                    <img src="/icons/delete.svg" alt="" width="20" height="20" aria-hidden="true" />
+                  </button>
+                </div>
+              </li>
+            }
+          </ul>
+        </section>
+
+        <aside class="cart-summary">
+          <h2 class="cart-summary__title">Order summary</h2>
+          @if (!auth.isAuthenticated()) {
+            <div class="guest-checkout-notice">
+              <p class="guest-checkout-notice__text">
+                Please log in to place your order.
+              </p>
+              <rw-button
+                routerLink="/auth/login"
+              >
+                Log in to checkout
+              </rw-button>
+              <a routerLink="/auth/register" class="guest-checkout-notice__register">
+                No account? Join for free
+              </a>
+            </div>
+          }
+          <ul class="summary-lines">
+            @for (item of cart.items(); track item.id) {
+              <li class="summary-row">
+                <span class="summary-row__label">
+                  {{ item.pizza.name }}
+                  @if (item.quantity > 1) {
+                    <span class="summary-row__qty"> ×{{ item.quantity }}</span>
+                  }
+                </span>
+                <span>€{{ item.totalPrice | number: '1.2-2' }}</span>
+              </li>
+            }
+          </ul>
+          <div class="summary-total">
+            <span>Total</span>
+            <strong>€{{ cart.totalPrice() | number: '1.2-2' }}</strong>
+          </div>
+          @if (auth.isAuthenticated()) {
+            <rw-button
+              class="btn--full"
+              routerLink="/checkout"
+            >
+              Proceed to checkout
+            </rw-button>
+          }
+        </aside>
+      </div>
+    }
+  </div>
+</div>

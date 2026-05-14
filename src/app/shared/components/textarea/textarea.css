@@ -1,0 +1,42 @@
+@import '../input/input.css';
+
+.field__textarea {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  resize: vertical;
+  min-height: 100px;
+  font-family: var(--font-family);
+  line-height: var(--line-height-relaxed);
+}
+
+.field__textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.field__textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus);
+}
+
+.field__textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--color-surface-alt);
+}
+
+.field--error .field__textarea {
+  border-color: var(--color-error);
+}
+
+.field__counter {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-align: right;
+}

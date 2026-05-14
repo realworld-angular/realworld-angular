@@ -1,0 +1,17 @@
+input[type='search'] {
+  background-image: url('/icons/search.svg');
+  background-repeat: no-repeat;
+  background-position: left var(--space-3) center;
+  background-size: 1.25rem 1.25rem;
+  padding-inline-start: calc(var(--space-3) + 1.25rem + var(--space-2));
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

@@ -1,0 +1,123 @@
+@if (pizzeriaResource.isLoading() || pizzasResource.isLoading()) {
+  <div class="loading-center" aria-label="Loading pizzeria">
+    <rw-spinner />
+  </div>
+} @else if (pizzeriaResource.error()) {
+  <div class="container">
+    <rw-empty-state
+      icon="folder-off"
+      title="Pizzeria not found"
+      text="We could not find this pizzeria, or it is no longer available."
+    />
+  </div>
+} @else {
+  @let pizzeria = pizzeriaResource.value()!;
+  @let pizzas = pizzasResource.value() ?? [];
+  <!-- Pizzeria hero -->
+  <section class="pizzeria-hero">
+    <div class="pizzeria-hero__image-wrap">
+      <img
+        [ngSrc]="pizzeria.image | catalogImageUrl: 'pizzeria'"
+        alt=""
+        class="pizzeria-hero__image"
+        width="1200"
+        height="600"
+        priority
+        disableOptimizedSrcset
+      />
+    </div>
+    <div class="pizzeria-hero__overlay">
+      <div class="container">
+        <h1 class="pizzeria-hero__name">{{ pizzeria.name }}</h1>
+        <p class="pizzeria-hero__location">{{ pizzeria.city }}, {{ pizzeria.country }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pizza catalog -->
+  <section class="section">
+    <div class="container">
+      <div class="menu-toolbar">
+        <label for="pizza-name-search" class="sr-only">Search pizzas by name</label>
+        <input
+          id="pizza-name-search"
+          type="search"
+          class="pizza-menu-search__input"
+          [(ngModel)]="pizzaNameSearch"
+          placeholder="Search by pizza name"
+          autocomplete="off"
+        />
+      </div>
+
+      @if (pizzas.length === 0) {
+        @if (hasActivePizzaSearch()) {
+          <rw-empty-state icon="folder-off" text="No pizzas match your search." />
+        } @else {
+          <rw-empty-state icon="folder-off" text="No pizzas on the menu yet." />
+        }
+      } @else {
+        <ul class="pizza-grid" role="list">
+          @for (pizza of pizzas; track pizza.id) {
+            <li>
+              <div
+                class="pizza-card"
+                role="button"
+                tabindex="0"
+                [attr.aria-label]="'Customize ' + pizza.name"
+                (click)="onPizzaCardClick($event, pizza)"
+                (keydown)="onPizzaCardKeydown($event, pizza)"
+              >
+                <div class="pizza-card__image-wrap">
+                  <img
+                    [ngSrc]="pizza.image | catalogImageUrl: 'pizza'"
+                    alt=""
+                    class="pizza-card__image"
+                    width="400"
+                    height="300"
+                    disableOptimizedSrcset
+                  />
+                </div>
+                <div class="pizza-card__body">
+                  <span class="pizza-card__name">{{ pizza.name }}</span>
+                  <div class="pizza-card__footer">
+                    <span class="pizza-card__price">
+                      from <strong>€{{ pizza.basePrice | number: '1.2-2' }}</strong>
+                    </span>
+
+                    <span *rwRole="['CUSTOMER', 'GUEST']" class="pizza-card__add" aria-hidden="true">
+                      Add to cart
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </section>
+}
+
+@if (addedToCartBannerVisible()) {
+  <div
+    class="cart-added-banner"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  >
+    <div class="cart-added-banner__inner container">
+      <span class="cart-added-banner__message">Added to your cart.</span>
+      <div class="cart-added-banner__actions">
+        <a routerLink="/cart" class="cart-added-banner__link">View cart</a>
+        <button
+          type="button"
+          class="cart-added-banner__dismiss"
+          aria-label="Dismiss notification"
+          (click)="dismissAddedToCartBanner()"
+        >
+          <span aria-hidden="true">✕</span>
+        </button>
+      </div>
+    </div>
+  </div>
+}

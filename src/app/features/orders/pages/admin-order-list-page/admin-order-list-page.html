@@ -1,0 +1,52 @@
+@if (cancelFeedback(); as fb) {
+  <rw-callout [variant]="fb.variant" [message]="fb.message" />
+}
+
+@if (ordersResource.isLoading()) {
+  <div class="loading-center" aria-label="Loading orders"><rw-spinner /></div>
+} @else if (ordersResource.error()) {
+  <rw-callout variant="error" message="Could not load orders. Please try again." />
+} @else {
+  @let page = ordersResource.value()!;
+  @if (page.items.length === 0) {
+    <rw-empty-state
+      icon="folder-off"
+      title="No orders yet"
+      text="Customer orders for this pizzeria will appear here."
+    />
+  } @else {
+    <section class="admin-table-section">
+      <div class="admin-table-scroll">
+        <table class="admin-table" aria-label="Orders">
+          <thead>
+            <tr>
+              <th scope="col">Placed</th>
+              <th scope="col">Items</th>
+              <th scope="col">Total</th>
+              <th scope="col">Status</th>
+              <th scope="col" class="admin-table__actions-head"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of page.items; track order.id) {
+              <tr
+                rw-admin-order-row
+                [order]="order"
+                (orderUpdated)="updateOrder($event)"
+                (feedback)="onRowFeedback($event)"
+              ></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="pagination-wrap">
+      <rw-pagination
+        [currentPage]="currentPage()"
+        [totalPages]="page.totalPages"
+        (pageChange)="changePage($event)"
+      />
+    </div>
+  }
+}

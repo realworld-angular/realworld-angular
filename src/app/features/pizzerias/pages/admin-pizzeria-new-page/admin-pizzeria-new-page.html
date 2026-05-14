@@ -1,0 +1,26 @@
+<div class="admin-page">
+  <div class="container admin-form-wrap">
+    <div class="admin-page__header">
+      <h1 class="admin-page__title">New Pizzeria</h1>
+    </div>
+
+    <form [formRoot]="pizzeriaForm" class="admin-form">
+      @if (isSubmitted() && pizzeriaForm().errors()) {
+        <rw-callout variant="error" [message]="pizzeriaForm().errors()[0].message ?? 'Failed'" />
+      }
+      <rw-photon-location-field [formField]="pizzeriaForm.location" />
+
+      <rw-image-picker
+        category="pizzeria"
+        label="Pizzeria image"
+        [formField]="pizzeriaForm.image"
+      />
+
+      <div class="form-actions">
+        <rw-button type="submit" [isLoading]="pizzeriaForm().submitting()">
+          Create pizzeria
+        </rw-button>
+      </div>
+    </form>
+  </div>
+</div>

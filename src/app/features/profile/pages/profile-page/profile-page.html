@@ -1,0 +1,22 @@
+<div class="profile-page">
+  <div class="container">
+    <div class="profile-page__inner">
+
+      <div class="profile-top">
+        <header class="profile-identity">
+          <rw-avatar [name]="user()!.name" />
+          <div class="profile-identity__text">
+            <h1 class="profile-identity__name">{{ user()!.name }}</h1>
+            <p class="profile-identity__email">{{ user()!.email }}</p>
+          </div>
+        </header>
+
+        <div class="profile-actions">
+          <rw-button variant="outlined" palette="danger" [isLoading]="isLoggingOut()" (click)="logout()">
+            Log out
+          </rw-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+@import '../input/input.css';
+
+.photon-location__wrap {
+  position: relative;
+}
+
+.photon-location__suggestions {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  top: calc(100% + 2px);
+  margin: 0;
+  padding: var(--space-1) 0;
+  list-style: none;
+  max-height: 16rem;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.12));
+}
+
+.photon-location__option {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+.photon-location__option:hover,
+.photon-location__option--active {
+  background-color: var(--color-surface-alt, rgba(0, 0, 0, 0.06));
+}
+
+.photon-location__hint {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  list-style: none;
+}

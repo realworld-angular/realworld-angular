@@ -1,0 +1,73 @@
+<rw-modal [title]="editingPizza() ? 'Edit Pizza' : 'New Pizza'">
+  <form [formRoot]="pizzaForm" class="admin-form">
+    @if (toppingError()) {
+      <rw-callout variant="error" [message]="toppingError()" />
+    }
+    @if (pizzaForm().errors()[0]; as err) {
+      <rw-callout variant="error" [message]="err.message!" />
+    }
+    <rw-input
+      label="Name"
+      type="text"
+      [formField]="pizzaForm.name"
+      [placeholder]="editingPizza() ? '' : 'The name is assigned automatically when you save; you cannot set it here.'"
+    />
+
+    <rw-input
+      label="Base price (€)"
+      type="number"
+      [formField]="pizzaForm.basePrice"
+    />
+
+    <rw-image-picker
+      category="pizza"
+      label="Pizza image"
+      [formField]="pizzaForm.image"
+    />
+
+    <fieldset class="admin-form__toppings">
+      <legend>Toppings *</legend>
+      @for (t of toppings(); track t.id) {
+        <label class="admin-form__topping-option">
+          <input
+            type="checkbox"
+            [checked]="selectedToppingIds().has(t.id)"
+            (change)="toggleFormTopping(t.id, $event)"
+          />
+          <span class="admin-form__topping-label">{{ t.label }}</span>
+          <span class="admin-form__topping-price" aria-label="Extra price">+€{{ t.price | number: '1.2-2' }}</span>
+        </label>
+      }
+    </fieldset>
+  </form>
+
+  <rw-modal-footer class="admin-modal-footer">
+    <div class="admin-modal-footer__pricing" aria-live="polite">
+      <p class="admin-modal-footer__total-line">
+        <span class="admin-modal-footer__total-label">Total price</span>
+        @if (modalPizzaEstimatedTotal() !== null) {
+          <strong class="admin-modal-footer__total-value">
+            €{{ modalPizzaEstimatedTotal()! | number: '1.2-2' }}
+          </strong>
+        } @else {
+          <strong
+            class="admin-modal-footer__total-value admin-modal-footer__total-value--placeholder"
+            aria-label="Unavailable until base price is valid"
+          >
+            —
+          </strong>
+        }
+      </p>
+    </div>
+    <div class="admin-modal-footer__actions">
+      <rw-button variant="ghost" palette="secondary" type="button" (click)="dismiss()">Cancel</rw-button>
+      <rw-button
+        type="submit"
+        [isLoading]="pizzaForm().submitting()"
+        (click)="save()"
+      >
+        {{ editingPizza() ? 'Save changes' : 'Create pizza' }}
+      </rw-button>
+    </div>
+  </rw-modal-footer>
+</rw-modal>

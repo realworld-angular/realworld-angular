@@ -1,0 +1,5 @@
+/* Main */
+.site-main {
+  min-height: calc(100vh - var(--nav-height) - 80px);
+  outline: none;
+}

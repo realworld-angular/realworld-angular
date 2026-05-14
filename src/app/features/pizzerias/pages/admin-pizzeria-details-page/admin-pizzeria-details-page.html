@@ -1,0 +1,68 @@
+<div class="admin-page">
+  <div class="container">
+    @if (pizzeriaResource.isLoading()) {
+      <div class="loading-center" aria-label="Loading pizzeria"><rw-spinner /></div>
+    } @else if (pizzeriaResource.error()) {
+      <rw-callout variant="error" message="Could not load pizzeria. Please try again." />
+    } @else if (!pizzeriaResource.value()) {
+      <rw-callout variant="error" message="No pizzeria found. Create one first." />
+    } @else {
+      @let pizzeria = pizzeriaResource.value()!;
+      <div class="admin-page__header">
+        <h1 class="admin-page__title">
+          {{ pizzeria.name }}
+        </h1>
+        <a
+          [routerLink]="['/pizzerias', pizzeria.id]"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="admin-page__public-link"
+        >
+          View pizzeria page
+          <img src="/icons/external-link.svg" alt="" width="20" height="20" aria-hidden="true" />
+        </a>
+      </div>
+
+      <nav class="admin-tabs" aria-label="Pizzeria admin">
+        <ul class="admin-tabs__list">
+          <li class="admin-tabs__item" *rwRole="'PIZZERIA_ADMIN'">
+            <a
+              class="admin-tabs__link"
+              routerLink="/pizzerias/admin/pizzeria/pizzas"
+              routerLinkActive="admin-tabs__link--active"
+              #pizzasTab="routerLinkActive"
+              [attr.aria-current]="pizzasTab.isActive ? 'page' : null"
+              >Pizzas</a
+            >
+          </li>
+          <li class="admin-tabs__item" *rwRole="'PIZZERIA_ADMIN'">
+            <a
+              class="admin-tabs__link"
+              routerLink="/pizzerias/admin/pizzeria/orders"
+              routerLinkActive="admin-tabs__link--active"
+              #ordersTab="routerLinkActive"
+              [attr.aria-current]="ordersTab.isActive ? 'page' : null"
+              >Orders</a
+            >
+          </li>
+          <li class="admin-tabs__item" *rwRole="'PIZZERIA_ADMIN'">
+            <a
+              class="admin-tabs__link"
+              routerLink="/pizzerias/admin/pizzeria/configuration"
+              routerLinkActive="admin-tabs__link--active"
+              #configTab="routerLinkActive"
+              [attr.aria-current]="configTab.isActive ? 'page' : null"
+              >Configuration</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <main
+        class="admin-pizzeria-panel"
+      >
+        <router-outlet />
+      </main>
+    }
+  </div>
+</div>

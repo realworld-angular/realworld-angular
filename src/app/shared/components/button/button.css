@@ -1,0 +1,137 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    opacity var(--transition-fast);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  line-height: 1;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* --- Plain (filled) --- */
+.btn--plain-primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-on-primary);
+  border-color: var(--color-primary);
+}
+
+.btn--plain-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+.btn--plain-danger {
+  background-color: var(--color-error);
+  color: var(--color-text-on-primary);
+  border-color: var(--color-error);
+}
+
+.btn--plain-danger:hover:not(:disabled) {
+  background-color: #c62828;
+  border-color: #c62828;
+}
+
+/* --- Outlined --- */
+.btn--outlined-primary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn--outlined-primary:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: var(--color-text-on-primary);
+}
+
+.btn--outlined-danger {
+  background-color: transparent;
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.btn--outlined-danger:hover:not(:disabled) {
+  background-color: var(--color-error);
+  color: var(--color-text-on-primary);
+}
+
+/* --- Ghost --- */
+.btn--ghost-secondary {
+  background-color: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.btn--ghost-secondary:hover:not(:disabled) {
+  background-color: var(--color-surface-alt);
+}
+
+/* Sizes */
+.btn--sm {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+}
+
+.btn--md {
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--text-base);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--loading {
+  color: transparent;
+}
+
+.btn-spinner {
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-block-start-color: transparent;
+  border-radius: 50%;
+  animation: btn-spin 0.6s linear infinite;
+  color: var(--color-text-on-primary);
+}
+
+.btn--plain-primary.btn--loading .btn-spinner,
+.btn--plain-danger.btn--loading .btn-spinner {
+  color: var(--color-text-on-primary);
+}
+
+.btn--outlined-primary.btn--loading .btn-spinner {
+  color: var(--color-primary);
+}
+
+.btn--ghost-secondary.btn--loading .btn-spinner {
+  color: var(--color-text-muted);
+}
+
+.btn--outlined-danger.btn--loading .btn-spinner {
+  color: var(--color-error);
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

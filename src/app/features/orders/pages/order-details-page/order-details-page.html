@@ -1,0 +1,109 @@
+@if (orderResource.isLoading()) {
+  <div class="loading-center" aria-label="Loading order"><rw-spinner /></div>
+} @else if (orderResource.error()) {
+  <div class="container">
+    <rw-empty-state
+      icon="folder-off"
+      title="Order not found"
+      text="We could not find an order with this id, or you may not have access to it."
+    />
+  </div>
+} @else {
+  @let order = orderResource.value()!;
+  <div class="orders-page">
+    <div class="container">
+      @if (cancelFeedback(); as fb) {
+        <rw-callout [variant]="fb.variant" [message]="fb.message" />
+      }
+      <div class="detail-header">
+        <div class="detail-header__right">
+          <rw-status-badge [status]="order.status" />
+          @if (order.status === 'PENDING') {
+            <rw-button palette="danger" size="sm" [isLoading]="isCancelling()" (click)="cancel()">
+              Cancel order
+            </rw-button>
+          }
+        </div>
+      </div>
+
+      <div class="detail-meta">
+        <h1 class="detail-meta__pizzeria">
+          <a
+            [routerLink]="['/pizzerias', order.pizzeria.id]"
+          >
+            {{ order.pizzeria.name }}
+          </a>
+        </h1>
+        <p class="detail-meta__date">Placed on {{ order.createdAt | date: 'dd MMM yyyy, HH:mm' }}</p>
+        <p class="detail-meta__address">
+          Deliver to: {{ order.deliveryAddress.street }}, {{ order.deliveryAddress.city }},
+          {{ order.deliveryAddress.country }}
+        </p>
+        @if (order.billingAddress; as address) {
+          <p class="detail-meta__address">
+            Bill to: {{ address.street }}, {{ address.city }}, {{ address.country }}
+          </p>
+        }
+        @if (order.notes) {
+          <p class="detail-meta__notes">Notes: {{ order.notes }}</p>
+        }
+      </div>
+
+      <!-- Order status / progress -->
+      @if (order.status === 'CANCELLED') {
+        <div class="status-track status-track--cancelled" role="status" aria-live="polite">
+          <div class="status-track__cancel-visual" aria-hidden="true"></div>
+          <div>
+            <h2 class="status-track__title">Order cancelled</h2>
+            <p class="status-track__lede">This order will not be prepared or delivered.</p>
+          </div>
+        </div>
+      } @else {
+        <section class="status-track">
+          <h2 class="status-track__title">Progress</h2>
+          <ol class="status-track__steps" aria-label="Progress steps">
+            @for (step of ['PENDING', 'PREPARING', 'READY', 'DELIVERED']; track step) {
+              @let stepDone = isStepDone()(step);
+              <li
+                class="status-step"
+                [class.status-step--done]="stepDone"
+                [class.status-step--active]="order.status === step && !stepDone"
+                [class.status-step--ahead]="!stepDone && order.status !== step"
+              >
+                <div class="status-step__node">
+                  <span class="status-step__dot" [attr.aria-hidden]="true">
+                    @if (stepDone) {
+                      <span class="status-step__check" aria-hidden="true">✓</span>
+                    }
+                  </span>
+                </div>
+                <p class="status-step__label">{{ step | titlecase }}</p>
+              </li>
+            }
+          </ol>
+        </section>
+      }
+
+      <!-- Pizzas -->
+      <section>
+        <h2 class="section-heading">Pizzas</h2>
+        <ul class="pizza-list" role="list">
+          @for (item of order.items; track item.id) {
+            <li class="pizza-row">
+              <span class="pizza-row__qty">{{ item.quantity }}×</span>
+              <span class="pizza-row__name">{{ item.pizza.name }}</span>
+              @if (item.selectedOptions.length > 0) {
+                <span class="pizza-row__opts">{{ item.selectedOptions.map(o => o.label).join(', ') }}</span>
+              }
+              <span class="pizza-row__price">€{{ (item.quantity * item.unitPrice) | number: '1.2-2' }}</span>
+            </li>
+          }
+        </ul>
+        <div class="pizza-total">
+          <span>Total</span>
+          <strong>€{{ order.total | number: '1.2-2' }}</strong>
+        </div>
+      </section>
+    </div>
+  </div>
+}

@@ -1,0 +1,124 @@
+<header class="site-header" role="banner">
+  <div class="container header-inner">
+    <a routerLink="/" class="logo" aria-label="Sliced – Home">
+      <rw-pizza-logo class="logo__icon" [size]="28" />
+      <span class="logo__text">Sliced</span>
+    </a>
+
+    <nav class="nav" aria-label="Main navigation">
+      @if (!auth.isAdmin()) {
+        <a routerLink="/" routerLinkActive="nav__link--active" [routerLinkActiveOptions]="{ exact: true }" class="nav__link">Pizzerias</a>
+      }
+
+      <a *rwRole="'CUSTOMER'" routerLink="/orders" routerLinkActive="nav__link--active" class="nav__link">My Orders</a>
+
+      <a *rwRole="'PIZZERIA_ADMIN'" routerLink="/pizzerias/admin/pizzeria" routerLinkActive="nav__link--active" class="nav__link">My Pizzeria</a>
+
+      <a *rwRole="'PIZZERIA_ADMIN'" routerLink="/orders" routerLinkActive="nav__link--active" class="nav__link">Orders</a>
+    </nav>
+
+    <!-- Actions -->
+    <div class="header-actions">
+      @if (!auth.isAdmin()) {
+        <a
+          routerLink="/cart"
+          class="cart-link"
+          [attr.aria-label]="
+            'Cart – ' + cart.itemCount() + ' ' + (cart.itemCount() === 1 ? 'pizza' : 'pizzas')
+          "
+        >
+          <span class="cart-link__icon" aria-hidden="true">
+            <img src="/icons/shopping-cart.svg" alt="" width="24" height="24" />
+          </span>
+          @if (cart.itemCount() > 0) {
+            <span class="cart-link__badge" aria-hidden="true">{{ cart.itemCount() }}</span>
+          }
+        </a>
+      }
+
+      <ng-container *rwRole="['CUSTOMER', 'PIZZERIA_ADMIN']; else guestActionsTpl">
+        <a routerLink="/profile" class="user-menu" aria-label="Profile for {{ auth.user()?.name }}">
+          <rw-avatar [name]="auth.user()!.name" size="sm" />
+        </a>
+      </ng-container>
+      <ng-template #guestActionsTpl>
+        <a routerLink="/auth/login" class="nav__link hide-on-mobile">Log in</a>
+        <a routerLink="/auth/register" class="btn-nav-primary hide-on-mobile">Join</a>
+      </ng-template>
+
+      <!-- Mobile hamburger -->
+      <button
+        type="button"
+        class="hamburger"
+        [attr.aria-expanded]="isMobileMenuOpen()"
+        aria-controls="mobile-menu"
+        aria-label="Toggle mobile menu"
+        (click)="toggleMobileMenu()"
+      >
+        <img src="/icons/menu.svg" alt="" aria-hidden="true" width="24" height="24" />
+      </button>
+    </div>
+  </div>
+
+  @if (isMobileMenuOpen()) {
+    <button
+      type="button"
+      class="mobile-menu-backdrop"
+      aria-label="Close menu"
+      (click)="closeMobileMenu()"
+    ></button>
+    <nav id="mobile-menu" class="mobile-menu" role="navigation" aria-label="Mobile navigation">
+      <div class="container mobile-menu__header">
+        <a routerLink="/" class="logo" aria-label="Sliced – Home" (click)="closeMobileMenu()">
+          <rw-pizza-logo class="logo__icon" [size]="28" />
+          <span class="logo__text">Sliced</span>
+        </a>
+        <button
+          type="button"
+          class="hamburger"
+          aria-label="Close mobile menu"
+          (click)="closeMobileMenu()"
+        >
+          <img src="/icons/close.svg" alt="" aria-hidden="true" width="24" height="24" />
+        </button>
+      </div>
+      <div class="container mobile-menu__body">
+        <div class="mobile-menu__links">
+          @if (!auth.isAdmin()) {
+            <a routerLink="/" class="mobile-menu__link" (click)="closeMobileMenu()">Pizzerias</a>
+          }
+
+          <a *rwRole="'CUSTOMER'" routerLink="/orders" class="mobile-menu__link" (click)="closeMobileMenu()">My Orders</a>
+
+          <a *rwRole="'PIZZERIA_ADMIN'" routerLink="/pizzerias/admin/pizzeria" class="mobile-menu__link" (click)="closeMobileMenu()">My Pizzeria</a>
+
+          <a *rwRole="'PIZZERIA_ADMIN'" routerLink="/orders" class="mobile-menu__link" (click)="closeMobileMenu()">Orders</a>
+
+          @if (!auth.isAdmin()) {
+            <a routerLink="/cart" class="mobile-menu__link" (click)="closeMobileMenu()">
+              Cart
+              @if (cart.itemCount() > 0) {
+                <span class="cart-link__badge" aria-hidden="true">{{ cart.itemCount() }}</span>
+              }
+            </a>
+          }
+
+          <ng-container *rwRole="['CUSTOMER', 'PIZZERIA_ADMIN']">
+            <a routerLink="/profile" class="mobile-menu__link" (click)="closeMobileMenu()">Profile</a>
+          </ng-container>
+        </div>
+
+        <ng-container *rwRole="'GUEST'">
+          <div class="mobile-menu__auth">
+            <p class="mobile-menu__auth-title">Welcome back</p>
+            <p class="mobile-menu__auth-subtitle">Log in to your account or create a new one.</p>
+            <div class="mobile-menu__auth-actions">
+              <a routerLink="/auth/login" class="mobile-menu__auth-btn mobile-menu__auth-btn--secondary" (click)="closeMobileMenu()">Log in</a>
+              <a routerLink="/auth/register" class="mobile-menu__auth-btn mobile-menu__auth-btn--primary" (click)="closeMobileMenu()">Join</a>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </nav>
+  }
+</header>

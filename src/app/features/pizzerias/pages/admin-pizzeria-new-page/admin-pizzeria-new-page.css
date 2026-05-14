@@ -1,0 +1,31 @@
+.admin-page {
+  padding: var(--space-10) 0;
+}
+
+.admin-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: var(--space-8);
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.admin-page__title {
+  font-size: var(--text-2xl);
+}
+
+.admin-form-wrap {
+  max-width: 680px;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}

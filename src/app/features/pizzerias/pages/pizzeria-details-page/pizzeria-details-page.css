@@ -1,0 +1,251 @@
+
+.pizzeria-hero {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+
+
+.pizzeria-hero__image-wrap {
+  position: absolute;
+  inset: 0;
+}
+
+.pizzeria-hero__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pizzeria-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding-block-end: var(--space-8);
+}
+
+.pizzeria-hero__name {
+  font-size: var(--text-3xl);
+  color: white;
+  margin-block-end: var(--space-2);
+}
+
+.pizzeria-hero__location {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.9);
+  margin-block-end: var(--space-3);
+}
+
+.section {
+  padding: var(--space-10) 0;
+}
+
+.menu-toolbar {
+  margin-block-end: var(--space-8);
+  max-width: 420px;
+}
+
+.pizza-menu-search__input {
+  width: 100%;
+  padding-block: var(--space-3);
+  padding-inline-end: var(--space-4);
+  font-size: var(--text-base);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+.pizza-menu-search__input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.pizza-menu-search__input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.pizza-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-6);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pizza-grid > li {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.pizza-card {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: box-shadow var(--transition-fast);
+}
+
+.pizza-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.pizza-card:focus-visible {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.pizza-card__image-wrap {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background-color: var(--color-surface-alt);
+}
+
+.pizza-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pizza-card__body {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+  min-height: 0;
+}
+
+.pizza-card__name {
+  display: block;
+  font-family: var(--font-family);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  flex: 1;
+  min-height: 0;
+}
+
+.pizza-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  margin-block-start: var(--space-3);
+}
+
+.pizza-card__price {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.pizza-card__price strong {
+  color: var(--color-text);
+  font-size: var(--text-base);
+}
+
+.pizza-card__add {
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  text-decoration: none;
+}
+
+.pizza-card:hover .pizza-card__add {
+  background-color: var(--color-primary-dark);
+}
+
+/* Success banner after add to cart */
+.cart-added-banner {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: var(--z-overlay);
+  padding: var(--space-4);
+  padding-block-end: max(var(--space-4), env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+}
+
+.cart-added-banner__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--color-success-bg);
+  border: 1px solid color-mix(in srgb, var(--color-success) 35%, transparent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+}
+
+.cart-added-banner__message {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.cart-added-banner__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.cart-added-banner__link {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-success);
+  text-decoration: none;
+}
+
+.cart-added-banner__link:hover {
+  text-decoration: underline;
+}
+
+.cart-added-banner__dismiss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.cart-added-banner__dismiss:hover {
+  background-color: color-mix(in srgb, var(--color-success) 12%, transparent);
+  color: var(--color-text);
+}
+
+.cart-added-banner__dismiss:focus-visible {
+  outline: 2px solid var(--color-success);
+  outline-offset: 2px;
+}

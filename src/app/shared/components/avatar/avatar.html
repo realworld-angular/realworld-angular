@@ -1,0 +1,10 @@
+<div
+  class="avatar"
+  [class]="'avatar avatar--' + size()"
+  [attr.aria-label]="('Avatar for ' + name())"
+  role="img"
+>
+  <span class="avatar__initials" aria-hidden="true">
+    {{ initials() }}
+  </span>
+</div>

@@ -1,0 +1,50 @@
+<div class="orders-page">
+  <div class="container">
+    <h1 class="orders-page__title">{{ heading() }}</h1>
+
+    @if (ordersResource.isLoading()) {
+      <div class="loading-center" aria-label="Loading orders"><rw-spinner /></div>
+    } @else if (ordersResource.error()) {
+      <rw-callout variant="error" message="Could not load orders. Please try again." />
+    } @else {
+      @let page = ordersResource.value()!;
+      @if (page.items.length === 0) {
+        <rw-empty-state
+          icon="folder-off"
+          title="No orders yet"
+          text="When you place an order, it will show up here."
+        >
+          <a routerLink="/">Browse pizzerias</a>
+        </rw-empty-state>
+      } @else {
+        <ul class="orders-list" role="list">
+          @for (order of page.items; track order.id) {
+            <li>
+              <a [routerLink]="['/orders', order.id]" class="order-row" aria-label="View order {{ order.id }}">
+                <div>
+                  <p class="order-row__pizzeria">{{ order.pizzeria.name }}</p>
+                  <p class="order-row__meta">
+                    {{ order.items.length }} pizza(s) &middot;
+                    {{ order.createdAt | date: 'dd MMM yyyy, HH:mm' }}
+                  </p>
+                </div>
+                <div class="order-row__right">
+                  <rw-status-badge [status]="order.status" />
+                  <p class="order-row__total">€{{ order.total | number: '1.2-2' }}</p>
+                </div>
+              </a>
+            </li>
+          }
+        </ul>
+
+        <div class="pagination-wrap">
+          <rw-pagination
+            [currentPage]="currentPage()"
+            [totalPages]="page.totalPages"
+            (pageChange)="changePage($event)"
+          />
+        </div>
+      }
+    }
+  </div>
+</div>

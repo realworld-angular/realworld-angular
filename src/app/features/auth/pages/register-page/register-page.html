@@ -1,0 +1,66 @@
+<div class="auth-page">
+  <div class="auth-card">
+    @if (registerAsPizzeriaOwner()) {
+      <h1 class="auth-card__title">Create your pizzeria</h1>
+      <p class="auth-card__subtitle">Sign up to list your pizzeria and manage your menu</p>
+    } @else {
+      <h1 class="auth-card__title">Create account</h1>
+      <p class="auth-card__subtitle">Start ordering delicious pizzas</p>
+    }
+
+    <form [formRoot]="registerForm" class="auth-form">
+      @if (registerForm().errors()[0]; as err) {
+        <rw-callout variant="error" [message]="err.message!" />
+      }
+      <rw-input
+        label="Email"
+        type="email"
+        autocomplete="email"
+        [formField]="registerForm.email"
+      />
+      <rw-input
+        label="Password"
+        [type]="showPassword.checked ? 'text' : 'password'"
+        autocomplete="new-password"
+        [formField]="registerForm.password"
+        hint="At least 8 characters"
+      >
+        <label rwInputSuffix class="password-toggle" [attr.aria-label]="showPassword.checked ? 'Hide password' : 'Show password'">
+          <input #showPassword type="checkbox" class="password-toggle__checkbox" />
+          <img
+            [src]="showPassword.checked ? '/icons/visibility-off.svg' : '/icons/visibility.svg'"
+            width="24"
+            height="24"
+            alt=""
+            aria-hidden="true"
+          />
+        </label>
+      </rw-input>
+      <rw-input
+        label="Confirm Password"
+        [type]="showConfirmPassword.checked ? 'text' : 'password'"
+        autocomplete="new-password"
+        [formField]="registerForm.confirmPassword"
+      >
+        <label rwInputSuffix class="password-toggle" [attr.aria-label]="showConfirmPassword.checked ? 'Hide confirm password' : 'Show confirm password'">
+          <input #showConfirmPassword type="checkbox" class="password-toggle__checkbox" />
+          <img
+            [src]="showConfirmPassword.checked ? '/icons/visibility-off.svg' : '/icons/visibility.svg'"
+            width="24"
+            height="24"
+            alt=""
+            aria-hidden="true"
+          />
+        </label>
+      </rw-input>
+      <rw-button type="submit" [isLoading]="registerForm().submitting()" class="btn--full">
+        {{ registerAsPizzeriaOwner() ? 'Create pizzeria account' : 'Create account' }}
+      </rw-button>
+    </form>
+
+    <p class="auth-card__footer">
+      Already have an account?
+      <a routerLink="/auth/login">Log in</a>
+    </p>
+  </div>
+</div>

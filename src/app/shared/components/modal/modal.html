@@ -1,0 +1,17 @@
+<div class="modal-panel" role="document">
+  <div class="modal-header">
+    <h2 class="modal-title">{{ title() }}</h2>
+    <button
+      type="button"
+      class="modal-close"
+      aria-label="Close dialog"
+      (click)="closeDialog()"
+    >
+      <img src="/icons/close.svg" alt="" class="modal-close-icon" />
+    </button>
+  </div>
+  <div class="modal-body">
+    <ng-content />
+  </div>
+  <ng-content select="rw-modal-footer" />
+</div>

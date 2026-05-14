@@ -1,0 +1,83 @@
+<rw-modal [title]="data.pizza.name">
+  <form [formRoot]="orderForm" class="order-modal">
+      <div class="order-modal__image-wrap">
+        <img
+          class="order-modal__image"
+          [ngSrc]="data.pizza.image | catalogImageUrl: 'pizza'"
+          alt=""
+          width="520"
+          height="390"
+          disableOptimizedSrcset
+        />
+      </div>
+
+    <div class="order-modal__body">
+        <p class="order-modal__toppings">Comes with: {{ defaultToppings }}</p>
+
+<rw-size-option-field
+          [options]="sizesResource.value()!"
+          [formField]="orderForm.selectedSize"
+        />
+
+        <fieldset class="option-group">
+          <legend class="option-group__label">
+            Extra Toppings
+          </legend>
+          <div class="option-list">
+            @for (topping of orderForm.extraToppings; track topping) {
+              <label class="option-item" [class.option-item--selected]="toppingInput.checked">
+                <input
+                  #toppingInput
+                  type="checkbox"
+                  class="sr-only"
+                  [formField]="topping"
+                />
+                <span class="option-item__label">{{ toppings()[$index].label }}</span>
+                <span class="option-item__price">+€{{ toppings()[$index].price | number: '1.2-2' }}</span>
+              </label>
+            }
+          </div>
+        </fieldset>
+
+      <div class="quantity-row">
+        <span class="quantity-row__label">Quantity</span>
+        <div class="quantity-control">
+          <button
+            type="button"
+            class="quantity-btn"
+            [disabled]="orderForm().value().quantity <= 1"
+            aria-label="Decrease quantity"
+            (click)="decrementQuantity()"
+          >
+            <img src="/icons/remove.svg" alt="" width="24" height="24" aria-hidden="true" />
+          </button>
+          <rw-input
+            class="quantity-input"
+            type="number"
+            [formField]="orderForm.quantity"
+            aria-live="polite"
+            aria-atomic="true"
+          />
+          <button
+            type="button"
+            class="quantity-btn"
+            aria-label="Increase quantity"
+            (click)="incrementQuantity()"
+          >
+            <img src="/icons/add.svg" alt="" width="24" height="24" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+
+      <div class="order-footer">
+        <div class="order-total">
+          <span>Total</span>
+          <strong>€{{ modalTotal() | number: '1.2-2' }}</strong>
+        </div>
+        <div class="order-modal__actions">
+          <rw-button type="submit" [isLoading]="orderForm().submitting()">Add to cart</rw-button>
+        </div>
+      </div>
+    </div>
+  </form>
+</rw-modal>
