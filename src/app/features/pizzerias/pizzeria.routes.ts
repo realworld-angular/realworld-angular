@@ -13,7 +13,7 @@ export const pizzeriasRoutes: Routes = [
     path: 'admin/pizzeria/new',
     canMatch: [roleGuard(ROLES.PIZZERIA_ADMIN), noPizzeriaGuard],
     loadComponent: () =>
-      import('./pages/admin-pizzeria-new-page/admin-pizzeria-new-page').then((m) => m.AdminPizzeriaNewPage),
+      import('./pages/admin-pizzeria-form-page/admin-pizzeria-form-page').then((m) => m.AdminPizzeriaFormPage),
   },
   {
     path: 'admin/pizzeria',

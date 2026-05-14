@@ -15,13 +15,13 @@ interface PizzeriaForm {
 }
 
 @Component({
-  selector: 'rw-admin-pizzeria-new-page',
+  selector: 'rw-admin-pizzeria-form-page',
   imports: [Button, FormField, ImagePicker, Callout, PhotonLocationField, FormRoot],
-  templateUrl: './admin-pizzeria-new-page.html',
-  styleUrl: './admin-pizzeria-new-page.css',
+  templateUrl: './admin-pizzeria-form-page.html',
+  styleUrl: './admin-pizzeria-form-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminPizzeriaNewPage {
+export class AdminPizzeriaFormPage {
   private readonly api = inject(PizzeriaApi);
   private readonly router = inject(Router);
 
