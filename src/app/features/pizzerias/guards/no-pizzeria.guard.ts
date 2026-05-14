@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CanMatchFn, Router } from '@angular/router';
 import { map, catchError, of } from 'rxjs';
-import { PizzeriaDetail } from '../../../features/pizzerias/models/pizzeria.models';
+import { PizzeriaDetail } from '../models/pizzeria.models';
 
 
 
