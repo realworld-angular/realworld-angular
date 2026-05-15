@@ -40,23 +40,9 @@ describe('App', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should have isMobileMenuOpen signal defaulting to false', () => {
+  it('should render the header', () => {
     const fixture = TestBed.createComponent(App);
-    expect(fixture.componentInstance.isMobileMenuOpen()).toBe(false);
-  });
-
-  it('should toggle isMobileMenuOpen', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.componentInstance.toggleMobileMenu();
-    expect(fixture.componentInstance.isMobileMenuOpen()).toBe(true);
-    fixture.componentInstance.toggleMobileMenu();
-    expect(fixture.componentInstance.isMobileMenuOpen()).toBe(false);
-  });
-
-  it('should close mobile menu', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.componentInstance.toggleMobileMenu();
-    fixture.componentInstance.closeMobileMenu();
-    expect(fixture.componentInstance.isMobileMenuOpen()).toBe(false);
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('rw-header')).toBeTruthy();
   });
 });

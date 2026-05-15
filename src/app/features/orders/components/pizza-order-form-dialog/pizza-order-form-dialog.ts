@@ -11,7 +11,7 @@ import { httpResource } from '@angular/common/http';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { form, FormField, FormRoot, min, required } from '@angular/forms/signals';
 import { CartStore } from '../../../cart/cart.store';
-import { PizzaOption, SelectedPizzaOption } from '../../../pizzerias/models/pizza.models';
+import { PizzaOption } from '../../../pizzerias/models/pizza.models';
 import { PizzaOrderFormDialogData } from '../../order.models';
 import { Button } from '../../../../shared/components/button/button';
 import { Modal } from '../../../../shared/components/modal/modal';
@@ -20,7 +20,7 @@ import { CatalogImageUrlPipe } from '../../../../shared/pipes/catalog-image-url.
 import { SizeOptionField } from '../pizza-size-option-field/pizza-size-option-field';
 
 interface PizzaOrderFormModel {
-  selectedSize: SelectedPizzaOption | null;
+  selectedSize: PizzaOption | null;
   extraToppings: boolean[];
   quantity: number;
 }
@@ -67,10 +67,13 @@ export class PizzaOrderFormDialog {
 
         const { selectedSize, extraToppings, quantity } = form().value();
         this.cart.addItem(
-          this.data.pizza,
+          this.data.pizza.id,
           Number(quantity),
-          selectedSize,
-          extraToppings.map((selected, index) => selected ? this.toppings()![index] : null).filter((t): t is PizzaOption => t !== null),
+          selectedSize?.id ?? null,
+          extraToppings
+            .map((selected, index) => selected ? this.toppings()![index].id : null)
+            .filter((t): t is string => t !== null),
+          this.data.pizzeriaId,
         );
         this.dialogRef.close('added');
         return null;

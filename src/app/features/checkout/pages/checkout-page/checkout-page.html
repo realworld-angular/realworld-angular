@@ -11,6 +11,7 @@
         <a routerLink="/">Browse pizzerias</a>
       </rw-empty-state>
     } @else {
+      @let data = cart.reconstructed()!;
       <div class="checkout-layout">
         <section>
           <h2 class="section-heading">Delivery details</h2>
@@ -83,9 +84,9 @@
 
         <aside class="checkout-summary">
           <h2 class="section-heading">Order summary</h2>
-          <p class="summary-from">{{ cart.pizzeria()?.name }}</p>
+          <p class="summary-from">{{ data.pizzeria.name }}</p>
           <ul class="pizza-summary-list">
-            @for (item of cart.items(); track item.id) {
+            @for (item of data.items; track item.id) {
               <li class="pizza-summary-line">
                 <span>{{ item.quantity }}× {{ item.pizza.name }}</span>
                 <span>€{{ item.totalPrice | number: '1.2-2' }}</span>
@@ -94,7 +95,7 @@
           </ul>
           <div class="summary-total">
             <span>Total</span>
-            <strong>€{{ cart.totalPrice() | number: '1.2-2' }}</strong>
+            <strong>€{{ data.total | number: '1.2-2' }}</strong>
           </div>
         </aside>
       </div>

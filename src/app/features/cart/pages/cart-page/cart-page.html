@@ -6,17 +6,18 @@
         title="Your cart is empty"
         text="Pick a pizzeria and add pizzas to get started."
       />
+    } @else if (cart.isReconstructing() && !cart.reconstructed()) {
+      <div class="loading-center" aria-label="Loading cart"><rw-spinner /></div>
     } @else {
+      @let data = cart.reconstructed()!;
       <div class="cart-layout">
         <section class="cart-pizzas">
           <div class="cart-pizzas__header">
             <p class="cart-pizzas__from">
               Ordering from
               <strong>
-                <a
-                  [routerLink]="['/pizzerias', cart.pizzeria()!.id]"
-                >
-                  {{ cart.pizzeria()?.name }}
+                <a [routerLink]="['/pizzerias', data.pizzeria.id]">
+                  {{ data.pizzeria.name }}
                 </a>
               </strong>
             </p>
@@ -26,7 +27,7 @@
           </div>
 
           <ul class="pizza-list" role="list">
-            @for (item of cart.items(); track item.id) {
+            @for (item of data.items; track item.id) {
               <li class="pizza-row">
                 <div class="pizza-row__image-wrap">
                   <img
@@ -106,7 +107,7 @@
             </div>
           }
           <ul class="summary-lines">
-            @for (item of cart.items(); track item.id) {
+            @for (item of data.items; track item.id) {
               <li class="summary-row">
                 <span class="summary-row__label">
                   {{ item.pizza.name }}
@@ -120,7 +121,7 @@
           </ul>
           <div class="summary-total">
             <span>Total</span>
-            <strong>€{{ cart.totalPrice() | number: '1.2-2' }}</strong>
+            <strong>€{{ data.total | number: '1.2-2' }}</strong>
           </div>
           @if (auth.isAuthenticated()) {
             <rw-button

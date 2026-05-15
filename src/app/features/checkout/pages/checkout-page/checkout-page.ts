@@ -110,10 +110,10 @@ export class CheckoutPage {
           ...(billing ? { billingAddress: billing } : {}),
           notes: formValue.notes?.trim() || undefined,
           items: this.cart.items().map((item) => ({
-            pizzaId: item.pizza.id,
+            pizzaId: item.pizzaId,
             quantity: item.quantity,
-            selectedSizeId: item.size?.id ?? undefined,
-            selectedOptionIds: item.extraToppings.map((t) => t.id),
+            selectedSizeId: item.selectedSizeId ?? undefined,
+            selectedOptionIds: item.selectedOptionIds,
           })),
         };
 

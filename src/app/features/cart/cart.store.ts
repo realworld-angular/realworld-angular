@@ -1,34 +1,101 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { Pizza, SelectedPizzaOption } from '../pizzerias/models/pizza.models';
+import { Injectable, signal, computed, effect, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 export interface CartPizzeria {
   id: string;
-  name: string;
 }
 
 export interface CartItem {
   id: string;
-  pizza: Pizza;
+  pizzaId: string;
   quantity: number;
-  size: SelectedPizzaOption | null;
-  extraToppings: SelectedPizzaOption[];
+  selectedSizeId: string | null;
+  selectedOptionIds: string[];
+}
+
+export interface ReconstructedPizza {
+  id: string;
+  name: string;
+  image: string;
+  basePrice: number;
+}
+
+export interface ReconstructedOption {
+  id: string;
+  label: string;
+  price: number;
+}
+
+export interface ReconstructedCartItem {
+  id: string;
+  pizza: ReconstructedPizza;
+  quantity: number;
+  size: ReconstructedOption | null;
+  extraToppings: ReconstructedOption[];
   totalPrice: number;
+}
+
+export interface CartReconstructResponse {
+  pizzeria: { id: string; name: string; image: string };
+  items: ReconstructedCartItem[];
+  total: number;
 }
 
 @Injectable({ providedIn: 'root' })
 export class CartStore {
+  private readonly http = inject(HttpClient);
+
   public readonly pizzeria = signal<CartPizzeria | null>(null);
   public readonly items = signal<CartItem[]>([]);
+  public readonly reconstructed = signal<CartReconstructResponse | null>(null);
+  public readonly isReconstructing = signal(false);
 
   public readonly totalPrice = computed<number>(() =>
-    this.items().reduce((sum, item) => sum + item.totalPrice, 0),
+    this.reconstructed()?.total ?? 0,
   );
 
   public readonly itemCount = computed<number>(() =>
-    this.items().reduce((sum, item) => sum + item.quantity, 0),
+    this.reconstructed()?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0,
   );
 
   public readonly isEmpty = computed<boolean>(() => this.items().length === 0);
+
+  public constructor() {
+    effect((onCleanup) => {
+      const currentItems = this.items();
+      const currentPizzeria = this.pizzeria();
+
+      if (currentItems.length === 0 || !currentPizzeria) {
+        this.reconstructed.set(null);
+        this.isReconstructing.set(false);
+        return;
+      }
+
+      this.isReconstructing.set(true);
+      const sub = this.http
+        .post<CartReconstructResponse>('/api/orders/cart', {
+          pizzeriaId: currentPizzeria.id,
+          items: currentItems.map((item) => ({
+            pizzaId: item.pizzaId,
+            quantity: item.quantity,
+            selectedSizeId: item.selectedSizeId ?? undefined,
+            selectedOptionIds: item.selectedOptionIds,
+          })),
+        })
+        .subscribe({
+          next: (result) => {
+            this.reconstructed.set(result);
+            this.isReconstructing.set(false);
+          },
+          error: () => {
+            this.reconstructed.set(null);
+            this.isReconstructing.set(false);
+          },
+        });
+
+      onCleanup(() => sub.unsubscribe());
+    });
+  }
 
   public hasItemsForOtherPizzeria(pizzeriaId: string): boolean {
     const current = this.pizzeria();
@@ -36,33 +103,27 @@ export class CartStore {
   }
 
   public addItem(
-    pizza: Pizza,
+    pizzaId: string,
     quantity: number,
-    size: SelectedPizzaOption | null,
-    extraToppings: SelectedPizzaOption[],
+    selectedSizeId: string | null,
+    selectedOptionIds: string[],
+    pizzeriaId: string,
   ): void {
-    if (this.hasItemsForOtherPizzeria(pizza.id)) {
+    if (this.hasItemsForOtherPizzeria(pizzeriaId)) {
       this.clear();
     }
 
-    this.pizzeria.set({ id: pizza.id, name: pizza.name });
+    this.pizzeria.set({ id: pizzeriaId });
 
-    const itemId = this.generateItemId(pizza.id, size, extraToppings);
-    const basePrice = pizza.basePrice;
-    const sizePrice = size?.price ?? 0;
-    const toppingsPrice = extraToppings.reduce((sum, option) => sum + option.price, 0);
-    const optionTotalPrice = sizePrice + toppingsPrice;
+    const itemId = this.generateItemId(pizzaId, selectedSizeId, selectedOptionIds);
 
     this.items.update((items) => {
       const existing = items.find((item) => item.id === itemId);
       if (existing) {
-        const newQty = existing.quantity + quantity;
         return items.map((item) =>
           item.id === itemId
-            ? {
-              ...item,
-              quantity: newQty,
-              totalPrice: (basePrice + optionTotalPrice) * newQty } : item,
+            ? { ...item, quantity: item.quantity + quantity }
+            : item,
         );
       }
 
@@ -70,11 +131,10 @@ export class CartStore {
         ...items,
         {
           id: itemId,
-          pizza,
+          pizzaId,
           quantity,
-          size,
-          extraToppings,
-          totalPrice: (basePrice + optionTotalPrice) * quantity,
+          selectedSizeId,
+          selectedOptionIds,
         },
       ];
     });
@@ -84,22 +144,12 @@ export class CartStore {
     if (quantity === 0) {
       this.removeItem(itemId);
     } else {
-    this.items.update((items) =>
-      items.map((item) => {
-        if (item.id !== itemId) {
-          return item;
-        }
-        const sizePrice = item.size?.price ?? 0;
-        const toppingsPrice = item.extraToppings.reduce((sum, option) => sum + option.price, 0);
-        const optionTotalPrice = sizePrice + toppingsPrice;
-        return {
-          ...item,
-          quantity,
-          totalPrice: (item.pizza.basePrice + optionTotalPrice) * quantity
-        };
-      }),
-    );
-   }
+      this.items.update((items) =>
+        items.map((item) =>
+          item.id === itemId ? { ...item, quantity } : item,
+        ),
+      );
+    }
   }
 
   public removeItem(itemId: string): void {
@@ -114,9 +164,13 @@ export class CartStore {
     this.pizzeria.set(null);
   }
 
-  private generateItemId(pizzaId: string, size: SelectedPizzaOption | null, extraToppings: SelectedPizzaOption[]): string {
-    const sizeId = size?.id ?? '';
-    const toppingIds = extraToppings.map((t) => t.id).sort().join(',');
+  private generateItemId(
+    pizzaId: string,
+    selectedSizeId: string | null,
+    selectedOptionIds: string[],
+  ): string {
+    const sizeId = selectedSizeId ?? '';
+    const toppingIds = [...selectedOptionIds].sort().join(',');
     return `${pizzaId}:${sizeId}:${toppingIds}`;
   }
 }

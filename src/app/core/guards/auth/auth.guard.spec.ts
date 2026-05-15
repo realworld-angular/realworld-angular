@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { Route, UrlSegment, UrlTree } from '@angular/router';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -28,13 +28,13 @@ describe('authGuard', () => {
 
   it('should allow activation when authenticated', () => {
     setup(true);
-    const result = TestBed.runInInjectionContext(() => authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot));
+    const result = TestBed.runInInjectionContext(() => authGuard({} as Route, [] as UrlSegment[]));
     expect(result).toBe(true);
   });
 
   it('should redirect to /auth/login when not authenticated', () => {
     setup(false);
-    const result = TestBed.runInInjectionContext(() => authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot));
+    const result = TestBed.runInInjectionContext(() => authGuard({} as Route, [] as UrlSegment[]));
     expect(result).toBeInstanceOf(UrlTree);
     expect((result as UrlTree).toString()).toBe('/auth/login');
   });
@@ -61,13 +61,13 @@ describe('guestGuard', () => {
 
   it('should allow activation when NOT authenticated (guest)', () => {
     setup(false);
-    const result = TestBed.runInInjectionContext(() => guestGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot));
+    const result = TestBed.runInInjectionContext(() => guestGuard({} as Route, [] as UrlSegment[]));
     expect(result).toBe(true);
   });
 
   it('should redirect to / when already authenticated', () => {
     setup(true);
-    const result = TestBed.runInInjectionContext(() => guestGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot));
+    const result = TestBed.runInInjectionContext(() => guestGuard({} as Route, [] as UrlSegment[]));
     expect(result).toBeInstanceOf(UrlTree);
     expect((result as UrlTree).toString()).toBe('/');
   });
