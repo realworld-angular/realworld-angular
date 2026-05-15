@@ -170,7 +170,6 @@ This project is licensed under the [MIT License](LICENSE).
 
 ### TODO
 
-- password input no refresh properly
 - use native html element select for photon location field
 - add more basic toppings
 - check Number() usage on angular side
