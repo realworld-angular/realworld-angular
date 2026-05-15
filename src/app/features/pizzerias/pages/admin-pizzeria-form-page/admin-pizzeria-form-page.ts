@@ -25,8 +25,6 @@ export class AdminPizzeriaFormPage {
   private readonly api = inject(PizzeriaApi);
   private readonly router = inject(Router);
 
-  protected readonly isSubmitted = signal(false);
-
   protected readonly model = signal<PizzeriaForm>({
     location: null,
     image: null,
@@ -38,7 +36,6 @@ export class AdminPizzeriaFormPage {
   }, {
     submission: {
       action: async (form) => {
-        this.isSubmitted.set(true);
         const value = form().value();
         try {
           await firstValueFrom(this.api.createPizzeria({
@@ -49,7 +46,7 @@ export class AdminPizzeriaFormPage {
         } catch {
           return { kind: 'serverError', message: 'Failed to create pizzeria' };
         }
-        this.router.navigate(['/pizzerias/admin/pizzeria', 'pizzas']);
+        this.router.navigate(['/pizzerias/admin/pizzeria/pizzas']);
         return null;
       },
     },

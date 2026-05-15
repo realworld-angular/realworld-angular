@@ -2,13 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map, catchError, of } from 'rxjs';
 
-/** True when `url` targets Photon (Komoot) — used to skip global credentials on those requests. */
+/** used to skip global credentials on those requests. */
 export function isPhotonApiUrl(url: string): boolean {
   return url.includes('photon.komoot.io');
 }
 
 export interface PhotonLocationSuggestion {
-  /** Single-line label for the input after selection */
   label: string;
   city: string;
   country: string;

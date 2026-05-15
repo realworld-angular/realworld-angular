@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { inject } from '@angular/core';
 import { Auth } from './core/services/auth';
 import { authGuard, guestGuard } from './core/guards/auth/auth.guard';
+import { cartNotEmptyGuard } from './features/checkout/guards/cart-not-empty.guard';
 
 export const routes: Routes = [
   {
@@ -31,7 +32,7 @@ export const routes: Routes = [
     path: 'checkout',
     loadChildren: () =>
       import('./features/checkout/checkout.routes').then((m) => m.checkoutRoutes),
-    canMatch: [authGuard],
+    canMatch: [authGuard, cartNotEmptyGuard],
   },
   {
     path: 'orders',

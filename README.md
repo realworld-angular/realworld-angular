@@ -171,7 +171,6 @@ This project is licensed under the [MIT License](LICENSE).
 ### TODO
 
 - password input no refresh properly
-- merge auth page templates?
 - use native html element select for photon location field
 - redirect from checkout if the cart is empty
 - add more basic toppings

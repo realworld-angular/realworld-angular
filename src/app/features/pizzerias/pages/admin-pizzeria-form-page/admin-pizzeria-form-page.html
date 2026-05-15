@@ -5,8 +5,8 @@
     </div>
 
     <form [formRoot]="pizzeriaForm" class="admin-form">
-      @if (isSubmitted() && pizzeriaForm().errors()) {
-        <rw-callout variant="error" [message]="pizzeriaForm().errors()[0].message ?? 'Failed'" />
+      @if (pizzeriaForm().errors()[0]; as err) {
+        <rw-callout variant="error" [message]="err.message!" />
       }
       <rw-photon-location-field [formField]="pizzeriaForm.location" />
 

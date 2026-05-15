@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal, effect, DestroyRef 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField, form, required, FormRoot } from '@angular/forms/signals';
 import { httpResource } from '@angular/common/http';
-import { filter, firstValueFrom, switchMap } from 'rxjs';
+import { filter, firstValueFrom, switchMap, finalize } from 'rxjs';
 import { Router } from '@angular/router';
 import { PizzeriaApi } from '../../services/pizzeria-api';
 import { Callout } from '../../../../shared/components/callout/callout';
@@ -98,10 +98,9 @@ export class AdminPizzeriaConfigurationPage {
         this.isDeleting.set(true);
         return this.pizzeriaApi.deleteMyPizzeria().pipe(takeUntilDestroyed(this.destroyRef));
       }),
+      finalize(() => this.isDeleting.set(false)),
     ).subscribe({
-      next: () => {
-        this.isDeleting.set(false);
-        ref.close();
+        next: () => {
         void this.router.navigateByUrl('/pizzerias/admin/pizzeria/new');
       },
       error: () => {

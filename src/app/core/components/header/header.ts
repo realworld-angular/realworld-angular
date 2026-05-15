@@ -2,7 +2,6 @@ import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   HostListener,
   effect,
   inject,
@@ -26,7 +25,6 @@ export class Header {
   protected readonly auth = inject(Auth);
   protected readonly cart = inject(CartStore);
   private readonly document = inject(DOCUMENT);
-  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly isMobileMenuOpen = signal(false);
 
@@ -41,10 +39,6 @@ export class Header {
     effect(() => {
       const open = this.isMobileMenuOpen();
       this.document.body.style.overflow = open ? 'hidden' : '';
-    });
-
-    this.destroyRef.onDestroy(() => {
-      this.document.body.style.overflow = '';
     });
   }
 

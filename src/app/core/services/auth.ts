@@ -12,7 +12,6 @@ export class Auth {
   public readonly isCustomer = computed<boolean>(() => this.user()?.role === 'CUSTOMER');
   public readonly isAdmin = computed<boolean>(() => this.user()?.role === 'PIZZERIA_ADMIN');
 
-  /** Called once on app init to restore session */
   public init(): Observable<User | null> {
     return this.http.get<User>('/api/auth/me').pipe(
       tap((user) => {
