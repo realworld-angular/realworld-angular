@@ -40,6 +40,10 @@
 
 /* Password visibility toggle — sits inside rw-input suffix slot */
 .password-toggle {
+  position: absolute;
+  right: var(--space-1);
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   padding: var(--space-2);
