@@ -26,7 +26,7 @@
         hint="At least 8 characters"
       >
         <label rwInputSuffix class="password-toggle" [attr.aria-label]="showPassword.checked ? 'Hide password' : 'Show password'">
-          <input #showPassword type="checkbox" class="password-toggle__checkbox" />
+          <input #showPassword type="checkbox" class="password-toggle__checkbox" (change)="void 0" />
           <img
             [src]="showPassword.checked ? '/icons/visibility-off.svg' : '/icons/visibility.svg'"
             width="24"
@@ -43,7 +43,7 @@
         [formField]="registerForm.confirmPassword"
       >
         <label rwInputSuffix class="password-toggle" [attr.aria-label]="showConfirmPassword.checked ? 'Hide confirm password' : 'Show confirm password'">
-          <input #showConfirmPassword type="checkbox" class="password-toggle__checkbox" />
+          <input #showConfirmPassword type="checkbox" class="password-toggle__checkbox" (change)="void 0" />
           <img
             [src]="showConfirmPassword.checked ? '/icons/visibility-off.svg' : '/icons/visibility.svg'"
             width="24"

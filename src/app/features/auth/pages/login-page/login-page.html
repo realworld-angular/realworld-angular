@@ -20,7 +20,7 @@
         [formField]="loginForm.password"
       >
         <label rwInputSuffix class="password-toggle" [attr.aria-label]="showPassword.checked ? 'Hide password' : 'Show password'">
-          <input #showPassword type="checkbox" class="password-toggle__checkbox" />
+          <input #showPassword type="checkbox" class="password-toggle__checkbox" (change)="void 0" />
           <img
             [src]="showPassword.checked ? '/icons/visibility-off.svg' : '/icons/visibility.svg'"
             width="24"
