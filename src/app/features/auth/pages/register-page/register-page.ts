@@ -19,7 +19,6 @@ export class RegisterPage {
   private readonly router = inject(Router);
 
   public readonly registerAsPizzeriaOwner = input<boolean>(false);
-  public readonly postRegisterRedirect = input<string | undefined>('/pizzerias/admin/pizzeria/new');
 
   protected readonly model = signal({ email: '', password: '', confirmPassword: '' });
 
@@ -45,11 +44,7 @@ export class RegisterPage {
             ? this.auth.registerPizzeriaOwner(email, password)
             : this.auth.register(email, password);
           await firstValueFrom(register$);
-          if (this.registerAsPizzeriaOwner()) {
-            await this.router.navigateByUrl(this.postRegisterRedirect()!);
-          } else {
-            await this.router.navigate(['/']);
-          }
+          await this.router.navigate(this.registerAsPizzeriaOwner() ? ['/pizzerias/admin/pizzeria/new'] : ['/']);
         } catch {
           return { kind: 'serverError', message: 'Registration failed' };
         }

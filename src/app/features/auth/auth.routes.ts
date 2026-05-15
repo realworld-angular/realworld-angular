@@ -13,7 +13,6 @@ export const authRoutes: Routes = [
     path: 'register-pizzeria',
     data: {
       registerAsPizzeriaOwner: true,
-      postRegisterRedirect: '/pizzerias/admin/pizzeria/new',
     },
     loadComponent: () => import('./pages/register-page/register-page').then((m) => m.RegisterPage),
   },
