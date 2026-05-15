@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
-import { form, FormField, required, email, minLength, FormRoot } from '@angular/forms/signals';
+import { form, FormField, required, email, FormRoot } from '@angular/forms/signals';
 import { Auth } from '../../../../core/services/auth';
 import { Callout } from '../../../../shared/components/callout/callout';
 import { Input } from '../../../../shared/components/input/input';
