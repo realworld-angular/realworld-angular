@@ -172,15 +172,10 @@ This project is licensed under the [MIT License](LICENSE).
 
 - password input no refresh properly
 - use native html element select for photon location field
-- redirect from checkout if the cart is empty
 - add more basic toppings
-- on navigation, go on top of the page
 - check Number() usage on angular side
-- enforce public/protected/private
 - check requirement at closing modal being passed
-- do not use size-option and topping-option components anymore
 - think about refactoring the 'feedback' callout system
-- check dialog styles and compoentns and overlay
 
 ## components to check
 - order details
