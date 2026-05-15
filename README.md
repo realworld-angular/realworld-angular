@@ -174,7 +174,6 @@ This project is licensed under the [MIT License](LICENSE).
 - use native html element select for photon location field
 - add more basic toppings
 - check Number() usage on angular side
-- check requirement at closing modal being passed
 - think about refactoring the 'feedback' callout system
 
 ## components to check
