@@ -17,7 +17,7 @@
   <section class="pizzeria-hero">
     <div class="pizzeria-hero__image-wrap">
       <img
-        [ngSrc]="pizzeria.image | catalogImageUrl: 'pizzeria'"
+        [ngSrc]=" 'banner-' + pizzeria.image | catalogImageUrl: 'pizzeria'"
         alt=""
         class="pizzeria-hero__image"
         width="1200"
