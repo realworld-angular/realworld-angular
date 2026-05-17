@@ -44,7 +44,7 @@ export class RegisterPage {
             ? this.auth.registerPizzeriaOwner(email, password)
             : this.auth.register(email, password);
           await firstValueFrom(register$);
-          await this.router.navigate(this.registerAsPizzeriaOwner() ? ['/pizzerias/admin/pizzeria/new'] : ['/']);
+          await this.router.navigate(this.registerAsPizzeriaOwner() ? ['/pizzerias/admin/new'] : ['/']);
         } catch {
           return { kind: 'serverError', message: 'Registration failed' };
         }

@@ -9,7 +9,7 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     redirectTo: (): string => {
-      return inject(Auth).isAdmin() ? '/pizzerias/admin/pizzeria' : '/pizzerias';
+      return inject(Auth).isAdmin() ? '/pizzerias/admin' : '/pizzerias';
     },
   },
   {

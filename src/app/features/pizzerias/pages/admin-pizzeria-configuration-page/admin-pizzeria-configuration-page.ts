@@ -101,7 +101,7 @@ export class AdminPizzeriaConfigurationPage {
       finalize(() => this.isDeleting.set(false)),
     ).subscribe({
         next: () => {
-        void this.router.navigateByUrl('/pizzerias/admin/pizzeria/new');
+        void this.router.navigateByUrl('/pizzerias/admin/new');
       },
       error: () => {
         this.isDeleting.set(false);

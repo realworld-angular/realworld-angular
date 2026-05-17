@@ -28,7 +28,7 @@
           <li class="admin-tabs__item" *rwRole="'PIZZERIA_ADMIN'">
             <a
               class="admin-tabs__link"
-              routerLink="/pizzerias/admin/pizzeria/pizzas"
+              routerLink="/pizzerias/admin/pizzas"
               routerLinkActive="admin-tabs__link--active"
               #pizzasTab="routerLinkActive"
               [attr.aria-current]="pizzasTab.isActive ? 'page' : null"
@@ -38,7 +38,7 @@
           <li class="admin-tabs__item" *rwRole="'PIZZERIA_ADMIN'">
             <a
               class="admin-tabs__link"
-              routerLink="/pizzerias/admin/pizzeria/orders"
+              routerLink="/pizzerias/admin/orders"
               routerLinkActive="admin-tabs__link--active"
               #ordersTab="routerLinkActive"
               [attr.aria-current]="ordersTab.isActive ? 'page' : null"
@@ -48,7 +48,7 @@
           <li class="admin-tabs__item" *rwRole="'PIZZERIA_ADMIN'">
             <a
               class="admin-tabs__link"
-              routerLink="/pizzerias/admin/pizzeria/configuration"
+              routerLink="/pizzerias/admin/configuration"
               routerLinkActive="admin-tabs__link--active"
               #configTab="routerLinkActive"
               [attr.aria-current]="configTab.isActive ? 'page' : null"

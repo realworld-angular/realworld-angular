@@ -10,13 +10,13 @@ export const pizzeriasRoutes: Routes = [
       import('./pages/pizzeria-list-page/pizzeria-list-page').then((m) => m.PizzeriaListPage),
   },
   {
-    path: 'admin/pizzeria/new',
+    path: 'admin/new',
     canMatch: [roleGuard(ROLES.PIZZERIA_ADMIN), noPizzeriaGuard],
     loadComponent: () =>
       import('./pages/admin-pizzeria-form-page/admin-pizzeria-form-page').then((m) => m.AdminPizzeriaFormPage),
   },
   {
-    path: 'admin/pizzeria',
+    path: 'admin',
     canMatch: [roleGuard(ROLES.PIZZERIA_ADMIN)],
     loadComponent: () =>
       import('./pages/admin-pizzeria-details-page/admin-pizzeria-details-page').then((m) => m.AdminPizzeriaDetailsPage),

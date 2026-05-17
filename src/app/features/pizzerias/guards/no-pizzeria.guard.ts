@@ -13,7 +13,7 @@ export const noPizzeriaGuard: CanMatchFn = () => {
   return httpClient.get<PizzeriaDetail | null>('/api/pizzerias/admin/pizzeria').pipe(
     map((pizzeria) => {
       if (pizzeria) {
-        return router.createUrlTree(['/pizzerias/admin/pizzeria']);
+        return router.createUrlTree(['/pizzerias/admin']);
       }
       return true;
     }),

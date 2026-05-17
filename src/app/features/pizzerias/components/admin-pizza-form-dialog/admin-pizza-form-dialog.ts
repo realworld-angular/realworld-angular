@@ -60,7 +60,7 @@ export class AdminPizzaFormDialog {
   protected readonly selectedToppingIds = signal(new Set<string>());
 
   protected readonly model = signal({
-    basePrice: '',
+    basePrice: '10',
     name: '',
     image: null as string | null,
   });
