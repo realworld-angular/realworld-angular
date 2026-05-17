@@ -38,16 +38,6 @@
           <li class="admin-tabs__item" *rwRole="'PIZZERIA_ADMIN'">
             <a
               class="admin-tabs__link"
-              routerLink="/pizzerias/admin/orders"
-              routerLinkActive="admin-tabs__link--active"
-              #ordersTab="routerLinkActive"
-              [attr.aria-current]="ordersTab.isActive ? 'page' : null"
-              >Orders</a
-            >
-          </li>
-          <li class="admin-tabs__item" *rwRole="'PIZZERIA_ADMIN'">
-            <a
-              class="admin-tabs__link"
               routerLink="/pizzerias/admin/configuration"
               routerLinkActive="admin-tabs__link--active"
               #configTab="routerLinkActive"
