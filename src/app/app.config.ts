@@ -4,6 +4,7 @@ import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/
 import { routes } from './app.routes';
 import { credentialsInterceptor } from './core/interceptors/credentials.interceptor';
 import { Auth } from './core/services/auth';
+import { baseUrlInterceptor } from './core/interceptors/base-url.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -11,7 +12,10 @@ export const appConfig: ApplicationConfig = {
       scrollPositionRestoration: 'enabled',
       anchorScrolling: 'enabled'
     })),
-    provideHttpClient(withInterceptors([credentialsInterceptor]), withFetch()),
+    provideHttpClient(withInterceptors([
+      baseUrlInterceptor,
+      credentialsInterceptor
+    ]), withFetch()),
     provideAppInitializer(() =>  inject(Auth).init()),
   ],
 };
