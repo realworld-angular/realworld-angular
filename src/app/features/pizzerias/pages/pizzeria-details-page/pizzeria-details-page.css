@@ -94,18 +94,6 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  cursor: pointer;
-  transition: box-shadow var(--transition-fast);
-}
-
-.pizza-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
-
-.pizza-card:focus-visible {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
 }
 
 .pizza-card__image-wrap {
@@ -157,21 +145,8 @@
   font-size: var(--text-base);
 }
 
-.pizza-card__add {
-  padding: var(--space-2) var(--space-3);
-  background-color: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-  font-weight: var(--font-weight-semibold);
-  cursor: pointer;
-  transition: background-color var(--transition-fast);
-  text-decoration: none;
-}
-
-.pizza-card:hover .pizza-card__add {
-  background-color: var(--color-primary-dark);
+.pizza-card__footer rw-button {
+  flex-shrink: 0;
 }
 
 /* Success banner after add to cart */

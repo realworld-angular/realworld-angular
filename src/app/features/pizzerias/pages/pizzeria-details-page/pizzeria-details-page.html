@@ -59,14 +59,7 @@
         <ul class="pizza-grid" role="list">
           @for (pizza of pizzas; track pizza.id) {
             <li>
-              <div
-                class="pizza-card"
-                role="button"
-                tabindex="0"
-                [attr.aria-label]="'Customize ' + pizza.name"
-                (click)="onPizzaCardClick($event, pizza)"
-                (keydown)="onPizzaCardKeydown($event, pizza)"
-              >
+              <div class="pizza-card">
                 <div class="pizza-card__image-wrap">
                   <img
                     [ngSrc]="pizza.image | catalogImageUrl: 'pizza'"
@@ -84,9 +77,14 @@
                       from <strong>€{{ pizza.basePrice | number: '1.2-2' }}</strong>
                     </span>
 
-                    <span *rwRole="['CUSTOMER', 'GUEST']" class="pizza-card__add" aria-hidden="true">
+                    <rw-button
+                      *rwRole="['CUSTOMER', 'GUEST']"
+                      type="button"
+                      size="sm"
+                      (click)="openOrderModal(pizza)"
+                    >
                       Add to cart
-                    </span>
+                    </rw-button>
                   </div>
                 </div>
               </div>

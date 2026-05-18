@@ -23,7 +23,8 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
 import { Dialog } from '@angular/cdk/dialog';
-import { CatalogImageUrlPipe } from "../../../../shared/pipes/catalog-image-url.pipe";
+import { CatalogImageUrlPipe } from '../../../../shared/pipes/catalog-image-url.pipe';
+import { Button } from '../../../../shared/components/button/button';
 
 @Component({
   selector: 'rw-pizzeria-detail-page',
@@ -35,8 +36,9 @@ import { CatalogImageUrlPipe } from "../../../../shared/pipes/catalog-image-url.
     RoleDirective,
     EmptyState,
     FormsModule,
-    CatalogImageUrlPipe
-],
+    CatalogImageUrlPipe,
+    Button,
+  ],
   templateUrl: './pizzeria-details-page.html',
   styleUrl: './pizzeria-details-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -106,23 +108,6 @@ export class PizzeriaDetailsPage {
         this.showAddedToCartBanner();
       }
     });
-  }
-
-  protected onPizzaCardClick(event: MouseEvent, pizza: Pizza): void {
-    if ((event.target as HTMLElement | null)?.closest('a[href]')) {
-      return;
-    }
-    this.openOrderModal(pizza);
-  }
-
-  protected onPizzaCardKeydown(event: KeyboardEvent, pizza: Pizza): void {
-    if (event.target !== event.currentTarget) {
-      return;
-    }
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      this.openOrderModal(pizza);
-    }
   }
 
   protected dismissAddedToCartBanner(): void {
