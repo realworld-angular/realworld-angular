@@ -9,6 +9,7 @@ import {
   computed,
 } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import { httpResource } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, required, disabled, FormRoot, submit } from '@angular/forms/signals';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
@@ -24,7 +25,6 @@ import { firstValueFrom } from 'rxjs';
 
 export interface AdminPizzaFormDialogData {
   editingPizza?: Pizza | null;
-  toppings?: PizzaOption[];
 }
 
 @Component({
@@ -51,7 +51,8 @@ export class AdminPizzaFormDialog {
   public readonly data = inject<AdminPizzaFormDialogData>(DIALOG_DATA, { optional: true });
 
   public readonly editingPizza = input<Pizza | null>(this.data?.editingPizza ?? null);
-  public readonly toppings = input<PizzaOption[]>(this.data?.toppings ?? []);
+
+  protected readonly toppingsResource = httpResource<PizzaOption[]>(() => '/api/options/toppings');
 
   public readonly pizzaSaved = output<{ pizza: Pizza; mode: 'create' | 'edit' }>();
 
@@ -110,7 +111,7 @@ export class AdminPizzaFormDialog {
   });
 
   protected readonly modalSelectedToppingsExtraTotal = computed((): number => {
-    const opts = this.toppings();
+    const opts = this.toppingsResource.value() ?? [];
     const ids = this.selectedToppingIds();
     return opts.reduce((sum, o) => (ids.has(o.id) ? sum + o.price : sum), 0);
   });

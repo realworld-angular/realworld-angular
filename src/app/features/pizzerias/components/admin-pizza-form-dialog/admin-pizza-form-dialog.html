@@ -27,7 +27,7 @@
 
     <fieldset class="admin-form__toppings">
       <legend>Toppings *</legend>
-      @for (t of toppings(); track t.id) {
+      @for (t of toppingsResource.value() ?? []; track t.id) {
         <label class="admin-form__topping-option">
           <input
             type="checkbox"

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { httpResource } from '@angular/common/http';
 import { PizzaApi } from '../../services/pizza-api';
 import { Callout } from '../../../../shared/components/callout/callout';
-import { Pizza, PizzaOption } from '../../models/pizza.models';
+import { Pizza } from '../../models/pizza.models';
 import { Button } from '../../../../shared/components/button/button';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
@@ -31,8 +31,6 @@ export class AdminPizzaListPage {
     () => '/api/admin/pizzeria/pizzas',
   );
 
-  protected readonly toppingsResource = httpResource<PizzaOption[]>(() => '/api/options/toppings');
-
   protected readonly deleteError = signal('');
 
   protected openCreate(): void {
@@ -45,7 +43,7 @@ export class AdminPizzaListPage {
 
   private openPizzaFormDialog(editingPizza: Pizza | null): void {
     const ref = this.dialog.open<void, AdminPizzaFormDialogData, AdminPizzaFormDialog>(AdminPizzaFormDialog, {
-      data: { editingPizza, toppings: this.toppingsResource.value() ?? [] },
+      data: { editingPizza },
     });
 
     // TODO refactor to listen to close directly
