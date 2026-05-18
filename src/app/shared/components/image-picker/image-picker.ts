@@ -37,12 +37,11 @@ export class ImagePicker implements FormValueControl<string | null> {
   readonly required = input(false);
 
   readonly pickerImageKind = computed<CatalogImageKind>(() =>
-    this.category().toUpperCase() === 'PIZZERIA' ? 'pizzeria' : 'pizza',
+    this.category() === 'pizzeria' ? 'pizzeria' : 'pizza',
   );
 
-  /** Filenames from the API (sorted on the server). */
   readonly filenamesResource = httpResource<string[]>(() =>
-    this.category().toUpperCase() === 'PIZZERIA'
+    this.category() === 'pizzeria'
       ? '/api/pizzerias/images'
       : '/api/pizzas/images',
   );
