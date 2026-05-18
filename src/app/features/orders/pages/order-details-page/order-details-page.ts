@@ -60,14 +60,16 @@ export class OrderDetailPage {
     });
   }
 
-  private readonly statusOrder = ['PENDING', 'PREPARING', 'READY', 'DELIVERED'];
+  protected readonly statusOrder: readonly string[] = [
+    'PENDING',
+    'PREPARING',
+    'READY',
+    'DELIVERED',
+  ];
 
   protected readonly isStepDone = computed(() => {
-    const order = this.orderResource.value();
+    const order = this.orderResource.value()!;
     return (step: string): boolean => {
-      if (!order) {
-        return false;
-      }
       if (step === 'DELIVERED' && order.status === 'DELIVERED') {
         return true;
       }

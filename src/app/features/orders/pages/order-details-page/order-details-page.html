@@ -62,7 +62,7 @@
         <section class="status-track">
           <h2 class="status-track__title">Progress</h2>
           <ol class="status-track__steps" aria-label="Progress steps">
-            @for (step of ['PENDING', 'PREPARING', 'READY', 'DELIVERED']; track step) {
+            @for (step of statusOrder; track step) {
               @let stepDone = isStepDone()(step);
               <li
                 class="status-step"
