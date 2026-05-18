@@ -20,7 +20,8 @@ import { EmptyState } from '../../../../shared/components/empty-state/empty-stat
 import { PizzaOrderFormDialog } from '../../../orders/components/pizza-order-form-dialog/pizza-order-form-dialog';
 import { PizzaOrderFormDialogData } from '../../../orders/order.models';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { merge, of, Subject, timer } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { Dialog } from '@angular/cdk/dialog';
 import { CatalogImageUrlPipe } from '../../../../shared/pipes/catalog-image-url.pipe';
@@ -51,7 +52,8 @@ export class PizzeriaDetailsPage {
 
   public readonly id = input.required<string>();
 
-  private bannerHideTimer: ReturnType<typeof setTimeout> | undefined;
+  private readonly showBanner$ = new Subject<void>();
+  private readonly dismissBanner$ = new Subject<void>();
 
   protected readonly pizzeriaResource = httpResource<PizzeriaDetail>(
     () => `/api/pizzerias/${this.id()}`,
@@ -77,18 +79,20 @@ export class PizzeriaDetailsPage {
 
   protected readonly hasActivePizzaSearch = computed<boolean>(() => this.debouncedSearch().length > 0);
 
-  protected readonly addedToCartBannerVisible = signal(false);
+  protected readonly addedToCartBannerVisible = toSignal(
+    merge(
+      this.showBanner$.pipe(
+        switchMap(() => merge(of(true), timer(5000).pipe(map(() => false)))),
+      ),
+      this.dismissBanner$.pipe(map(() => false)),
+    ),
+    { initialValue: false },
+  );
 
   public constructor() {
     effect(() => {
       if(this.pizzeriaResource.value()) {
         this.title.setTitle(`${this.pizzeriaResource.value()!.name} - Pizzeria`);
-      }
-    });
-
-    this.destroyRef.onDestroy(() => {
-      if (this.bannerHideTimer !== undefined) {
-        clearTimeout(this.bannerHideTimer);
       }
     });
   }
@@ -112,21 +116,10 @@ export class PizzeriaDetailsPage {
   }
 
   protected dismissAddedToCartBanner(): void {
-    if (this.bannerHideTimer !== undefined) {
-      clearTimeout(this.bannerHideTimer);
-      this.bannerHideTimer = undefined;
-    }
-    this.addedToCartBannerVisible.set(false);
+    this.dismissBanner$.next();
   }
 
   protected showAddedToCartBanner(): void {
-    if (this.bannerHideTimer !== undefined) {
-      clearTimeout(this.bannerHideTimer);
-    }
-    this.addedToCartBannerVisible.set(true);
-    this.bannerHideTimer = setTimeout(() => {
-      this.bannerHideTimer = undefined;
-      this.addedToCartBannerVisible.set(false);
-    }, 5000);
+    this.showBanner$.next();
   }
 }
