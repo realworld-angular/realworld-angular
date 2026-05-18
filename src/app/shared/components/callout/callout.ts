@@ -5,6 +5,15 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
   templateUrl: './callout.html',
   styleUrl: './callout.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'callout',
+    '[class.callout--error]': "variant() === 'error'",
+    '[class.callout--success]': "variant() === 'success'",
+    '[class.callout--neutral]': "variant() === 'neutral'",
+    '[class.callout--has-heading]': '!!heading()',
+    '[attr.role]': 'roleAttr()',
+    '[attr.aria-live]': 'ariaLiveAttr()',
+  },
 })
 export class Callout {
   public readonly message = input('');

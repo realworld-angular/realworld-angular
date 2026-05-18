@@ -1,24 +1,13 @@
-<div
-  class="callout"
-  [class.callout--error]="variant() === 'error'"
-  [class.callout--success]="variant() === 'success'"
-  [class.callout--neutral]="variant() === 'neutral'"
-  [class.callout--has-heading]="!!heading()"
-  data-testid="callout"
-  [attr.role]="roleAttr()"
-  [attr.aria-live]="ariaLiveAttr()"
->
-  @if (variant() === 'success') {
-    <img class="callout__icon callout__icon--success" src="/icons/success.svg" alt="" aria-hidden="true" />
+@if (variant() === 'success') {
+  <img class="callout__icon callout__icon--success" src="/icons/success.svg" alt="" aria-hidden="true" />
+}
+@if (variant() === 'error') {
+  <img class="callout__icon callout__icon--error" src="/icons/error.svg" alt="" aria-hidden="true" />
+}
+<div class="callout__content">
+  @if (heading()) {
+    <span class="callout__heading">{{ heading() }}</span>
   }
-  @if (variant() === 'error') {
-    <img class="callout__icon callout__icon--error" src="/icons/error.svg" alt="" aria-hidden="true" />
-  }
-  <div class="callout__content">
-    @if (heading()) {
-      <span class="callout__heading">{{ heading() }}</span>
-    }
-    <span class="callout__message">{{ message() }}</span>
-  </div>
-  <span class="callout__action"><ng-content /></span>
+  <span class="callout__message">{{ message() }}</span>
 </div>
+<span class="callout__action"><ng-content /></span>
