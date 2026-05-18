@@ -1,8 +1,5 @@
-<rw-modal [title]="editingPizza() ? 'Edit Pizza' : 'New Pizza'">
+<rw-modal [title]="isEditMode ? 'Edit Pizza' : 'New Pizza'">
   <form [formRoot]="pizzaForm" class="admin-form">
-    @if (toppingError()) {
-      <rw-callout variant="error" [message]="toppingError()" />
-    }
     @if (pizzaForm().errors()[0]; as err) {
       <rw-callout variant="error" [message]="err.message!" />
     }
@@ -10,7 +7,7 @@
       label="Name"
       type="text"
       [formField]="pizzaForm.name"
-      [placeholder]="editingPizza() ? '' : 'The name is assigned automatically when you save; you cannot set it here.'"
+      [placeholder]="isEditMode ? '' : 'The name is assigned automatically when you save; you cannot set it here.'"
     />
 
     <rw-input
@@ -26,16 +23,17 @@
     />
 
     <fieldset class="admin-form__toppings">
-      <legend>Toppings *</legend>
-      @for (t of toppingsResource.value() ?? []; track t.id) {
-        <label class="admin-form__topping-option">
+      <legend>Toppings</legend>
+      @for (topping of pizzaForm.extraToppings; track topping) {
+        <label class="admin-form__topping-option" [class.admin-form__topping-option--selected]="toppingInput.checked">
           <input
+            #toppingInput
             type="checkbox"
-            [checked]="selectedToppingIds().has(t.id)"
-            (change)="toggleFormTopping(t.id, $event)"
+            class="sr-only"
+            [formField]="topping"
           />
-          <span class="admin-form__topping-label">{{ t.label }}</span>
-          <span class="admin-form__topping-price" aria-label="Extra price">+€{{ t.price | number: '1.2-2' }}</span>
+          <span class="admin-form__topping-label">{{ toppingsResource.value()![$index].label }}</span>
+          <span class="admin-form__topping-price" aria-label="Extra price">+€{{ toppingsResource.value()![$index].price | number: '1.2-2' }}</span>
         </label>
       }
     </fieldset>
@@ -45,18 +43,9 @@
     <div class="admin-modal-footer__pricing">
       <p class="admin-modal-footer__total-line">
         <span class="admin-modal-footer__total-label">Total price</span>
-        @if (modalPizzaEstimatedTotal() !== null) {
           <strong class="admin-modal-footer__total-value">
-            €{{ modalPizzaEstimatedTotal()! | number: '1.2-2' }}
+            €{{ pizzaTotalPrice() | number: '1.2-2' }}
           </strong>
-        } @else {
-          <strong
-            class="admin-modal-footer__total-value admin-modal-footer__total-value--placeholder"
-            aria-label="Unavailable until base price is valid"
-          >
-            —
-          </strong>
-        }
       </p>
     </div>
     <div class="admin-modal-footer__actions">
@@ -66,7 +55,7 @@
         [isLoading]="pizzaForm().submitting()"
         (click)="save()"
       >
-        {{ editingPizza() ? 'Save changes' : 'Create pizza' }}
+        {{ isEditMode ? 'Save changes' : 'Create pizza' }}
       </rw-button>
     </div>
   </rw-modal-footer>

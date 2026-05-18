@@ -7,7 +7,7 @@ import { Button } from '../../../../shared/components/button/button';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 import { Dialog } from '@angular/cdk/dialog';
-import { AdminPizzaFormDialog, AdminPizzaFormDialogData } from '../../components/admin-pizza-form-dialog/admin-pizza-form-dialog';
+import { AdminPizzaFormDialog } from '../../components/admin-pizza-form-dialog/admin-pizza-form-dialog';
 import { AdminPizzaRow } from '../../components/admin-pizza-row/admin-pizza-row';
 
 @Component({
@@ -41,14 +41,13 @@ export class AdminPizzaListPage {
     this.openPizzaFormDialog(pizza);
   }
 
-  private openPizzaFormDialog(editingPizza: Pizza | null): void {
-    const ref = this.dialog.open<void, AdminPizzaFormDialogData, AdminPizzaFormDialog>(AdminPizzaFormDialog, {
-      data: { editingPizza },
+  private openPizzaFormDialog(pizza: Pizza | null): void {
+    const ref = this.dialog.open<{ pizza: Pizza; mode: 'create' | 'edit' }, Pizza | null, AdminPizzaFormDialog>(AdminPizzaFormDialog, {
+      data: pizza,
     });
 
-    // TODO refactor to listen to close directly
-    ref.componentRef?.instance.pizzaSaved.subscribe((event: { pizza: Pizza; mode: 'create' | 'edit' }) => {
-      ref.close();
+    ref.closed.subscribe((event) => {
+      if (!event) return;
       const { pizza, mode } = event;
       if (mode === 'edit') {
         this.pizzasResource.set((this.pizzasResource.value() ?? []).map((existingPizza) => (existingPizza.id === pizza.id ? pizza : existingPizza)));

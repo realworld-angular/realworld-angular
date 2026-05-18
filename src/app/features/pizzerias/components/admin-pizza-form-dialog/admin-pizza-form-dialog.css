@@ -22,6 +22,18 @@
   align-items: center;
   gap: var(--space-2);
   margin-block-start: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+  user-select: none;
+}
+
+.admin-form__topping-option--selected {
+  background-color: #e8e8e8;
+  font-weight: var(--font-weight-semibold);
 }
 
 .admin-form__topping-label {

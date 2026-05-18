@@ -18,6 +18,7 @@ import { Modal } from '../../../../shared/components/modal/modal';
 import { Input } from '../../../../shared/components/input/input';
 import { CatalogImageUrlPipe } from '../../../../shared/pipes/catalog-image-url.pipe';
 import { SizeOptionField } from '../pizza-size-option-field/pizza-size-option-field';
+import { Spinner } from '../../../../shared/components/spinner/spinner';
 
 interface PizzaOrderFormModel {
   selectedSize: PizzaOption | null;
@@ -27,7 +28,7 @@ interface PizzaOrderFormModel {
 
 @Component({
   selector: 'rw-pizza-order-form-dialog',
-  imports: [Modal, DecimalPipe, NgOptimizedImage, Button, CatalogImageUrlPipe, FormField, FormRoot, Input, SizeOptionField],
+  imports: [Modal, DecimalPipe, NgOptimizedImage, Button, CatalogImageUrlPipe, FormField, FormRoot, Input, SizeOptionField, Spinner],
   templateUrl: './pizza-order-form-dialog.html',
   styleUrl: './pizza-order-form-dialog.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,8 +44,6 @@ export class PizzaOrderFormDialog {
   protected readonly toppingsResource = httpResource<PizzaOption[]>(() => '/api/options/toppings', {
     defaultValue: [],
   });
-
-  protected readonly toppings = computed(() => this.toppingsResource.value());
 
   public readonly defaultToppings = this.data.pizza.toppings.map((topping) => topping.label).join(', ');
 
@@ -71,7 +70,7 @@ export class PizzaOrderFormDialog {
           Number(quantity),
           selectedSize?.id ?? null,
           extraToppings
-            .map((selected, index) => selected ? this.toppings()![index].id : null)
+            .map((selected, index) => selected ? this.toppingsResource.value()![index].id : null)
             .filter((t): t is string => t !== null),
           this.data.pizzeriaId,
         );
@@ -85,14 +84,14 @@ export class PizzaOrderFormDialog {
     const { selectedSize, extraToppings, quantity } = this.orderForm().value();
     const pizza = this.data.pizza;
     const sizePrice = selectedSize?.price ?? 0;
-    const toppingsPrice = extraToppings.reduce((sum, topping, index) => sum + (topping ? this.toppings()![index].price : 0), 0);
+    const toppingsPrice = extraToppings.reduce((sum, topping, index) => sum + (topping ? this.toppingsResource.value()![index].price : 0), 0);
     return (pizza.basePrice + sizePrice + toppingsPrice) * Number(quantity);
   });
 
   public constructor() {
     effect(() => {
-      const toppings = this.toppings();
-      if (toppings.length > 0) {
+      const toppings = this.toppingsResource.value();
+      if (toppings) {
         this.model.update(m => ({
           ...m,
           extraToppings: toppings.map(() => false),

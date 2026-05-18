@@ -1,17 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
-  inject,
-  input,
-  output,
-  signal,
   computed,
+  effect,
+  inject,
+  signal,
 } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { httpResource } from '@angular/common/http';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, required, disabled, FormRoot, submit } from '@angular/forms/signals';
+import { form, FormField, required, disabled, FormRoot, submit, min } from '@angular/forms/signals';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { PizzaApi } from '../../services/pizza-api';
 import { Callout } from '../../../../shared/components/callout/callout';
@@ -23,8 +20,11 @@ import { Modal } from '../../../../shared/components/modal/modal';
 import { ModalFooter } from '../../../../shared/components/modal/modal-footer';
 import { firstValueFrom } from 'rxjs';
 
-export interface AdminPizzaFormDialogData {
-  editingPizza?: Pizza | null;
+interface AdminPizzaFormModel {
+  basePrice: number;
+  name: string;
+  image: string | null;
+  extraToppings: boolean[];
 }
 
 @Component({
@@ -39,57 +39,53 @@ export interface AdminPizzaFormDialogData {
     Modal,
     ModalFooter,
     Callout,
-],
+  ],
   templateUrl: './admin-pizza-form-dialog.html',
   styleUrl: './admin-pizza-form-dialog.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminPizzaFormDialog {
   private readonly api = inject(PizzaApi);
-  private readonly destroyRef = inject(DestroyRef);
   private readonly dialogRef = inject(DialogRef);
-  public readonly data = inject<AdminPizzaFormDialogData>(DIALOG_DATA, { optional: true });
+  public readonly data = inject<Pizza | null>(DIALOG_DATA, { optional: true });
 
-  public readonly editingPizza = input<Pizza | null>(this.data?.editingPizza ?? null);
+  protected readonly isEditMode = this.data !== null;
 
-  protected readonly toppingsResource = httpResource<PizzaOption[]>(() => '/api/options/toppings');
+  protected readonly toppingsResource = httpResource<PizzaOption[]>(() => '/api/options/toppings', {
+    defaultValue: [],
+  });
 
-  public readonly pizzaSaved = output<{ pizza: Pizza; mode: 'create' | 'edit' }>();
-
-  protected readonly toppingError = signal('');
-  protected readonly selectedToppingIds = signal(new Set<string>());
-
-  protected readonly model = signal({
-    basePrice: '10',
-    name: '',
-    image: null as string | null,
+  protected readonly model = signal<AdminPizzaFormModel>({
+    basePrice: this.data?.basePrice ?? 10,
+    name: this.data?.name ?? '',
+    image: this.data?.image ?? null,
+    extraToppings: [],
   });
 
   protected readonly pizzaForm = form(this.model, (schema) => {
     disabled(schema.name, () => true);
     required(schema.basePrice, { message: 'Price is required' });
     required(schema.image, { message: 'Select an image' });
+    min(schema.basePrice, 0, { message: 'Price must be ≥ 0' });
   }, {
     submission: {
       action: async (formRef) => {
-        if (Number(formRef().value().basePrice) < 0) {
-          return { kind: 'serverError', message: 'Price must be ≥ 0' };
-        }
-        const { basePrice } = formRef().value();
+        const { basePrice, image, extraToppings } = formRef().value();
+        const toppingIds = extraToppings
+          .map((selected, index) => selected ? this.toppingsResource.value()![index].id : null)
+          .filter((t): t is string => t !== null);
         const payload = {
-          basePrice: Number(basePrice),
-          imageFilename: this.model().image!,
-          toppingIds: Array.from(this.selectedToppingIds()),
+          basePrice,
+          imageFilename: image!,
+          toppingIds,
         };
-        const editing = this.editingPizza();
-        const req = editing
-          ? this.api.updateMyPizza(editing.id, payload)
+        const req = this.isEditMode
+          ? this.api.updateMyPizza(this.data!.id, payload)
           : this.api.createMyPizza(payload);
 
         try {
-          const pizza = await firstValueFrom(req.pipe(takeUntilDestroyed(this.destroyRef)));
-          const mode = editing ? 'edit' : 'create';
-          this.pizzaSaved.emit({ pizza, mode });
+          const pizza = await firstValueFrom(req);
+          this.dialogRef.close({ pizza, mode: this.isEditMode ? 'edit' : 'create' });
         } catch {
           return { kind: 'serverError', message: 'Save failed' };
         }
@@ -98,69 +94,29 @@ export class AdminPizzaFormDialog {
     },
   });
 
-  protected readonly modalBasePriceNumber = computed((): number | null => {
-    const raw = this.model().basePrice.trim();
-    if (raw === '') {
-      return null;
-    }
-    const num = Number(raw);
-    if (!Number.isFinite(num) || num < 0) {
-      return null;
-    }
-    return num;
+  protected readonly selectedToppingsPrice = computed((): number => {
+    const opts = this.toppingsResource.value();
+    const extra = this.model().extraToppings;
+    return opts.reduce((sum, o, i) => (extra[i] ? sum + o.price : sum), 0);
   });
 
-  protected readonly modalSelectedToppingsExtraTotal = computed((): number => {
-    const opts = this.toppingsResource.value() ?? [];
-    const ids = this.selectedToppingIds();
-    return opts.reduce((sum, o) => (ids.has(o.id) ? sum + o.price : sum), 0);
-  });
-
-  protected readonly modalPizzaEstimatedTotal = computed((): number | null => {
-    const base = this.modalBasePriceNumber();
-    if (base === null) {
-      return null;
-    }
-    return base + this.modalSelectedToppingsExtraTotal();
+  protected readonly pizzaTotalPrice = computed((): number | null => {
+    return (this.model().basePrice ?? 0) + this.selectedToppingsPrice();
   });
 
   public constructor() {
-    this.hydrateFromInputs();
-  }
-
-  private hydrateFromInputs(): void {
-    this.toppingError.set('');
-    const editing = this.editingPizza();
-    if (editing) {
-      this.selectedToppingIds.set(new Set((editing.toppings ?? []).map((topping) => topping.id)));
-      this.model.set({
-        basePrice: String(editing.basePrice),
-        name: editing.name,
-        image: editing.image,
-      });
-    } else {
-      this.selectedToppingIds.set(new Set());
-      this.model.set({ basePrice: '', name: '', image: null });
-    }
-  }
-
-  protected toggleFormTopping(id: string, ev: Event): void {
-    const checked = (ev.target as HTMLInputElement).checked;
-    const next = new Set(this.selectedToppingIds());
-    if (checked) {
-      next.add(id);
-    } else {
-      next.delete(id);
-    }
-    this.selectedToppingIds.set(next);
+    effect(() => {
+      const toppings = this.toppingsResource.value();
+      if (toppings) {
+        this.model.update(m => ({
+          ...m,
+          extraToppings: toppings.map(t => this.data?.toppings?.some(pt => pt.id === t.id) ?? false),
+        }));
+      }
+    });
   }
 
   protected save(): void {
-    this.toppingError.set('');
-    if (this.selectedToppingIds().size === 0) {
-      this.toppingError.set('Select at least one topping');
-      return;
-    }
     void submit(this.pizzaForm);
   }
 
