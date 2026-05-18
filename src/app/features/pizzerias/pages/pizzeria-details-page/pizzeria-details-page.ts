@@ -6,10 +6,12 @@ import {
   signal,
   computed,
   input,
+  effect,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { httpResource } from '@angular/common/http';
+import { Title } from '@angular/platform-browser';
 import { PizzeriaDetail } from '../../models/pizzeria.models';
 import { Pizza } from '../../models/pizza.models';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
@@ -42,6 +44,7 @@ import { CatalogImageUrlPipe } from "../../../../shared/pipes/catalog-image-url.
 export class PizzeriaDetailsPage {
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialog = inject(Dialog);
+  private readonly title = inject(Title);
 
   public readonly id = input.required<string>();
 
@@ -74,6 +77,12 @@ export class PizzeriaDetailsPage {
   protected readonly addedToCartBannerVisible = signal(false);
 
   public constructor() {
+    effect(() => {
+      if(this.pizzeriaResource.value()) {
+        this.title.setTitle(`${this.pizzeriaResource.value()!.name} - Pizzeria`);
+      }
+    });
+
     this.destroyRef.onDestroy(() => {
       if (this.bannerHideTimer !== undefined) {
         clearTimeout(this.bannerHideTimer);

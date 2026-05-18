@@ -5,6 +5,7 @@ import { ROLES } from '../auth/role.model';
 export const ordersRoutes: Routes = [
   {
     path: 'admin',
+    title: 'Orders - Admin',
     canMatch: [roleGuard(ROLES.PIZZERIA_ADMIN)],
     loadComponent: () =>
       import('./pages/admin-order-list-page/admin-order-list-page').then((m) => m.AdminOrderListPage),

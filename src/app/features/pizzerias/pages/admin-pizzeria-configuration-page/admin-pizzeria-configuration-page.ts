@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal, effect, DestroyRef 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField, form, required, FormRoot } from '@angular/forms/signals';
 import { httpResource } from '@angular/common/http';
+import { Title } from '@angular/platform-browser';
 import { filter, firstValueFrom, switchMap, finalize } from 'rxjs';
 import { Router } from '@angular/router';
 import { PizzeriaApi } from '../../services/pizzeria-api';
@@ -27,6 +28,7 @@ export class AdminPizzeriaConfigurationPage {
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly dialog = inject(Dialog);
+  private readonly title = inject(Title);
 
   protected readonly pizzeriaResource = httpResource<PizzeriaDetail | null>(
     () => '/api/pizzerias/admin/pizzeria',
@@ -67,6 +69,12 @@ export class AdminPizzeriaConfigurationPage {
   });
 
   public constructor() {
+    effect(() => {
+      if(this.pizzeriaResource.value()) {
+        this.title.setTitle(`Configure your pizzeria - ${this.pizzeriaResource.value()!.name}`);
+      }
+    });
+
     effect(() => {
       const pizzeria = this.pizzeriaResource.value();
       if (!pizzeria) {

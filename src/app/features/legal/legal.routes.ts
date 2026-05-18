@@ -4,6 +4,7 @@ import { TermsAndConditionsPage } from './pages/terms-and-conditions-page/terms-
 export const legalRoutes: Routes = [
   {
     path: '',
+    title: 'Terms & Conditions',
     component: TermsAndConditionsPage,
   },
 ];

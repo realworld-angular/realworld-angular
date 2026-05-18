@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgOptimizedImage, DecimalPipe } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 import { CartStore } from '../../cart.store';
 import { Auth } from '../../../../core/services/auth';
 import { Button } from '../../../../shared/components/button/button';
@@ -24,6 +25,14 @@ import { CatalogImageUrlPipe } from '../../../../shared/pipes/catalog-image-url.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartPage {
+  private readonly title = inject(Title);
   protected readonly cart = inject(CartStore);
   protected readonly auth = inject(Auth);
+
+  public constructor() {
+    effect(() => {
+      const name = this.cart.reconstructed()?.pizzeria.name;
+      this.title.setTitle(name ? `Cart - ${name}` : 'Cart');
+    });
+  }
 }

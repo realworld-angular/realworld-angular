@@ -9,6 +9,7 @@ import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { map, Observable } from 'rxjs';
 import { DecimalPipe } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 import { form, FormField, required, maxLength, FormRoot } from '@angular/forms/signals';
 import { CartStore } from '../../../cart/cart.store';
 import { OrderApi } from '../../../orders/order-api';
@@ -55,6 +56,7 @@ interface CheckoutForm {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckoutPage {
+  private readonly title = inject(Title);
   protected readonly cart = inject(CartStore);
   private readonly api = inject(OrderApi);
   private readonly router = inject(Router);
@@ -131,6 +133,11 @@ export class CheckoutPage {
   });
 
   public constructor() {
+    effect(() => {
+      const name = this.cart.reconstructed()?.pizzeria.name;
+      this.title.setTitle(name ? `Checkout - ${name}` : 'Checkout');
+    });
+
     effect(() => {
       const useSameAsBilling = this.checkoutForm.useSameAsBilling().value();
       if (useSameAsBilling) {
