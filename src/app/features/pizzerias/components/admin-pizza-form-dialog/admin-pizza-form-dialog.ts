@@ -80,8 +80,8 @@ export class AdminPizzaFormDialog {
           toppingIds,
         };
         const req = this.isEditMode
-          ? this.api.updateMyPizza(this.data!.id, payload)
-          : this.api.createMyPizza(payload);
+          ? this.api.updatePizza(this.data!.id, payload)
+          : this.api.createPizza(payload);
 
         try {
           const pizza = await firstValueFrom(req);

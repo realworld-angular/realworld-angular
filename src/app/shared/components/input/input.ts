@@ -14,5 +14,5 @@ export class Input {
   public readonly placeholder = input<string>('');
   public readonly hint = input<string>('');
   public readonly autocomplete = input<string | undefined>(undefined);
-  public readonly formField = input.required<FieldTree<string | number | boolean | Date | null>>();
+  public readonly formField = input.required<FieldTree<string | number | null>>();
 }

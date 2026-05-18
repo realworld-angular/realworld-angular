@@ -1,16 +1,13 @@
 import { inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CanMatchFn, Router } from '@angular/router';
 import { map, catchError, of } from 'rxjs';
-import { PizzeriaDetail } from '../models/pizzeria.models';
-
-
+import { PizzeriaApi } from '../services/pizzeria-api';
 
 export const noPizzeriaGuard: CanMatchFn = () => {
-  const httpClient = inject(HttpClient);
+  const pizzeriaApi = inject(PizzeriaApi);
   const router = inject(Router);
 
-  return httpClient.get<PizzeriaDetail | null>('/api/pizzerias/admin/pizzeria').pipe(
+  return pizzeriaApi.getMyPizzeria().pipe(
     map((pizzeria) => {
       if (pizzeria) {
         return router.createUrlTree(['/pizzerias/admin']);

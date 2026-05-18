@@ -49,7 +49,7 @@ export class AdminPizzaRow {
       switchMap(() => {
         this.deleteError.emit('');
         this.deleting.set(true);
-        return this.api.deleteMyPizza(pizza.id);
+        return this.api.deletePizza(pizza.id);
       }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({

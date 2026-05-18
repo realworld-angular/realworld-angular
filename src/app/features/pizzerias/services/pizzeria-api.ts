@@ -7,6 +7,10 @@ import { PizzeriaDetail } from '../models/pizzeria.models';
 export class PizzeriaApi {
   private readonly http = inject(HttpClient);
 
+  public getMyPizzeria(): Observable<PizzeriaDetail | null> {
+    return this.http.get<PizzeriaDetail | null>('/api/pizzerias/admin/pizzeria');
+  }
+
   public createPizzeria(data: {
     city: string;
     country: string;

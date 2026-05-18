@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, computed } from '@angular/core';
+import type { OrderStatus } from '../../../features/orders/order.models';
 
 export type BadgeVariant = 'default' | 'primary' | 'success' | 'warning' | 'error' | 'info';
-
-export type OrderStatus = 'PENDING' | 'PREPARING' | 'READY' | 'DELIVERED' | 'CANCELLED';
 
 const STATUS_CONFIG: Record<OrderStatus, { label: string; variant: BadgeVariant }> = {
   PENDING: { label: 'Pending', variant: 'warning' },
