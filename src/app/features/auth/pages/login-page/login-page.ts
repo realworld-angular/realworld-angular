@@ -32,7 +32,7 @@ export class LoginPage {
         const { email, password } = formRef().value();
         try {
           await firstValueFrom(this.auth.login(email, password));
-          await this.router.navigate(['/']);
+          void this.router.navigate(['/']);
         } catch {
           return { kind: 'serverError', message: 'Invalid credentials' };
         }

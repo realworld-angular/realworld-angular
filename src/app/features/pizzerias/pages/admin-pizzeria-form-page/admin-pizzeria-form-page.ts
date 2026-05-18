@@ -46,7 +46,7 @@ export class AdminPizzeriaFormPage {
         } catch {
           return { kind: 'serverError', message: 'Failed to create pizzeria' };
         }
-        this.router.navigate(['/pizzerias/admin/pizzas']);
+        void this.router.navigate(['/pizzerias/admin/pizzas']);
         return null;
       },
     },

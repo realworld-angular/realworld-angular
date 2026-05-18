@@ -123,7 +123,7 @@ export class CheckoutPage {
           const order = await firstValueFrom(this.api.createOrder(payload));
           this.cart.clear();
           this.submitted.set(true);
-          this.router.navigate(['/orders', order.id]);
+          void this.router.navigate(['/orders', order.id]);
         } catch {
           return { kind: 'serverError', message: 'Order failed. Please try again.' };
         }
