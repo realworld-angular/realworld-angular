@@ -1,11 +1,10 @@
-@let orderData = order();
-<td class="admin-table__cell-primary">{{ orderData.createdAt | date: 'dd MMM, HH:mm' }}</td>
-<td class="admin-table__cell-muted">{{ orderData.items.length }} pizza(s)</td>
-<td class="admin-table__cell-muted">€{{ orderData.total | number: '1.2-2' }}</td>
-<td><rw-status-badge [status]="orderData.status" /></td>
+<td class="admin-table__cell-primary">{{ order().createdAt | date: 'dd MMM, HH:mm' }}</td>
+<td class="admin-table__cell-muted">{{ order().items.length }} pizza(s)</td>
+<td class="admin-table__cell-muted">€{{ order().total | number: '1.2-2' }}</td>
+<td><rw-status-badge [status]="order().status" /></td>
 <td class="admin-table__actions">
   <span class="admin-table__actions-inline">
-    @if (orderData.status !== 'CANCELLED' && orderData.status !== 'DELIVERED') {
+    @if (order().status !== 'CANCELLED' && order().status !== 'DELIVERED') {
       <button
         type="button"
         class="admin-action-link admin-icon-action"
@@ -15,7 +14,7 @@
         <img src="/icons/delivery.svg" alt="" width="20" height="20" aria-hidden="true" />
       </button>
     }
-    @if (orderData.status === 'PENDING') {
+    @if (order().status === 'PENDING') {
       <button
         type="button"
         class="admin-action-delete admin-icon-action"

@@ -20,8 +20,6 @@ import { StatusBadge } from "../../../../shared/components/status-badge/status-b
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderDetailPage {
-  public readonly id = input.required<string>();
-
   private readonly api = inject(OrderApi);
   private readonly destroyRef = inject(DestroyRef);
   private readonly title = inject(Title);
@@ -54,12 +52,6 @@ export class OrderDetailPage {
   protected readonly isCancelling = signal(false);
   protected readonly cancelFeedback = signal<{ variant: 'error' | 'success'; message: string } | null>(null);
 
-  public constructor() {
-    effect(() => {
-      this.title.setTitle(`Order ${this.id()}`);
-    });
-  }
-
   protected readonly statusOrder: readonly string[] = [
     'PENDING',
     'PREPARING',
@@ -76,6 +68,14 @@ export class OrderDetailPage {
       return this.statusOrder.indexOf(order.status) > this.statusOrder.indexOf(step);
     };
   });
+
+  public readonly id = input.required<string>();
+
+  public constructor() {
+    effect(() => {
+      this.title.setTitle(`Order ${this.id()}`);
+    });
+  }
 
   protected cancel(): void {
     this.isCancelling.set(true);

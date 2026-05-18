@@ -32,8 +32,8 @@
               <tr
                 rw-admin-order-row
                 [order]="order"
-                (orderUpdated)="updateOrder($event)"
-                (feedback)="onRowFeedback($event)"
+                (updateOrder)="updateOrder($event)"
+                (showFeedback)="showFeedback($event)"
               ></tr>
             }
           </tbody>

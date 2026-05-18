@@ -23,16 +23,14 @@ import { StatusBadge } from "../../../../../shared/components/status-badge/statu
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminOrderRow {
-  public readonly order = input.required<AdminOrderListItem>();
-
-  public readonly orderUpdated = output<AdminOrderListItem>();
-  public readonly feedback = output<{ variant: 'error' | 'success'; message: string }>();
-
   private readonly api = inject(OrderApi);
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialog = inject(Dialog);
 
-  public readonly isRowBusy = computed<boolean>(() => false);
+  public readonly order = input.required<AdminOrderListItem>();
+
+  public readonly updateOrder = output<AdminOrderListItem>();
+  public readonly showFeedback = output<{ variant: 'error' | 'success'; message: string }>();
 
   public promptCancelOrder(): void {
     const ref = this.dialog.open<ConfirmDialogResult, ConfirmDialogData>(ConfirmDialog, {
@@ -46,14 +44,15 @@ export class AdminOrderRow {
 
     ref.closed.pipe(
       filter((result) => result === 'confirmed'),
-      switchMap(() => this.api.cancelOrder(this.order().id).pipe(takeUntilDestroyed(this.destroyRef))),
+      switchMap(() => this.api.cancelOrder(this.order().id)),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (updated) => {
-        this.orderUpdated.emit(updated as AdminOrderListItem);
-        this.feedback.emit({ variant: 'success', message: 'Order cancelled.' });
+        this.updateOrder.emit(updated);
+        this.showFeedback.emit({ variant: 'success', message: 'Order cancelled.' });
       },
       error: (err) => {
-        this.feedback.emit({ variant: 'error', message: err?.error?.message ?? 'Failed' });
+        this.showFeedback.emit({ variant: 'error', message: err?.error?.message ?? 'Failed' });
       },
     });
   }
@@ -70,14 +69,15 @@ export class AdminOrderRow {
 
     ref.closed.pipe(
       filter((result) => result === 'confirmed'),
-      switchMap(() => this.api.deliverOrder(this.order().id).pipe(takeUntilDestroyed(this.destroyRef))),
+      switchMap(() => this.api.deliverOrder(this.order().id)),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (updated) => {
-        this.orderUpdated.emit(updated as AdminOrderListItem);
-        this.feedback.emit({ variant: 'success', message: 'Order marked as delivered.' });
+        this.updateOrder.emit(updated);
+        this.showFeedback.emit({ variant: 'success', message: 'Order marked as delivered.' });
       },
       error: (err) => {
-        this.feedback.emit({ variant: 'error', message: err?.error?.message ?? 'Failed' });
+        this.showFeedback.emit({ variant: 'error', message: err?.error?.message ?? 'Failed' });
       },
     });
   }

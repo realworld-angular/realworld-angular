@@ -39,7 +39,7 @@ export class AdminOrderListPage {
     });
   }
 
-  protected onRowFeedback(fb: { variant: 'error' | 'success'; message: string }): void {
+  protected showFeedback(fb: { variant: 'error' | 'success'; message: string }): void {
     this.cancelFeedback.set(fb);
   }
 }
