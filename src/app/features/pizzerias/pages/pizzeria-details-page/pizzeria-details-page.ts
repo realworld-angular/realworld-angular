@@ -25,6 +25,7 @@ import { FormsModule } from '@angular/forms';
 import { Dialog } from '@angular/cdk/dialog';
 import { CatalogImageUrlPipe } from '../../../../shared/pipes/catalog-image-url.pipe';
 import { Button } from '../../../../shared/components/button/button';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'rw-pizzeria-detail-page',
@@ -103,7 +104,7 @@ export class PizzeriaDetailsPage {
       hasBackdrop: false,
     });
 
-    ref.closed.subscribe((result) => {
+    ref.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result) => {
       if (result === 'added') {
         this.showAddedToCartBanner();
       }
