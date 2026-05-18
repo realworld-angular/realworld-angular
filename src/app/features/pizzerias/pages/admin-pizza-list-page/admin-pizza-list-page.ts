@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { httpResource } from '@angular/common/http';
 import { PizzaApi } from '../../services/pizza-api';
@@ -11,6 +11,7 @@ import { Dialog } from '@angular/cdk/dialog';
 import { filter, switchMap } from 'rxjs/operators';
 import { AdminPizzaFormDialog, AdminPizzaFormDialogData } from '../../components/admin-pizza-form-dialog/admin-pizza-form-dialog';
 import { ConfirmDialog, ConfirmDialogData, ConfirmDialogResult } from '../../../../shared/components/confirm-dialog/confirm-dialog';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'rw-admin-pizzas-page',
@@ -28,6 +29,7 @@ import { ConfirmDialog, ConfirmDialogData, ConfirmDialogResult } from '../../../
 export class AdminPizzaListPage {
   private readonly api = inject(PizzaApi);
   private readonly dialog = inject(Dialog);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly pizzasResource = httpResource<Pizza[]>(
     () => '/api/admin/pizzeria/pizzas',
@@ -51,6 +53,7 @@ export class AdminPizzaListPage {
       data: { editingPizza, toppings: this.toppingsResource.value() ?? [] },
     });
 
+    // TODO refactor to listen to close directly
     ref.componentRef?.instance.pizzaSaved.subscribe((event: { pizza: Pizza; mode: 'create' | 'edit' }) => {
       ref.close();
       const { pizza, mode } = event;
@@ -86,6 +89,7 @@ export class AdminPizzaListPage {
         this.deletingId.set(pizza.id);
         return this.api.deleteMyPizza(pizza.id);
       }),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => {
         this.pizzasResource.set((this.pizzasResource.value() ?? []).filter((existingPizza) => existingPizza.id !== pizza.id));
