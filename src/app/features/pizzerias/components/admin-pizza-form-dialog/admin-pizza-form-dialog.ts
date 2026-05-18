@@ -39,10 +39,9 @@ export interface AdminPizzaFormDialogData {
     Modal,
     ModalFooter,
     Callout,
-    ModalFooter
 ],
   templateUrl: './admin-pizza-form-dialog.html',
-  styleUrls: ['./admin-pizza-form-dialog.css'],
+  styleUrl: './admin-pizza-form-dialog.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminPizzaFormDialog {
