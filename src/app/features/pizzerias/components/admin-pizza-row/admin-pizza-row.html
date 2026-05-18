@@ -1,0 +1,27 @@
+<td class="admin-table__cell-primary" [attr.title]="pizza().name">{{ pizza().name }}</td>
+<td class="admin-table__cell-muted">€{{ pizza().basePrice | number: '1.2-2' }}</td>
+<td class="admin-table__cell-muted">€{{ menuListTotalPrice() | number: '1.2-2' }}</td>
+<td class="admin-table__cell-toppings">
+  {{ pizza().toppings.length ? toppingLabels() : '—' }}
+</td>
+<td class="admin-table__actions">
+  <span class="admin-table__actions-inline">
+    <button
+      type="button"
+      class="admin-action-link admin-icon-action"
+      [attr.aria-label]="'Edit ' + pizza().name"
+      (click)="edit.emit(pizza())"
+    >
+      <img src="/icons/edit.svg" alt="" width="20" height="20" aria-hidden="true" />
+    </button>
+    <button
+      type="button"
+      class="admin-action-delete admin-icon-action"
+      [disabled]="deleting()"
+      [attr.aria-label]="'Delete ' + pizza().name"
+      (click)="promptDelete()"
+    >
+      <img src="/icons/delete.svg" alt="" width="20" height="20" aria-hidden="true" />
+    </button>
+  </span>
+</td>

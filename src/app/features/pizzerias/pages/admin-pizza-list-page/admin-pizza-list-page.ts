@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { httpResource } from '@angular/common/http';
 import { PizzaApi } from '../../services/pizza-api';
 import { Callout } from '../../../../shared/components/callout/callout';
@@ -8,19 +7,17 @@ import { Button } from '../../../../shared/components/button/button';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 import { Dialog } from '@angular/cdk/dialog';
-import { filter, switchMap } from 'rxjs/operators';
 import { AdminPizzaFormDialog, AdminPizzaFormDialogData } from '../../components/admin-pizza-form-dialog/admin-pizza-form-dialog';
-import { ConfirmDialog, ConfirmDialogData, ConfirmDialogResult } from '../../../../shared/components/confirm-dialog/confirm-dialog';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AdminPizzaRow } from '../../components/admin-pizza-row/admin-pizza-row';
 
 @Component({
   selector: 'rw-admin-pizzas-page',
   imports: [
-    DecimalPipe,
     Button,
     Spinner,
     Callout,
     EmptyState,
+    AdminPizzaRow,
   ],
   templateUrl: './admin-pizza-list-page.html',
   styleUrl: './admin-pizza-list-page.css',
@@ -29,7 +26,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class AdminPizzaListPage {
   private readonly api = inject(PizzaApi);
   private readonly dialog = inject(Dialog);
-  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly pizzasResource = httpResource<Pizza[]>(
     () => '/api/admin/pizzeria/pizzas',
@@ -37,7 +33,6 @@ export class AdminPizzaListPage {
 
   protected readonly toppingsResource = httpResource<PizzaOption[]>(() => '/api/options/toppings');
 
-  protected readonly deletingId = signal<string | null>(null);
   protected readonly deleteError = signal('');
 
   protected openCreate(): void {
@@ -65,40 +60,11 @@ export class AdminPizzaListPage {
     });
   }
 
-  protected toppingLabels(pizza: Pizza): string {
-    return (pizza.toppings ?? []).map((topping) => topping.label).join(', ');
+  protected onPizzaDeleted(pizza: Pizza): void {
+    this.pizzasResource.set((this.pizzasResource.value() ?? []).filter((p) => p.id !== pizza.id));
   }
 
-  /** Base + sum of this pizza's configured topping prices. */
-  protected menuListTotalPrice(pizza: Pizza): number {
-    const base = pizza.basePrice;
-    const toppingsSum = (pizza.toppings ?? []).reduce((sum, topping) => sum + topping.price, 0);
-    return base + toppingsSum;
-  }
-
-  protected promptDeletePizza(pizza: Pizza): void {
-    const message = `Delete "${pizza.name}"? This removes the pizza from the menu. Customers can no longer order it.`;
-    const ref = this.dialog.open<ConfirmDialogResult, ConfirmDialogData>(ConfirmDialog, {
-      data: { title: 'Delete pizza?', message, cancelLabel: 'Cancel', confirmLabel: 'Delete' },
-    });
-
-    ref.closed.pipe(
-      filter((result) => result === 'confirmed' && !this.deletingId()),
-      switchMap(() => {
-        this.deleteError.set('');
-        this.deletingId.set(pizza.id);
-        return this.api.deleteMyPizza(pizza.id);
-      }),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: () => {
-        this.pizzasResource.set((this.pizzasResource.value() ?? []).filter((existingPizza) => existingPizza.id !== pizza.id));
-        this.deletingId.set(null);
-      },
-      error: (err) => {
-        this.deletingId.set(null);
-        this.deleteError.set(err?.error?.message ?? 'Delete failed');
-      },
-    });
+  protected onDeleteError(message: string): void {
+    this.deleteError.set(message);
   }
 }

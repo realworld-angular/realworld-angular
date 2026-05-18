@@ -1,0 +1,57 @@
+.admin-action-link {
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.admin-action-link:hover { text-decoration: underline; }
+
+.admin-action-delete {
+  font-size: var(--text-sm);
+  color: var(--color-error);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.admin-action-delete:hover { text-decoration: underline; }
+.admin-action-delete:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.admin-icon-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  border-radius: var(--radius-md);
+  line-height: 0;
+}
+
+.admin-icon-action img {
+  display: block;
+  opacity: 0.85;
+}
+
+.admin-action-link.admin-icon-action:hover {
+  text-decoration: none;
+  background-color: var(--color-surface-alt);
+}
+
+.admin-action-link.admin-icon-action:hover img {
+  opacity: 1;
+}
+
+.admin-action-delete.admin-icon-action:hover {
+  text-decoration: none;
+  background-color: color-mix(in srgb, var(--color-error) 14%, transparent);
+}
+
+.admin-action-delete.admin-icon-action:hover:not(:disabled) img {
+  opacity: 1;
+}
