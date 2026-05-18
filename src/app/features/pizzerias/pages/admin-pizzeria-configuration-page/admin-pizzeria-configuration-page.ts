@@ -36,7 +36,6 @@ export class AdminPizzeriaConfigurationPage {
 
   protected readonly isDeleting = signal(false);
   protected readonly submitSuccess = signal(false);
-  private lastHydratedPizzeriaId = '';
 
   protected readonly model = signal({
     location: null as LocationValue | null,
@@ -50,12 +49,12 @@ export class AdminPizzeriaConfigurationPage {
     submission: {
       action: async (formRef) => {
         this.submitSuccess.set(false);
-        const loc = formRef().value().location!;
+        const location = formRef().value().location!;
         try {
           await firstValueFrom(
             this.pizzeriaApi.updateMyPizzeria({
-              city: loc.city,
-              country: loc.country,
+              city: location.city,
+              country: location.country,
               imageFilename: formRef().value().image!,
             }).pipe(takeUntilDestroyed(this.destroyRef)),
           );
@@ -77,22 +76,17 @@ export class AdminPizzeriaConfigurationPage {
 
     effect(() => {
       const pizzeria = this.pizzeriaResource.value();
-      if (!pizzeria) {
-        return;
+      if(pizzeria) {
+        this.model.update((modelState) => ({
+          ...modelState,
+          location: { city: pizzeria.city, country: pizzeria.country },
+          image: pizzeria.image,
+        }));
       }
-      if (pizzeria.id === this.lastHydratedPizzeriaId) {
-        return;
-      }
-      this.lastHydratedPizzeriaId = pizzeria.id;
-      this.model.update((modelState) => ({
-        ...modelState,
-        location: { city: pizzeria.city, country: pizzeria.country },
-        image: pizzeria.image,
-      }));
     });
   }
 
-  protected openDeleteConfirm(): void {
+  protected deletePizzeria(): void {
     const pizzeria = this.pizzeriaResource.value()!;
 
     const message = `Are you sure you want to delete "${pizzeria.name}"? This action cannot be undone.`;
@@ -101,19 +95,16 @@ export class AdminPizzeriaConfigurationPage {
     });
 
     ref.closed.pipe(
-      filter((result) => result === 'confirmed' && !this.isDeleting()),
+      filter((result) => result === 'confirmed'),
       switchMap(() => {
         this.isDeleting.set(true);
-        return this.pizzeriaApi.deleteMyPizzeria().pipe(takeUntilDestroyed(this.destroyRef));
+        return this.pizzeriaApi.deleteMyPizzeria();
       }),
       finalize(() => this.isDeleting.set(false)),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
         next: () => {
         void this.router.navigateByUrl('/pizzerias/admin/new');
-      },
-      error: () => {
-        this.isDeleting.set(false);
-        ref.close();
       },
     });
   }

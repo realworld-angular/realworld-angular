@@ -38,7 +38,7 @@
           variant="error"
           message="Danger zone: deleting this pizzeria permanently removes it and cannot be undone."
         >
-          <rw-button type="button" palette="danger" (click)="openDeleteConfirm()">
+          <rw-button type="button" palette="danger" [isLoading]="isDeleting()" (click)="deletePizzeria()">
             Delete pizzeria
           </rw-button>
         </rw-callout>
