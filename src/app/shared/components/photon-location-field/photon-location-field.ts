@@ -25,24 +25,22 @@ export interface LocationValue {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhotonLocationField implements FormValueControl<LocationValue | null> {
-  private static nextId = 0;
-
   private readonly photon = inject(PhotonApi);
   private readonly destroyRef = inject(DestroyRef);
 
   // --- FormValueControl required ---
-  readonly value = model<LocationValue | null>(null);
+  public readonly value = model<LocationValue | null>(null);
 
   // --- FormValueControl optional state ---
-  readonly touched = model<boolean>(false);
-  readonly disabled = input<boolean>(false);
-  readonly readonly = input<boolean>(false);
-  readonly invalid = input<boolean>(false);
-  readonly errors = input<readonly WithOptionalFieldTree<ValidationError>[]>([]);
-  readonly required = input<boolean>(false);
+  public readonly touched = model<boolean>(false);
+  public readonly disabled = input<boolean>(false);
+  public readonly readonly = input<boolean>(false);
+  public readonly invalid = input<boolean>(false);
+  public readonly errors = input<readonly WithOptionalFieldTree<ValidationError>[]>([]);
+  public readonly required = input<boolean>(false);
 
   // --- UI-only input ---
-  readonly label = input('Location (city and country)');
+  public readonly label = input('Location (city and country)');
 
   protected readonly query = signal('');
   protected readonly suggestions = signal<PhotonLocationSuggestion[]>([]);
@@ -58,10 +56,6 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
   } | null>(null);
 
   private readonly search$ = new Subject<string>();
-
-  readonly inputId = `rw-photon-loc-${++PhotonLocationField.nextId}`;
-  readonly listboxId = `${this.inputId}-listbox`;
-  readonly errorId = `${this.inputId}-error`;
 
   constructor() {
     this.search$
@@ -98,19 +92,7 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
     });
   }
 
-  protected optionId(i: number): string {
-    return `${this.inputId}-opt-${i}`;
-  }
-
-  protected activeId(): string | null {
-    const activeIdx = this.activeIndex();
-    if (activeIdx < 0) {
-      return null;
-    }
-    return this.optionId(activeIdx);
-  }
-
-  protected onQueryInput(ev: Event): void {
+  protected queryInput(ev: Event): void {
     const el = ev.target as HTMLInputElement;
     const inputValue = el.value;
     this.query.set(inputValue);
@@ -131,13 +113,13 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
     }
   }
 
-  protected onFocus(): void {
+  protected focusField(): void {
     if (this.suggestions().length > 0 || this.isLoading()) {
       this.isOpen.set(true);
     }
   }
 
-  protected onBlur(): void {
+  protected blurField(): void {
     this.touched.set(true);
     setTimeout(() => {
       this.isOpen.set(false);
@@ -151,16 +133,12 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
     }, 150);
   }
 
-  protected pick(ev: Event, s: PhotonLocationSuggestion): void {
+  protected selectSuggestion(ev: Event, suggestion: PhotonLocationSuggestion): void {
     ev.preventDefault();
-    this.committedPick.set({ label: s.label, city: s.city, country: s.country });
-    this.query.set(s.label);
-    this.suggestions.set([]);
-    this.isOpen.set(false);
-    this.value.set({ city: s.city, country: s.country });
+    this.setValue(suggestion);
   }
 
-  protected onContainerKeydown(ev: KeyboardEvent): void {
+  protected containerKeydown(ev: KeyboardEvent): void {
     if (!this.isOpen() || this.suggestions().length === 0) {
       return;
     }
@@ -175,18 +153,26 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
       activeIdx = Math.max(0, activeIdx - 1);
       this.activeIndex.set(activeIdx);
     } else if (ev.key === 'Enter') {
-      const sel = list[activeIdx];
-      if (sel) {
+      const selected = list[activeIdx];
+      if (selected) {
         ev.preventDefault();
-        this.committedPick.set({ label: sel.label, city: sel.city, country: sel.country });
-        this.query.set(sel.label);
-        this.suggestions.set([]);
-        this.isOpen.set(false);
-        this.value.set({ city: sel.city, country: sel.country });
+        this.setValue(selected);
       }
     } else if (ev.key === 'Escape') {
       ev.preventDefault();
       this.isOpen.set(false);
     }
+  }
+
+  private setValue(suggestion: PhotonLocationSuggestion): void {
+    this.committedPick.set({
+      label: suggestion.label,
+      city: suggestion.city,
+      country: suggestion.country,
+    });
+    this.query.set(suggestion.label);
+    this.suggestions.set([]);
+    this.isOpen.set(false);
+    this.value.set({ city: suggestion.city, country: suggestion.country });
   }
 }

@@ -19,15 +19,6 @@ export class Textarea {
   public readonly hint = input<string>('');
   public readonly formField = input.required<FieldTree<string>>();
 
-  protected readonly uid = `rw-ta-${Textarea.nextId++}`;
-  protected readonly errorId = `${this.uid}-e`;
-  protected readonly hintId = `${this.uid}-h`;
-
-  protected field(): FieldState<string> | null {
-    const fieldTree = this.formField();
-    return fieldTree ? fieldTree() : null;
-  }
-
   protected readonly charCount = computed<number>(() => {
     const fieldTree = this.formField();
     if (!fieldTree) {

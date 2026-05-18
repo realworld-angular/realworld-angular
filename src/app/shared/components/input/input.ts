@@ -9,16 +9,10 @@ import { FieldTree, FormField } from '@angular/forms/signals';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Input {
-  private static nextId = 0;
-
-  readonly label = input<string>('');
-  readonly type = input<string>('text');
-  readonly placeholder = input<string>('');
-  readonly hint = input<string>('');
-  readonly autocomplete = input<string | undefined>(undefined);
-  readonly formField = input.required<FieldTree<string | number | boolean | Date | null>>();
-
-  protected readonly uid = `rw-i-${Input.nextId++}`;
-  protected readonly errorId = `${this.uid}-e`;
-  protected readonly hintId = `${this.uid}-h`;
+  public readonly label = input<string>('');
+  public readonly type = input<string>('text');
+  public readonly placeholder = input<string>('');
+  public readonly hint = input<string>('');
+  public readonly autocomplete = input<string | undefined>(undefined);
+  public readonly formField = input.required<FieldTree<string | number | boolean | Date | null>>();
 }

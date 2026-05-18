@@ -19,34 +19,28 @@ import { Spinner } from '../spinner/spinner';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImagePicker implements FormValueControl<string | null> {
-  private static counter = 0;
+  public readonly category = input.required<string>();
+  public readonly label = input.required<string>();
 
-  readonly pickerLegendId = `rw-image-picker-legend-${++ImagePicker.counter}`;
+  public readonly value = model<string | null>(null);
+  public readonly touched = model(false);
 
-  /** `pizza` | `pizzeria` — drives `GET /api/pizzas/images` vs `GET /api/pizzerias/images`. */
-  readonly category = input.required<string>();
-  readonly label = input<string>('Image');
+  public readonly invalid = input(false);
+  public readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
+  public readonly disabled = input(false);
+  public readonly required = input(false);
 
-  /** Selected image basename, or null — bound by `[formField]` (Signal Forms). */
-  readonly value = model<string | null>(null);
-  readonly touched = model(false);
-
-  readonly invalid = input(false);
-  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
-  readonly disabled = input(false);
-  readonly required = input(false);
-
-  readonly pickerImageKind = computed<CatalogImageKind>(() =>
+  protected readonly pickerImageKind = computed<CatalogImageKind>(() =>
     this.category() === 'pizzeria' ? 'pizzeria' : 'pizza',
   );
 
-  readonly filenamesResource = httpResource<string[]>(() =>
+  protected readonly filenamesResource = httpResource<string[]>(() =>
     this.category() === 'pizzeria'
       ? '/api/pizzerias/images'
       : '/api/pizzas/images',
   );
 
-  select(filename: string): void {
+  protected select(filename: string): void {
     if (this.disabled()) {
       return;
     }

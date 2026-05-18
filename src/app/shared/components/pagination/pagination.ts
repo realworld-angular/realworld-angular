@@ -11,7 +11,7 @@ export class Pagination {
   public readonly totalPages = input.required<number>();
   public readonly pageChange = output<number>();
 
-  public readonly visiblePages = computed<number[]>(() => {
+  protected readonly visiblePages = computed<number[]>(() => {
     const pages: number[] = [];
     const delta = 2;
 

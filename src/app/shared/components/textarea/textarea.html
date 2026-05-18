@@ -1,4 +1,4 @@
-<div class="field" [class.field--error]="field()?.touched() && field()?.errors()?.length">
+<div class="field" [class.field--error]="formField()().touched() && formField()().errors().length">
   <label class="field__label">
     @if (label()) {
       {{ label() }}
@@ -10,21 +10,20 @@
       [placeholder]="placeholder()"
       [rows]="rows()"
       [formField]="formField()"
-      [attr.aria-describedby]="(field()?.touched() && field()?.errors()?.length) ? errorId : hint() ? hintId : null"
       class="field__textarea"
     ></textarea>
   </label>
   @if (maxLength()) {
-    <span class="field__counter" aria-live="polite">
+    <span class="field__counter">
       {{ charCount() }}/{{ maxLength() }}
     </span>
   }
-  @if (hint() && !(field()?.touched() && field()?.errors()?.length)) {
-    <span [id]="hintId" class="field__hint">{{ hint() }}</span>
+  @if (hint() && !(formField()().touched() && formField()().errors().length)) {
+    <span class="field__hint">{{ hint() }}</span>
   }
-  @if (field()?.touched() && field()?.errors()?.length) {
-    <span [id]="errorId" class="field__error" role="alert">
-      {{ field()!.errors()[0].message }}
+  @if (formField()().touched() && formField()().errors().length) {
+    <span class="field__error" role="alert">
+      {{ formField()().errors()[0].message }}
     </span>
   }
 </div>

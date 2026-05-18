@@ -2,35 +2,32 @@
   class="field"
   tabindex="0"
   [class.field--error]="touched() && invalid()"
-  (keydown)="onContainerKeydown($event)"
+  (keydown)="containerKeydown($event)"
 >
-  <label [for]="inputId" class="field__label">
+  <label class="field__label">
     {{ label() }}
     @if (required()) {
       <span class="field__required" aria-hidden="true">*</span>
     }
-  </label>
-  <div class="photon-location__wrap">
-    <input
-      [id]="inputId"
+    <div class="photon-location__wrap">
+      <input
       type="text"
       class="field__input"
       [value]="query()"
-      (input)="onQueryInput($event)"
-      (focus)="onFocus()"
-      (blur)="onBlur()"
+      (input)="queryInput($event)"
+      (focus)="focusField()"
+      (blur)="blurField()"
       [disabled]="disabled()"
       [readonly]="readonly()"
       placeholder="Start typing a city or place…"
       autocomplete="off"
       role="combobox"
       [attr.aria-expanded]="isOpen()"
-      [attr.aria-controls]="listboxId"
-      [attr.aria-activedescendant]="activeId()"
+      aria-controls="listboxId"
     />
     @if (isOpen() && (isLoading() || suggestions().length > 0)) {
       <ul
-        [id]="listboxId"
+        id="listboxId"
         class="photon-location__suggestions"
         aria-label="Location suggestions"
       >
@@ -39,10 +36,10 @@
         } @else {
           @for (suggestion of suggestions(); track $index; let idx = $index) {
             <li
-              [id]="optionId(idx)"
+              [id]="'option-' + idx"
               [class.photon-location__option--active]="idx === activeIndex()"
               class="photon-location__option"
-              (mousedown)="pick($event, suggestion)"
+              (mousedown)="selectSuggestion($event, suggestion)"
             >
               {{ suggestion.label }}
             </li>
@@ -51,7 +48,8 @@
       </ul>
     }
   </div>
+  </label>
   @if (touched() && invalid()) {
-    <span [id]="errorId" class="field__error" role="alert">{{ errors()[0].message }}</span>
+    <span class="field__error" role="alert">{{ errors()[0].message }}</span>
   }
 </div>

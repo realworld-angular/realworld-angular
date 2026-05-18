@@ -1,15 +1,13 @@
 <fieldset class="picker" [class.picker--invalid]="invalid() && touched()">
-  @if (label()) {
-    <legend [id]="pickerLegendId" class="picker__label">
-      {{ label() }}
-      @if (required()) {
-        <span class="picker__required" aria-hidden="true">*</span>
-      }
-    </legend>
-  }
+  <legend class="picker__label">
+    {{ label() }}
+    @if (required()) {
+      <span class="picker__required" aria-hidden="true">*</span>
+    }
+  </legend>
 
   @if (filenamesResource.isLoading()) {
-    <div class="picker__loading" aria-live="polite">
+    <div class="picker__loading">
       <rw-spinner />
       <span class="picker__loading-text">Loading images…</span>
     </div>
@@ -23,8 +21,6 @@
     <div
       class="picker__grid"
       role="radiogroup"
-      [attr.aria-labelledby]="label() ? pickerLegendId : null"
-      [attr.aria-label]="label() ? null : 'Choose image'"
     >
       @for (filename of filenames; track filename) {
         <button
