@@ -1,44 +1,38 @@
-<div
-  class="field"
-  tabindex="0"
-  [class.field--error]="touched() && invalid()"
-  (keydown)="containerKeydown($event)"
->
-  <label class="field__label">
+<div class="field" [class.field--error]="touched() && invalid()">
+  <label class="field__label" [attr.for]="inputId">
     {{ label() }}
     @if (required()) {
       <span class="field__required" aria-hidden="true">*</span>
     }
-    <div class="photon-location__wrap">
-      <input
+  </label>
+
+  <div class="photon-location__wrap" (focusout)="onWrapFocusOut($event)">
+    <input
+      [id]="inputId"
       type="text"
       class="field__input"
-      [value]="query()"
-      (input)="queryInput($event)"
-      (focus)="focusField()"
-      (blur)="blurField()"
+      [value]="displayText()"
+      (input)="onInput($event)"
+      (focus)="onFocus()"
+      (keydown)="onKeydown($event)"
       [disabled]="disabled()"
       [readonly]="readonly()"
       placeholder="Start typing a city or place…"
       autocomplete="off"
       role="combobox"
-      [attr.aria-expanded]="isOpen()"
-      aria-controls="listboxId"
+      [attr.aria-expanded]="showPanel()"
+      [attr.aria-controls]="showPanel() ? listboxId : null"
     />
-    @if (isOpen() && (isLoading() || suggestions().length > 0)) {
-      <ul
-        id="listboxId"
-        class="photon-location__suggestions"
-        aria-label="Location suggestions"
-      >
+
+    @if (showPanel()) {
+      <ul [id]="listboxId" class="photon-location__suggestions" aria-label="Location suggestions">
         @if (isLoading()) {
           <li class="photon-location__hint" role="presentation">Searching…</li>
         } @else {
-          @for (suggestion of suggestions(); track $index; let idx = $index) {
+          @for (suggestion of suggestions(); track suggestion.label; let idx = $index) {
             <li
-              [id]="'option-' + idx"
-              [class.photon-location__option--active]="idx === activeIndex()"
               class="photon-location__option"
+              [class.photon-location__option--active]="idx === activeIndex()"
               (mousedown)="selectSuggestion($event, suggestion)"
             >
               {{ suggestion.label }}
@@ -48,7 +42,7 @@
       </ul>
     }
   </div>
-  </label>
+
   @if (touched() && invalid()) {
     <span class="field__error" role="alert">{{ errors()[0].message }}</span>
   }

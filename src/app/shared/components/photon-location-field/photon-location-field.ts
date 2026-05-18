@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   effect,
   inject,
@@ -18,6 +19,8 @@ export interface LocationValue {
   country: string;
 }
 
+let nextFieldId = 0;
+
 @Component({
   selector: 'rw-photon-location-field',
   templateUrl: './photon-location-field.html',
@@ -27,34 +30,33 @@ export interface LocationValue {
 export class PhotonLocationField implements FormValueControl<LocationValue | null> {
   private readonly photon = inject(PhotonApi);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly fieldId = `rw-photon-location-${++nextFieldId}`;
 
-  // --- FormValueControl required ---
+  // --- FormValueControl ---
   public readonly value = model<LocationValue | null>(null);
-
-  // --- FormValueControl optional state ---
   public readonly touched = model<boolean>(false);
   public readonly disabled = input<boolean>(false);
   public readonly readonly = input<boolean>(false);
   public readonly invalid = input<boolean>(false);
   public readonly errors = input<readonly WithOptionalFieldTree<ValidationError>[]>([]);
   public readonly required = input<boolean>(false);
-
-  // --- UI-only input ---
   public readonly label = input('Location (city and country)');
 
-  protected readonly query = signal('');
+  protected readonly inputId = this.fieldId;
+  protected readonly listboxId = `${this.fieldId}-listbox`;
+
+  protected readonly displayText = signal('');
   protected readonly suggestions = signal<PhotonLocationSuggestion[]>([]);
-  protected readonly isOpen = signal(false);
+  protected readonly panelOpen = signal(false);
   protected readonly isLoading = signal(false);
   protected readonly activeIndex = signal(-1);
 
-  /** Non-null only when the input text matches a Photon option the user chose (or initial sync). */
-  private readonly committedPick = signal<{
-    label: string;
-    city: string;
-    country: string;
-  } | null>(null);
+  protected readonly showPanel = computed(
+    () => this.panelOpen() && (this.isLoading() || this.suggestions().length > 0),
+  );
 
+  /** Label of the last committed suggestion (or external value sync). */
+  private readonly pickedLabel = signal<string | null>(null);
   private readonly search$ = new Subject<string>();
 
   constructor() {
@@ -74,105 +76,114 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
         this.activeIndex.set(list.length > 0 ? 0 : -1);
       });
 
-    // Sync value signal → display query (e.g. when form resets or patches externally)
     effect(() => {
-      const locationValue = this.value();
-      if (locationValue && locationValue.city && locationValue.country) {
-        const label = `${locationValue.city}, ${locationValue.country}`;
-        const current = this.committedPick();
-        if (!current || current.city !== locationValue.city || current.country !== locationValue.country) {
-          this.committedPick.set({ label, city: locationValue.city, country: locationValue.country });
-          this.query.set(label);
-        }
-      } else if (!locationValue) {
-        this.committedPick.set(null);
-        this.query.set('');
+      const location = this.value();
+      if (location?.city && location?.country) {
+        const label = formatLocationLabel(location);
+        this.pickedLabel.set(label);
+        this.displayText.set(label);
+        this.closePanel();
+        return;
+      }
+      if (location === null && this.pickedLabel() !== null) {
+        this.pickedLabel.set(null);
+        this.displayText.set('');
         this.suggestions.set([]);
+        this.isLoading.set(false);
       }
     });
   }
 
-  protected queryInput(ev: Event): void {
-    const el = ev.target as HTMLInputElement;
-    const inputValue = el.value;
-    this.query.set(inputValue);
-    this.isOpen.set(true);
+  protected onInput(ev: Event): void {
+    const text = (ev.target as HTMLInputElement).value;
+    this.displayText.set(text);
+    this.panelOpen.set(true);
     this.activeIndex.set(-1);
 
-    const commit = this.committedPick();
-    if (!commit || inputValue !== commit.label) {
-      this.committedPick.set(null);
+    if (text !== this.pickedLabel()) {
+      this.pickedLabel.set(null);
       this.value.set(null);
     }
 
-    if (inputValue.trim().length >= 2) {
-      this.search$.next(inputValue);
+    const trimmed = text.trim();
+    if (trimmed.length >= 2) {
+      this.search$.next(text);
     } else {
       this.isLoading.set(false);
       this.suggestions.set([]);
     }
   }
 
-  protected focusField(): void {
+  protected onFocus(): void {
     if (this.suggestions().length > 0 || this.isLoading()) {
-      this.isOpen.set(true);
+      this.panelOpen.set(true);
     }
   }
 
-  protected blurField(): void {
+  protected onWrapFocusOut(ev: FocusEvent): void {
+    const wrap = ev.currentTarget as HTMLElement;
+    if (wrap.contains(ev.relatedTarget as Node | null)) {
+      return;
+    }
     this.touched.set(true);
-    setTimeout(() => {
-      this.isOpen.set(false);
-      this.activeIndex.set(-1);
-      if (!this.committedPick() && this.query().trim().length > 0) {
-        this.query.set('');
-        this.suggestions.set([]);
-        this.isLoading.set(false);
-        this.value.set(null);
-      }
-    }, 150);
+    this.closePanel();
+    if (!this.value() && this.displayText().trim()) {
+      this.displayText.set('');
+      this.suggestions.set([]);
+      this.isLoading.set(false);
+    }
   }
 
   protected selectSuggestion(ev: Event, suggestion: PhotonLocationSuggestion): void {
     ev.preventDefault();
-    this.setValue(suggestion);
+    this.commitSuggestion(suggestion);
   }
 
-  protected containerKeydown(ev: KeyboardEvent): void {
-    if (!this.isOpen() || this.suggestions().length === 0) {
+  protected onKeydown(ev: KeyboardEvent): void {
+    if (!this.panelOpen() || this.suggestions().length === 0) {
       return;
     }
     const list = this.suggestions();
-    let activeIdx = this.activeIndex();
-    if (ev.key === 'ArrowDown') {
-      ev.preventDefault();
-      activeIdx = Math.min(list.length - 1, activeIdx + 1);
-      this.activeIndex.set(activeIdx < 0 ? 0 : activeIdx);
-    } else if (ev.key === 'ArrowUp') {
-      ev.preventDefault();
-      activeIdx = Math.max(0, activeIdx - 1);
-      this.activeIndex.set(activeIdx);
-    } else if (ev.key === 'Enter') {
-      const selected = list[activeIdx];
-      if (selected) {
+    const idx = this.activeIndex();
+    switch (ev.key) {
+      case 'ArrowDown':
         ev.preventDefault();
-        this.setValue(selected);
+        this.activeIndex.set(Math.min(list.length - 1, idx < 0 ? 0 : idx + 1));
+        break;
+      case 'ArrowUp':
+        ev.preventDefault();
+        this.activeIndex.set(Math.max(0, idx - 1));
+        break;
+      case 'Enter': {
+        const selected = list[idx];
+        if (selected) {
+          ev.preventDefault();
+          this.commitSuggestion(selected);
+        }
+        break;
       }
-    } else if (ev.key === 'Escape') {
-      ev.preventDefault();
-      this.isOpen.set(false);
+      case 'Escape':
+        ev.preventDefault();
+        this.closePanel();
+        break;
     }
   }
 
-  private setValue(suggestion: PhotonLocationSuggestion): void {
-    this.committedPick.set({
-      label: suggestion.label,
-      city: suggestion.city,
-      country: suggestion.country,
-    });
-    this.query.set(suggestion.label);
-    this.suggestions.set([]);
-    this.isOpen.set(false);
+  private commitSuggestion(suggestion: PhotonLocationSuggestion): void {
+    this.pickedLabel.set(suggestion.label);
+    this.displayText.set(suggestion.label);
     this.value.set({ city: suggestion.city, country: suggestion.country });
+    this.closePanel();
   }
+
+  private closePanel(): void {
+    this.panelOpen.set(false);
+    this.activeIndex.set(-1);
+    this.suggestions.set([]);
+    this.isLoading.set(false);
+  }
+}
+
+function formatLocationLabel(location: LocationValue): string {
+  return `${location.city}, ${location.country}`;
 }
