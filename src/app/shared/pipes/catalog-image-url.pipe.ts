@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 export type CatalogImageKind = 'pizzeria' | 'pizza';
 
@@ -8,6 +9,6 @@ export type CatalogImageKind = 'pizzeria' | 'pizza';
 export class CatalogImageUrlPipe implements PipeTransform {
   transform(filename: string, kind: CatalogImageKind): string {
     const segment = kind === 'pizzeria' ? 'pizzerias' : 'pizzas';
-    return `/images/${segment}/${encodeURIComponent(filename)}`;
+    return `${environment.apiBaseUrl}/images/${segment}/${encodeURIComponent(filename)}`;
   }
 }
