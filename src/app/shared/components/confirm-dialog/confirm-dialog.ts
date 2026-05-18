@@ -19,7 +19,7 @@ export type ConfirmDialogResult = 'confirmed' | 'dismissed';
 
 @Component({
   selector: 'rw-confirm-dialog',
-  imports: [Modal, ModalFooter, Button, ModalFooter],
+  imports: [Modal, ModalFooter, Button],
   templateUrl: './confirm-dialog.html',
   styleUrl: './confirm-dialog.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
