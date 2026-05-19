@@ -136,6 +136,8 @@ Role guards (`roleGuard`) protect admin routes client-side. The API also enforce
 
 ## Contributing
 
+> **Note on scope:** This project is a focused learning reference — it is not meant to add third-party libraries, to serve as a perfect template stack, or to add features just for the sake of covering more aspects of the marketplace. If you have ideas that fall outside this scope, no contribution is lost — a fork demonstrating those aspects is a great standalone project.
+
 Contributions are welcome! Please follow these guidelines:
 
 - **Fork** the repository and create your branch from `main`
@@ -143,6 +145,7 @@ Contributions are welcome! Please follow these guidelines:
 - **Follow** the existing Angular conventions (standalone components, `inject()`, signals where applicable)
 - **Run lint and tests** before submitting: `pnpm run lint && pnpm run test`
 - Open a **pull request** with a clear description of the changes and motivation
+
 
 ### Reporting Issues
 
