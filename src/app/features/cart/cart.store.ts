@@ -1,5 +1,5 @@
-import { Injectable, signal, computed, effect, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, signal, computed } from '@angular/core';
+import { httpResource } from '@angular/common/http';
 
 export interface CartPizzeria {
   id: string;
@@ -43,12 +43,34 @@ export interface CartData {
 
 @Injectable({ providedIn: 'root' })
 export class CartStore {
-  private readonly http = inject(HttpClient);
-
   public readonly pizzeria = signal<CartPizzeria | null>(null);
   public readonly items = signal<CartItem[]>([]);
-  public readonly cart = signal<CartData | null>(null);
-  public readonly isLoading = signal(false);
+
+  private readonly cartResource = httpResource<CartData>(() => {
+    const currentItems = this.items();
+    const currentPizzeria = this.pizzeria();
+
+    if (currentItems.length === 0 || !currentPizzeria) {
+      return undefined;
+    }
+
+    return {
+      url: '/api/orders/cart',
+      method: 'POST',
+      body: {
+        pizzeriaId: currentPizzeria.id,
+        items: currentItems.map((item) => ({
+          pizzaId: item.pizzaId,
+          quantity: item.quantity,
+          selectedSizeId: item.selectedSizeId ?? undefined,
+          selectedOptionIds: item.selectedOptionIds,
+        })),
+      },
+    };
+  });
+
+  public readonly cart = computed<CartData | null>(() => this.cartResource.value() ?? null);
+  public readonly isLoading = computed<boolean>(() => this.cartResource.isLoading());
 
   public readonly totalPrice = computed<number>(() =>
     this.cart()?.total ?? 0,
@@ -59,43 +81,6 @@ export class CartStore {
   );
 
   public readonly isEmpty = computed<boolean>(() => this.items().length === 0);
-
-  public constructor() {
-    effect((onCleanup) => {
-      const currentItems = this.items();
-      const currentPizzeria = this.pizzeria();
-
-      if (currentItems.length === 0 || !currentPizzeria) {
-        this.cart.set(null);
-        this.isLoading.set(false);
-        return;
-      }
-
-      this.isLoading.set(true);
-      const sub = this.http
-        .post<CartData>('/api/orders/cart', {
-          pizzeriaId: currentPizzeria.id,
-          items: currentItems.map((item) => ({
-            pizzaId: item.pizzaId,
-            quantity: item.quantity,
-            selectedSizeId: item.selectedSizeId ?? undefined,
-            selectedOptionIds: item.selectedOptionIds,
-          })),
-        })
-        .subscribe({
-          next: (result) => {
-            this.cart.set(result);
-            this.isLoading.set(false);
-          },
-          error: () => {
-            this.cart.set(null);
-            this.isLoading.set(false);
-          },
-        });
-
-      onCleanup(() => sub.unsubscribe());
-    });
-  }
 
   public hasItemsForOtherPizzeria(pizzeriaId: string): boolean {
     const current = this.pizzeria();
