@@ -26,12 +26,12 @@ import { CatalogImageUrlPipe } from '../../../../shared/pipes/catalog-image-url.
 })
 export class CartPage {
   private readonly title = inject(Title);
-  protected readonly cart = inject(CartStore);
+  protected readonly cartStore = inject(CartStore);
   protected readonly auth = inject(Auth);
 
   public constructor() {
     effect(() => {
-      const name = this.cart.reconstructed()?.pizzeria.name;
+      const name = this.cartStore.cart()?.pizzeria.name;
       this.title.setTitle(name ? `Cart - ${name}` : 'Cart');
     });
   }

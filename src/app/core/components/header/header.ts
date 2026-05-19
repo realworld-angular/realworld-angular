@@ -23,7 +23,7 @@ import { RoleDirective } from '../../../shared/directives/role.directive';
 })
 export class Header {
   protected readonly auth = inject(Auth);
-  protected readonly cart = inject(CartStore);
+  protected readonly cartStore = inject(CartStore);
   private readonly document = inject(DOCUMENT);
 
   protected readonly isMobileMenuOpen = signal(false);

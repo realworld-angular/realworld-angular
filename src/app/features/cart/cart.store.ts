@@ -13,31 +13,31 @@ export interface CartItem {
   selectedOptionIds: string[];
 }
 
-export interface ReconstructedPizza {
+export interface CartPizza {
   id: string;
   name: string;
   image: string;
   basePrice: number;
 }
 
-export interface ReconstructedOption {
+export interface CartOption {
   id: string;
   label: string;
   price: number;
 }
 
-export interface ReconstructedCartItem {
+export interface CartItemDetail {
   id: string;
-  pizza: ReconstructedPizza;
+  pizza: CartPizza;
   quantity: number;
-  size: ReconstructedOption | null;
-  extraToppings: ReconstructedOption[];
+  size: CartOption | null;
+  extraToppings: CartOption[];
   totalPrice: number;
 }
 
-export interface CartReconstructResponse {
+export interface CartData {
   pizzeria: { id: string; name: string; image: string };
-  items: ReconstructedCartItem[];
+  items: CartItemDetail[];
   total: number;
 }
 
@@ -47,15 +47,15 @@ export class CartStore {
 
   public readonly pizzeria = signal<CartPizzeria | null>(null);
   public readonly items = signal<CartItem[]>([]);
-  public readonly reconstructed = signal<CartReconstructResponse | null>(null);
-  public readonly isReconstructing = signal(false);
+  public readonly cart = signal<CartData | null>(null);
+  public readonly isLoading = signal(false);
 
   public readonly totalPrice = computed<number>(() =>
-    this.reconstructed()?.total ?? 0,
+    this.cart()?.total ?? 0,
   );
 
   public readonly itemCount = computed<number>(() =>
-    this.reconstructed()?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0,
+    this.cart()?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0,
   );
 
   public readonly isEmpty = computed<boolean>(() => this.items().length === 0);
@@ -66,14 +66,14 @@ export class CartStore {
       const currentPizzeria = this.pizzeria();
 
       if (currentItems.length === 0 || !currentPizzeria) {
-        this.reconstructed.set(null);
-        this.isReconstructing.set(false);
+        this.cart.set(null);
+        this.isLoading.set(false);
         return;
       }
 
-      this.isReconstructing.set(true);
+      this.isLoading.set(true);
       const sub = this.http
-        .post<CartReconstructResponse>('/api/orders/cart', {
+        .post<CartData>('/api/orders/cart', {
           pizzeriaId: currentPizzeria.id,
           items: currentItems.map((item) => ({
             pizzaId: item.pizzaId,
@@ -84,12 +84,12 @@ export class CartStore {
         })
         .subscribe({
           next: (result) => {
-            this.reconstructed.set(result);
-            this.isReconstructing.set(false);
+            this.cart.set(result);
+            this.isLoading.set(false);
           },
           error: () => {
-            this.reconstructed.set(null);
-            this.isReconstructing.set(false);
+            this.cart.set(null);
+            this.isLoading.set(false);
           },
         });
 

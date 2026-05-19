@@ -34,7 +34,7 @@ interface PizzaOrderFormModel {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PizzaOrderFormDialog {
-  private readonly cart = inject(CartStore);
+  private readonly cartStore = inject(CartStore);
   private readonly dialogRef = inject(DialogRef);
   protected readonly data = inject<PizzaOrderFormDialogData>(DIALOG_DATA);
 
@@ -60,12 +60,12 @@ export class PizzaOrderFormDialog {
   }, {
     submission: {
       action: async (form) => {
-        if (this.cart.hasItemsForOtherPizzeria(this.data.pizzeriaId)) {
-          this.cart.clear();
+        if (this.cartStore.hasItemsForOtherPizzeria(this.data.pizzeriaId)) {
+          this.cartStore.clear();
         }
 
         const { selectedSize, extraToppings, quantity } = form().value();
-        this.cart.addItem(
+        this.cartStore.addItem(
           this.data.pizza.id,
           Number(quantity),
           selectedSize?.id ?? null,

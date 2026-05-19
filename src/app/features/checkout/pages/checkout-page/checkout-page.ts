@@ -57,7 +57,7 @@ interface CheckoutForm {
 })
 export class CheckoutPage {
   private readonly title = inject(Title);
-  protected readonly cart = inject(CartStore);
+  protected readonly cartStore = inject(CartStore);
   private readonly api = inject(OrderApi);
   private readonly router = inject(Router);
   private readonly dialog = inject(Dialog);
@@ -107,11 +107,11 @@ export class CheckoutPage {
           : undefined;
 
         const payload = {
-          pizzeriaId: this.cart.pizzeria()!.id,
+          pizzeriaId: this.cartStore.pizzeria()!.id,
           deliveryAddress: delivery,
           ...(billing ? { billingAddress: billing } : {}),
           notes: formValue.notes?.trim() || undefined,
-          items: this.cart.items().map((item) => ({
+          items: this.cartStore.items().map((item) => ({
             pizzaId: item.pizzaId,
             quantity: item.quantity,
             selectedSizeId: item.selectedSizeId ?? undefined,
@@ -121,7 +121,7 @@ export class CheckoutPage {
 
         try {
           const order = await firstValueFrom(this.api.createOrder(payload));
-          this.cart.clear();
+          this.cartStore.clear();
           this.submitted.set(true);
           void this.router.navigate(['/orders', order.id]);
         } catch {
@@ -134,7 +134,7 @@ export class CheckoutPage {
 
   public constructor() {
     effect(() => {
-      const name = this.cart.reconstructed()?.pizzeria.name;
+      const name = this.cartStore.cart()?.pizzeria.name;
       this.title.setTitle(name ? `Checkout - ${name}` : 'Checkout');
     });
 

@@ -24,14 +24,14 @@
           routerLink="/cart"
           class="cart-link"
           [attr.aria-label]="
-            'Cart – ' + cart.itemCount() + ' ' + (cart.itemCount() === 1 ? 'pizza' : 'pizzas')
+            'Cart – ' + cartStore.itemCount() + ' ' + (cartStore.itemCount() === 1 ? 'pizza' : 'pizzas')
           "
         >
           <span class="cart-link__icon" aria-hidden="true">
             <img src="/icons/shopping-cart.svg" alt="" width="24" height="24" />
           </span>
-          @if (cart.itemCount() > 0) {
-            <span class="cart-link__badge" aria-hidden="true">{{ cart.itemCount() }}</span>
+          @if (cartStore.itemCount() > 0) {
+            <span class="cart-link__badge" aria-hidden="true">{{ cartStore.itemCount() }}</span>
           }
         </a>
       }
@@ -97,8 +97,8 @@
           @if (!auth.isAdmin()) {
             <a routerLink="/cart" class="mobile-menu__link" (click)="closeMobileMenu()">
               Cart
-              @if (cart.itemCount() > 0) {
-                <span class="cart-link__badge" aria-hidden="true">{{ cart.itemCount() }}</span>
+              @if (cartStore.itemCount() > 0) {
+                <span class="cart-link__badge" aria-hidden="true">{{ cartStore.itemCount() }}</span>
               }
             </a>
           }

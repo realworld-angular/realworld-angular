@@ -2,7 +2,7 @@
   <div class="container">
     <h1 class="checkout-page__title">Checkout</h1>
 
-    @if (cart.isEmpty()) {
+    @if (cartStore.isEmpty()) {
       <rw-empty-state
         icon="empty-shopping-cart"
         title="Your cart is empty"
@@ -11,7 +11,7 @@
         <a routerLink="/">Browse pizzerias</a>
       </rw-empty-state>
     } @else {
-      @let data = cart.reconstructed()!;
+      @let data = cartStore.cart()!;
       <div class="checkout-layout">
         <section>
           <h2 class="section-heading">Delivery details</h2>

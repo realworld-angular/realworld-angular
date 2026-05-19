@@ -1,15 +1,15 @@
 <div class="cart-page">
   <div class="container">
-    @if (cart.isEmpty()) {
+    @if (cartStore.isEmpty()) {
       <rw-empty-state
         icon="empty-shopping-cart"
         title="Your cart is empty"
         text="Pick a pizzeria and add pizzas to get started."
       />
-    } @else if (cart.isReconstructing() && !cart.reconstructed()) {
+    } @else if (cartStore.isLoading() && !cartStore.cart()) {
       <div class="loading-center" aria-label="Loading cart"><rw-spinner /></div>
     } @else {
-      @let data = cart.reconstructed()!;
+      @let data = cartStore.cart()!;
       <div class="cart-layout">
         <section class="cart-pizzas">
           <div class="cart-pizzas__header">
@@ -21,7 +21,7 @@
                 </a>
               </strong>
             </p>
-            <rw-button variant="outlined" size="sm" type="button" (click)="cart.clear()">
+            <rw-button variant="outlined" size="sm" type="button" (click)="cartStore.clear()">
               Clear cart
             </rw-button>
           </div>
@@ -61,7 +61,7 @@
                       class="qty-btn"
                       [disabled]="item.quantity <= 1"
                       aria-label="Decrease quantity"
-                      (click)="cart.updateQuantity(item.id, item.quantity - 1)"
+                      (click)="cartStore.updateQuantity(item.id, item.quantity - 1)"
                     >
                       <img src="/icons/remove.svg" alt="" width="24" height="24" aria-hidden="true" />
                     </button>
@@ -70,7 +70,7 @@
                       type="button"
                       class="qty-btn"
                       aria-label="Increase quantity"
-                      (click)="cart.updateQuantity(item.id, item.quantity + 1)"
+                      (click)="cartStore.updateQuantity(item.id, item.quantity + 1)"
                     >
                       <img src="/icons/add.svg" alt="" width="24" height="24" aria-hidden="true" />
                     </button>
@@ -79,7 +79,7 @@
                     type="button"
                     class="remove-btn"
                     [attr.aria-label]="'Remove ' + item.pizza.name"
-                    (click)="cart.removeItem(item.id)"
+                    (click)="cartStore.removeItem(item.id)"
                   >
                     <img src="/icons/delete.svg" alt="" width="20" height="20" aria-hidden="true" />
                   </button>
