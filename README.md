@@ -31,6 +31,10 @@ Key features of the frontend:
 
 > **This is a playground application for developers learning Angular and full-stack patterns.** It is not a real marketplace — no actual orders are fulfilled, no payment is processed, and mock data is encouraged.
 
+## API
+
+The app connects to a deployed backend. Browse the [API documentation](https://api.realworldangular.org/api/docs) for available endpoints.
+
 ## Tech Stack
 
 | Layer | Technology |
