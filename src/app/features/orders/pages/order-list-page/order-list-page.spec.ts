@@ -72,9 +72,12 @@ describe('OrdersListPage', () => {
   });
 
   it('should show error callout on failure', async () => {
-    httpTesting.expectOne((r) => r.url.includes('/api/orders')).flush('error', {
-      status: 500, statusText: 'Server Error',
-    });
+    httpTesting
+      .expectOne((r) => r.url.includes('/api/orders'))
+      .flush('error', {
+        status: 500,
+        statusText: 'Server Error',
+      });
     await fixture.whenStable();
     expect(el.querySelector('rw-callout')).not.toBeNull();
   });

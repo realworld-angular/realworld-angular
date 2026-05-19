@@ -72,12 +72,10 @@ export class CartStore {
   public readonly cart = computed<CartData | null>(() => this.cartResource.value() ?? null);
   public readonly isLoading = computed<boolean>(() => this.cartResource.isLoading());
 
-  public readonly totalPrice = computed<number>(() =>
-    this.cart()?.total ?? 0,
-  );
+  public readonly totalPrice = computed<number>(() => this.cart()?.total ?? 0);
 
-  public readonly itemCount = computed<number>(() =>
-    this.cart()?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0,
+  public readonly itemCount = computed<number>(
+    () => this.cart()?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0,
   );
 
   public readonly isEmpty = computed<boolean>(() => this.items().length === 0);
@@ -106,9 +104,7 @@ export class CartStore {
       const existing = items.find((item) => item.id === itemId);
       if (existing) {
         return items.map((item) =>
-          item.id === itemId
-            ? { ...item, quantity: item.quantity + quantity }
-            : item,
+          item.id === itemId ? { ...item, quantity: item.quantity + quantity } : item,
         );
       }
 
@@ -130,9 +126,7 @@ export class CartStore {
       this.removeItem(itemId);
     } else {
       this.items.update((items) =>
-        items.map((item) =>
-          item.id === itemId ? { ...item, quantity } : item,
-        ),
+        items.map((item) => (item.id === itemId ? { ...item, quantity } : item)),
       );
     }
   }

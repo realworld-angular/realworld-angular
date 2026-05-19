@@ -14,10 +14,7 @@ describe('authGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideRouter([]),
-        { provide: Auth, useValue: authStub },
-      ],
+      providers: [provideRouter([]), { provide: Auth, useValue: authStub }],
     });
     router = TestBed.inject(Router);
   });
@@ -41,10 +38,7 @@ describe('guestGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideRouter([]),
-        { provide: Auth, useValue: authStub },
-      ],
+      providers: [provideRouter([]), { provide: Auth, useValue: authStub }],
     });
     router = TestBed.inject(Router);
   });

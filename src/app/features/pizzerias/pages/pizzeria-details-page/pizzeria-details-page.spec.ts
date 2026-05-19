@@ -23,8 +23,22 @@ const mockPizzeria: PizzeriaDetail = {
 };
 
 const mockPizzas: Pizza[] = [
-  { id: 'pizza1', name: 'Margherita', basePrice: 9.5, image: 'marg.jpg', createdAt: '2024-01-01', toppings: [] },
-  { id: 'pizza2', name: 'Diavola', basePrice: 11, image: 'diav.jpg', createdAt: '2024-01-01', toppings: [] },
+  {
+    id: 'pizza1',
+    name: 'Margherita',
+    basePrice: 9.5,
+    image: 'marg.jpg',
+    createdAt: '2024-01-01',
+    toppings: [],
+  },
+  {
+    id: 'pizza2',
+    name: 'Diavola',
+    basePrice: 11,
+    image: 'diav.jpg',
+    createdAt: '2024-01-01',
+    toppings: [],
+  },
 ];
 
 const userSignal = signal<User | null>(null);
@@ -57,19 +71,27 @@ describe('PizzeriaDetailsPage', () => {
 
   it('should show loading indicator before response', () => {
     expect(el.querySelector('[aria-label="Loading pizzeria"]')).not.toBeNull();
-    httpTesting.match((r) => r.url.includes('/api/pizzerias/p1')).forEach((r) => r.flush(mockPizzeria));
-    httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas')).forEach((r) => r.flush(mockPizzas));
+    httpTesting
+      .match((r) => r.url.includes('/api/pizzerias/p1'))
+      .forEach((r) => r.flush(mockPizzeria));
+    httpTesting
+      .match((r) => r.url.includes('/api/pizzerias/p1/pizzas'))
+      .forEach((r) => r.flush(mockPizzas));
   });
 
   it('should render pizzeria name after successful responses', async () => {
-    httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1') && !r.url.includes('/pizzas')).flush(mockPizzeria);
+    httpTesting
+      .expectOne((r) => r.url.includes('/api/pizzerias/p1') && !r.url.includes('/pizzas'))
+      .flush(mockPizzeria);
     httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas')).flush(mockPizzas);
     await fixture.whenStable();
     expect(el.textContent).toContain('Roma');
   });
 
   it('should render pizza names in the catalog', async () => {
-    httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1') && !r.url.includes('/pizzas')).flush(mockPizzeria);
+    httpTesting
+      .expectOne((r) => r.url.includes('/api/pizzerias/p1') && !r.url.includes('/pizzas'))
+      .flush(mockPizzeria);
     httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas')).flush(mockPizzas);
     await fixture.whenStable();
     expect(el.textContent).toContain('Margherita');
@@ -77,16 +99,20 @@ describe('PizzeriaDetailsPage', () => {
   });
 
   it('should show error state when pizzeria request fails', async () => {
-    httpTesting.match((r) => r.url.includes('/api/pizzerias/p1') && !r.url.includes('/pizzas')).forEach((r) =>
-      r.flush('error', { status: 404, statusText: 'Not Found' }),
-    );
-    httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas')).forEach((r) => r.flush(mockPizzas));
+    httpTesting
+      .match((r) => r.url.includes('/api/pizzerias/p1') && !r.url.includes('/pizzas'))
+      .forEach((r) => r.flush('error', { status: 404, statusText: 'Not Found' }));
+    httpTesting
+      .match((r) => r.url.includes('/api/pizzerias/p1/pizzas'))
+      .forEach((r) => r.flush(mockPizzas));
     await fixture.whenStable();
     expect(el.querySelector('rw-empty-state')).not.toBeNull();
   });
 
   it('should show empty state when no pizzas returned', async () => {
-    httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1') && !r.url.includes('/pizzas')).flush(mockPizzeria);
+    httpTesting
+      .expectOne((r) => r.url.includes('/api/pizzerias/p1') && !r.url.includes('/pizzas'))
+      .flush(mockPizzeria);
     httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas')).flush([]);
     await fixture.whenStable();
     expect(el.querySelector('rw-empty-state')).not.toBeNull();

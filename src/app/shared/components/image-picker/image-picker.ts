@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  model,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { httpResource } from '@angular/common/http';
 import { FormValueControl, ValidationError } from '@angular/forms/signals';
@@ -35,9 +29,7 @@ export class ImagePicker implements FormValueControl<string | null> {
   );
 
   protected readonly filenamesResource = httpResource<string[]>(() =>
-    this.category() === 'pizzeria'
-      ? '/api/pizzerias/images'
-      : '/api/pizzas/images',
+    this.category() === 'pizzeria' ? '/api/pizzerias/images' : '/api/pizzas/images',
   );
 
   protected select(filename: string): void {

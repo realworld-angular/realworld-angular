@@ -8,7 +8,9 @@ describe('Spinner', () => {
   let el: HTMLElement;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({}).overrideComponent(Spinner, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.configureTestingModule({}).overrideComponent(Spinner, {
+      set: { schemas: [NO_ERRORS_SCHEMA] },
+    });
     fixture = TestBed.createComponent(Spinner);
     el = fixture.nativeElement;
     await fixture.whenStable();

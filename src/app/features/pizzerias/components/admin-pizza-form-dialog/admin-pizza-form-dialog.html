@@ -7,33 +7,31 @@
       label="Name"
       type="text"
       [formField]="pizzaForm.name"
-      [placeholder]="isEditMode ? '' : 'The name is assigned automatically when you save; you cannot set it here.'"
+      [placeholder]="
+        isEditMode
+          ? ''
+          : 'The name is assigned automatically when you save; you cannot set it here.'
+      "
     />
 
-    <rw-input
-      label="Base price (€)"
-      type="number"
-      [formField]="pizzaForm.basePrice"
-    />
+    <rw-input label="Base price (€)" type="number" [formField]="pizzaForm.basePrice" />
 
-    <rw-image-picker
-      category="pizza"
-      label="Pizza image"
-      [formField]="pizzaForm.image"
-    />
+    <rw-image-picker category="pizza" label="Pizza image" [formField]="pizzaForm.image" />
 
     <fieldset class="admin-form__toppings">
       <legend>Toppings</legend>
       @for (topping of pizzaForm.extraToppings; track topping) {
-        <label class="admin-form__topping-option" [class.admin-form__topping-option--selected]="toppingInput.checked">
-          <input
-            #toppingInput
-            type="checkbox"
-            class="sr-only"
-            [formField]="topping"
-          />
-          <span class="admin-form__topping-label">{{ toppingsResource.value()![$index].label }}</span>
-          <span class="admin-form__topping-price" aria-label="Extra price">+€{{ toppingsResource.value()![$index].price | number: '1.2-2' }}</span>
+        <label
+          class="admin-form__topping-option"
+          [class.admin-form__topping-option--selected]="toppingInput.checked"
+        >
+          <input #toppingInput type="checkbox" class="sr-only" [formField]="topping" />
+          <span class="admin-form__topping-label">{{
+            toppingsResource.value()![$index].label
+          }}</span>
+          <span class="admin-form__topping-price" aria-label="Extra price"
+            >+€{{ toppingsResource.value()![$index].price | number: '1.2-2' }}</span
+          >
         </label>
       }
     </fieldset>
@@ -43,18 +41,16 @@
     <div class="admin-modal-footer__pricing">
       <p class="admin-modal-footer__total-line">
         <span class="admin-modal-footer__total-label">Total price</span>
-          <strong class="admin-modal-footer__total-value">
-            €{{ pizzaTotalPrice() | number: '1.2-2' }}
-          </strong>
+        <strong class="admin-modal-footer__total-value">
+          €{{ pizzaTotalPrice() | number: '1.2-2' }}
+        </strong>
       </p>
     </div>
     <div class="admin-modal-footer__actions">
-      <rw-button variant="ghost" palette="secondary" type="button" (click)="dismiss()">Cancel</rw-button>
-      <rw-button
-        type="submit"
-        [isLoading]="pizzaForm().submitting()"
-        (click)="save()"
+      <rw-button variant="ghost" palette="secondary" type="button" (click)="dismiss()"
+        >Cancel</rw-button
       >
+      <rw-button type="submit" [isLoading]="pizzaForm().submitting()" (click)="save()">
         {{ isEditMode ? 'Save changes' : 'Create pizza' }}
       </rw-button>
     </div>

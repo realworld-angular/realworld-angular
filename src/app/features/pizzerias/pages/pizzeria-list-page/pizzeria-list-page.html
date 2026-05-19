@@ -30,28 +30,32 @@
       @let data = pizzeriasResource.value()!;
       <ul class="pizzeria-grid" role="list">
         @for (pizzeria of data.items; track pizzeria.id) {
-            <li>
-              <a [routerLink]="['/pizzerias', pizzeria.id]" class="pizzeria-card" aria-label="View {{ pizzeria.name }} pizzeria">
-                <div class="pizzeria-card__image-wrap">
-                  <img
-                    [ngSrc]="pizzeria.image | catalogImageUrl: 'pizzeria'"
-                    alt=""
-                    class="pizzeria-card__image"
-                    width="600"
-                    height="400"
-                    disableOptimizedSrcset
-                  />
-                </div>
-                <div class="pizzeria-card__body">
-                  <h3 class="pizzeria-card__name">{{ pizzeria.name }}</h3>
-                  <p class="pizzeria-card__location">{{ pizzeria.city }}, {{ pizzeria.country }}</p>
-                  <p class="pizzeria-card__meta">
-                    <span>{{ pizzeria._count.pizzas }} pizzas</span>
-                  </p>
-                </div>
-              </a>
-            </li>
-          }
+          <li>
+            <a
+              [routerLink]="['/pizzerias', pizzeria.id]"
+              class="pizzeria-card"
+              aria-label="View {{ pizzeria.name }} pizzeria"
+            >
+              <div class="pizzeria-card__image-wrap">
+                <img
+                  [ngSrc]="pizzeria.image | catalogImageUrl: 'pizzeria'"
+                  alt=""
+                  class="pizzeria-card__image"
+                  width="600"
+                  height="400"
+                  disableOptimizedSrcset
+                />
+              </div>
+              <div class="pizzeria-card__body">
+                <h3 class="pizzeria-card__name">{{ pizzeria.name }}</h3>
+                <p class="pizzeria-card__location">{{ pizzeria.city }}, {{ pizzeria.country }}</p>
+                <p class="pizzeria-card__meta">
+                  <span>{{ pizzeria._count.pizzas }} pizzas</span>
+                </p>
+              </div>
+            </a>
+          </li>
+        }
       </ul>
 
       @if (data.totalPages > 1 && data.items.length > 0) {

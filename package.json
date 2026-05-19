@@ -7,7 +7,10 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "prepare": "husky install",
+    "format:write": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "private": true,
   "packageManager": "pnpm@10.17.0",
@@ -36,5 +39,9 @@
     "typescript": "~5.9.2",
     "typescript-eslint": "8.56.1",
     "vitest": "^4.0.8"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
   }
 }

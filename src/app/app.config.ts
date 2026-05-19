@@ -8,14 +8,15 @@ import { baseUrlInterceptor } from './core/interceptors/base-url.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes, withComponentInputBinding(),  withInMemoryScrolling({
-      scrollPositionRestoration: 'enabled',
-      anchorScrolling: 'enabled'
-    })),
-    provideHttpClient(withInterceptors([
-      baseUrlInterceptor,
-      credentialsInterceptor
-    ]), withFetch()),
-    provideAppInitializer(() =>  inject(Auth).init()),
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'enabled',
+        anchorScrolling: 'enabled',
+      }),
+    ),
+    provideHttpClient(withInterceptors([baseUrlInterceptor, credentialsInterceptor]), withFetch()),
+    provideAppInitializer(() => inject(Auth).init()),
   ],
 };

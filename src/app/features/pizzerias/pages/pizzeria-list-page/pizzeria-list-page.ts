@@ -16,7 +16,17 @@ import { Callout } from '../../../../shared/components/callout/callout';
 
 @Component({
   selector: 'rw-pizzeria-list-page',
-  imports: [RouterLink, NgOptimizedImage, Spinner, Pagination, EmptyState, HeroBanner, CatalogImageUrlPipe, FormsModule, Callout],
+  imports: [
+    RouterLink,
+    NgOptimizedImage,
+    Spinner,
+    Pagination,
+    EmptyState,
+    HeroBanner,
+    CatalogImageUrlPipe,
+    FormsModule,
+    Callout,
+  ],
   templateUrl: './pizzeria-list-page.html',
   styleUrl: './pizzeria-list-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

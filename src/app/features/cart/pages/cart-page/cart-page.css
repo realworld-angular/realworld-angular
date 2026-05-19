@@ -117,7 +117,10 @@
   color: var(--color-primary);
 }
 
-.qty-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.qty-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
 .qty-value {
   font-weight: var(--font-weight-semibold);

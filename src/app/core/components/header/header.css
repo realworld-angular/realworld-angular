@@ -50,7 +50,9 @@
   font-weight: var(--font-weight-medium);
   color: var(--color-text-muted);
   border-radius: var(--radius-md);
-  transition: color var(--transition-fast), background-color var(--transition-fast);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
   text-decoration: none;
   background: none;
   border: none;
@@ -303,7 +305,10 @@ a.mobile-menu__link:has(.cart-link__badge) {
     font-weight: var(--font-weight-medium);
     border-radius: var(--radius-md);
     text-decoration: none;
-    transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast),
+      border-color var(--transition-fast);
   }
 
   .mobile-menu__auth-btn--primary {

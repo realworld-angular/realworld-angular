@@ -14,9 +14,7 @@
     ></textarea>
   </label>
   @if (maxLength()) {
-    <span class="field__counter">
-      {{ charCount() }}/{{ maxLength() }}
-    </span>
+    <span class="field__counter"> {{ charCount() }}/{{ maxLength() }} </span>
   }
   @if (hint() && !(formField()().touched() && formField()().errors().length)) {
     <span class="field__hint">{{ hint() }}</span>

@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  model,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormValueControl, ValidationError } from '@angular/forms/signals';
 import { PizzaOption, SelectedPizzaOption } from '../../../pizzerias/models/pizza.models';

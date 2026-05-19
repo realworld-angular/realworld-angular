@@ -20,7 +20,11 @@
         <ul class="orders-list" role="list">
           @for (order of page.items; track order.id) {
             <li>
-              <a [routerLink]="['/orders', order.id]" class="order-row" aria-label="View order {{ order.id }}">
+              <a
+                [routerLink]="['/orders', order.id]"
+                class="order-row"
+                aria-label="View order {{ order.id }}"
+              >
                 <div>
                   <p class="order-row__pizzeria">{{ order.pizzeria.name }}</p>
                   <p class="order-row__meta">

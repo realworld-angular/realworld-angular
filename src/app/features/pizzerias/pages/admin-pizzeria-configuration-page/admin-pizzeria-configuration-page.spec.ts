@@ -72,7 +72,8 @@ describe('AdminPizzeriaConfigurationPage', () => {
 
   it('should show error callout on HTTP failure', async () => {
     httpTesting.expectOne('/api/pizzerias/admin/pizzeria').flush('error', {
-      status: 500, statusText: 'Server Error',
+      status: 500,
+      statusText: 'Server Error',
     });
     await fixture.whenStable();
     expect(el.querySelector('rw-callout')).not.toBeNull();

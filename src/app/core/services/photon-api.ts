@@ -46,9 +46,16 @@ export class PhotonApi {
     if (trimmedQuery.length < 2) {
       return of([]);
     }
-    const params = new HttpParams().set('q', trimmedQuery).set('lang', 'en').set('limit', String(limit));
+    const params = new HttpParams()
+      .set('q', trimmedQuery)
+      .set('lang', 'en')
+      .set('limit', String(limit));
     return this.http.get<PhotonGeoJson>(`https://photon.komoot.io/api/`, { params }).pipe(
-      map((doc) => (doc.features ?? []).map((feature) => this.toSuggestion(feature)).filter((suggestion) => suggestion.city && suggestion.country)),
+      map((doc) =>
+        (doc.features ?? [])
+          .map((feature) => this.toSuggestion(feature))
+          .filter((suggestion) => suggestion.city && suggestion.country),
+      ),
       catchError(() => of([])),
     );
   }
@@ -76,7 +83,14 @@ export class PhotonApi {
     }
     const type = (props.type ?? '').toLowerCase();
     const name = (props.name ?? '').trim();
-    if (name && (type === 'city' || type === 'town' || type === 'village' || type === 'locality' || type === 'district')) {
+    if (
+      name &&
+      (type === 'city' ||
+        type === 'town' ||
+        type === 'village' ||
+        type === 'locality' ||
+        type === 'district')
+    ) {
       return name;
     }
     return name;

@@ -9,7 +9,9 @@ describe('Button', () => {
   let buttonEl: HTMLButtonElement;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({}).overrideComponent(Button, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.configureTestingModule({}).overrideComponent(Button, {
+      set: { schemas: [NO_ERRORS_SCHEMA] },
+    });
     fixture = TestBed.createComponent(Button);
     el = fixture.nativeElement;
     buttonEl = el.querySelector('button')!;

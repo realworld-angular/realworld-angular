@@ -77,13 +77,13 @@ export class PizzeriaDetailsPage {
     },
   }));
 
-  protected readonly hasActivePizzaSearch = computed<boolean>(() => this.debouncedSearch().length > 0);
+  protected readonly hasActivePizzaSearch = computed<boolean>(
+    () => this.debouncedSearch().length > 0,
+  );
 
   protected readonly addedToCartBannerVisible = toSignal(
     merge(
-      this.showBanner$.pipe(
-        switchMap(() => merge(of(true), timer(5000).pipe(map(() => false)))),
-      ),
+      this.showBanner$.pipe(switchMap(() => merge(of(true), timer(5000).pipe(map(() => false))))),
       this.dismissBanner$.pipe(map(() => false)),
     ),
     { initialValue: false },
@@ -106,10 +106,17 @@ export class PizzeriaDetailsPage {
   }
 
   protected openOrderModal(pizza: Pizza): void {
-    const ref = this.dialog.open<string, PizzaOrderFormDialogData, PizzaOrderFormDialog>(PizzaOrderFormDialog, {
-      data: { pizza, pizzeriaId: this.id(), displayPizzeriaName: this.pizzeriaResource.value()?.name ?? '' },
-      hasBackdrop: false,
-    });
+    const ref = this.dialog.open<string, PizzaOrderFormDialogData, PizzaOrderFormDialog>(
+      PizzaOrderFormDialog,
+      {
+        data: {
+          pizza,
+          pizzeriaId: this.id(),
+          displayPizzeriaName: this.pizzeriaResource.value()?.name ?? '',
+        },
+        hasBackdrop: false,
+      },
+    );
 
     ref.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result) => {
       if (result === 'added') {

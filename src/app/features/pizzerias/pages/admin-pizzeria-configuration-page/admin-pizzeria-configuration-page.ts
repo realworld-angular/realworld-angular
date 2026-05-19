@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, signal, effect, DestroyRef, untracked } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+  effect,
+  DestroyRef,
+  untracked,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField, form, required, FormRoot } from '@angular/forms/signals';
 import { httpResource } from '@angular/common/http';
@@ -14,7 +22,11 @@ import { PhotonLocationField } from '../../../../shared/components/photon-locati
 import type { LocationValue } from '../../../../shared/components/photon-location-field/photon-location-field';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { Dialog } from '@angular/cdk/dialog';
-import { ConfirmDialog, ConfirmDialogData, ConfirmDialogResult } from '../../../../shared/components/confirm-dialog/confirm-dialog';
+import {
+  ConfirmDialog,
+  ConfirmDialogData,
+  ConfirmDialogResult,
+} from '../../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'rw-admin-pizzeria-configuration-page',
@@ -42,30 +54,36 @@ export class AdminPizzeriaConfigurationPage {
     image: null as string | null,
   });
 
-  protected readonly pizzeriaForm = form(this.model, (schema) => {
-    required(schema.location, { message: 'Choose a location from the list' });
-    required(schema.image, { message: 'Please select an image' });
-  }, {
-    submission: {
-      action: async (formRef) => {
-        this.submitSuccess.set(false);
-        const location = formRef().value().location!;
-        try {
-          await firstValueFrom(
-            this.pizzeriaApi.updateMyPizzeria({
-              city: location.city,
-              country: location.country,
-              imageFilename: formRef().value().image!,
-            }).pipe(takeUntilDestroyed(this.destroyRef)),
-          );
-        } catch {
-          return { kind: 'serverError', message: 'Save failed' };
-        }
-        this.submitSuccess.set(true);
-        return null;
+  protected readonly pizzeriaForm = form(
+    this.model,
+    (schema) => {
+      required(schema.location, { message: 'Choose a location from the list' });
+      required(schema.image, { message: 'Please select an image' });
+    },
+    {
+      submission: {
+        action: async (formRef) => {
+          this.submitSuccess.set(false);
+          const location = formRef().value().location!;
+          try {
+            await firstValueFrom(
+              this.pizzeriaApi
+                .updateMyPizzeria({
+                  city: location.city,
+                  country: location.country,
+                  imageFilename: formRef().value().image!,
+                })
+                .pipe(takeUntilDestroyed(this.destroyRef)),
+            );
+          } catch {
+            return { kind: 'serverError', message: 'Save failed' };
+          }
+          this.submitSuccess.set(true);
+          return null;
+        },
       },
     },
-  });
+  );
 
   public constructor() {
     effect(() => {
@@ -96,21 +114,28 @@ export class AdminPizzeriaConfigurationPage {
 
     const message = `Are you sure you want to delete "${pizzeria.name}"? This action cannot be undone.`;
     const ref = this.dialog.open<ConfirmDialogResult, ConfirmDialogData>(ConfirmDialog, {
-      data: { title: 'Delete pizzeria', message, cancelLabel: 'Cancel', confirmLabel: 'Delete pizzeria' },
-    });
-
-    ref.closed.pipe(
-      filter((result) => result === 'confirmed'),
-      switchMap(() => {
-        this.isDeleting.set(true);
-        return this.pizzeriaApi.deleteMyPizzeria();
-      }),
-      finalize(() => this.isDeleting.set(false)),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-        next: () => {
-        void this.router.navigateByUrl('/pizzerias/admin/new');
+      data: {
+        title: 'Delete pizzeria',
+        message,
+        cancelLabel: 'Cancel',
+        confirmLabel: 'Delete pizzeria',
       },
     });
+
+    ref.closed
+      .pipe(
+        filter((result) => result === 'confirmed'),
+        switchMap(() => {
+          this.isDeleting.set(true);
+          return this.pizzeriaApi.deleteMyPizzeria();
+        }),
+        finalize(() => this.isDeleting.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: () => {
+          void this.router.navigateByUrl('/pizzerias/admin/new');
+        },
+      });
   }
 }

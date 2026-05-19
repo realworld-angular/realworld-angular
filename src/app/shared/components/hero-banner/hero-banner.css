@@ -39,5 +39,7 @@
 }
 
 @media (max-width: 768px) {
-  .hero { padding: var(--space-10) 0 var(--space-8); }
+  .hero {
+    padding: var(--space-10) 0 var(--space-8);
+  }
 }

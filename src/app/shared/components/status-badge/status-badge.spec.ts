@@ -8,7 +8,9 @@ describe('StatusBadge', () => {
   let el: HTMLElement;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({}).overrideComponent(StatusBadge, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.configureTestingModule({}).overrideComponent(StatusBadge, {
+      set: { schemas: [NO_ERRORS_SCHEMA] },
+    });
     fixture = TestBed.createComponent(StatusBadge);
     el = fixture.nativeElement;
     fixture.componentRef.setInput('status', 'PENDING');

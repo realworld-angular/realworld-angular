@@ -15,7 +15,12 @@
     <form [formRoot]="pizzeriaForm" class="admin-form">
       <div class="admin-readonly-field">
         <label for="pizzeria-name" class="admin-readonly-field__label">Name</label>
-        <input id="pizzeria-name" class="admin-readonly-field__input" [value]="pizzeria.name" disabled />
+        <input
+          id="pizzeria-name"
+          class="admin-readonly-field__input"
+          [value]="pizzeria.name"
+          disabled
+        />
         <span class="admin-readonly-field__hint">Auto-generated, not editable</span>
       </div>
 
@@ -38,7 +43,12 @@
           variant="error"
           message="Danger zone: deleting this pizzeria permanently removes it and cannot be undone."
         >
-          <rw-button type="button" palette="danger" [isLoading]="isDeleting()" (click)="deletePizzeria()">
+          <rw-button
+            type="button"
+            palette="danger"
+            [isLoading]="isDeleting()"
+            (click)="deletePizzeria()"
+          >
             Delete pizzeria
           </rw-button>
         </rw-callout>

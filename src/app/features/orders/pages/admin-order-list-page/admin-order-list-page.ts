@@ -22,7 +22,10 @@ export class AdminOrderListPage {
 
   protected readonly currentPage = signal(1);
   protected readonly limit = 15;
-  protected readonly cancelFeedback = signal<{ variant: 'error' | 'success'; message: string } | null>(null);
+  protected readonly cancelFeedback = signal<{
+    variant: 'error' | 'success';
+    message: string;
+  } | null>(null);
 
   protected changePage(page: number): void {
     this.currentPage.set(page);

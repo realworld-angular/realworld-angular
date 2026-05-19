@@ -19,9 +19,11 @@ export class PizzeriaApi {
     return this.http.post<PizzeriaDetail>('/api/pizzerias', data);
   }
 
-  public updateMyPizzeria(
-    data: { city?: string; country?: string; imageFilename?: string },
-  ): Observable<PizzeriaDetail> {
+  public updateMyPizzeria(data: {
+    city?: string;
+    country?: string;
+    imageFilename?: string;
+  }): Observable<PizzeriaDetail> {
     return this.http.patch<PizzeriaDetail>('/api/pizzerias/admin/pizzeria', data);
   }
 

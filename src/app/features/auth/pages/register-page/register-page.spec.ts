@@ -12,10 +12,7 @@ describe('RegisterPage', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClientTesting(),
-        provideRouter([]),
-      ],
+      providers: [provideHttpClientTesting(), provideRouter([])],
     }).overrideComponent(RegisterPage, { set: { schemas: [NO_ERRORS_SCHEMA] } });
 
     fixture = TestBed.createComponent(RegisterPage);

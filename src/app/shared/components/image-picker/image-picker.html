@@ -12,37 +12,36 @@
       <span class="picker__loading-text">Loading images…</span>
     </div>
   } @else if (filenamesResource.error()) {
-    <p class="picker__error" role="alert">Could not load image list. Check that the API is running.</p>
+    <p class="picker__error" role="alert">
+      Could not load image list. Check that the API is running.
+    </p>
   } @else {
     @let filenames = filenamesResource.value()!;
     @if (filenames.length === 0) {
       <p class="picker__empty">No bundled images are available.</p>
     } @else {
-    <div
-      class="picker__grid"
-      role="radiogroup"
-    >
-      @for (filename of filenames; track filename) {
-        <button
-          type="button"
-          class="picker__item"
-          [class.picker__item--selected]="value() === filename"
-          [attr.aria-pressed]="value() === filename"
-          [attr.aria-label]="'Image option ' + filename"
-          [disabled]="disabled()"
-          (click)="select(filename)"
-        >
-          <img
-            [ngSrc]="filename | catalogImageUrl: pickerImageKind()"
-            alt=""
-            class="picker__img"
-            width="100"
-            height="100"
-            disableOptimizedSrcset
-          />
-        </button>
-      }
-    </div>
+      <div class="picker__grid" role="radiogroup">
+        @for (filename of filenames; track filename) {
+          <button
+            type="button"
+            class="picker__item"
+            [class.picker__item--selected]="value() === filename"
+            [attr.aria-pressed]="value() === filename"
+            [attr.aria-label]="'Image option ' + filename"
+            [disabled]="disabled()"
+            (click)="select(filename)"
+          >
+            <img
+              [ngSrc]="filename | catalogImageUrl: pickerImageKind()"
+              alt=""
+              class="picker__img"
+              width="100"
+              height="100"
+              disableOptimizedSrcset
+            />
+          </button>
+        }
+      </div>
     }
   }
 

@@ -8,9 +8,11 @@ export class PizzaApi {
   private readonly http = inject(HttpClient);
 
   /** Admin: create a pizza in the current admin's pizzeria. */
-  public createPizza(
-    data: { basePrice: number; imageFilename: string; toppingIds: string[] },
-  ): Observable<Pizza> {
+  public createPizza(data: {
+    basePrice: number;
+    imageFilename: string;
+    toppingIds: string[];
+  }): Observable<Pizza> {
     return this.http.post<Pizza>('/api/admin/pizzeria/pizzas', data);
   }
 

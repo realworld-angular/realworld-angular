@@ -37,16 +37,16 @@ The app connects to a deployed backend. Browse the [API documentation](https://a
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | [Angular v21](https://angular.dev/) — standalone components |
-| Language | TypeScript 5.9 |
-| Routing | `@angular/router` with lazy-loaded routes and guards |
-| HTTP | `HttpClient` with a credentials interceptor |
-| Testing | [Vitest](https://vitest.dev/) with jsdom |
-| Linting | ESLint + `angular-eslint` |
-| Formatting | Prettier |
-| Package manager | pnpm |
+| Layer           | Technology                                                  |
+| --------------- | ----------------------------------------------------------- |
+| Framework       | [Angular v21](https://angular.dev/) — standalone components |
+| Language        | TypeScript 5.9                                              |
+| Routing         | `@angular/router` with lazy-loaded routes and guards        |
+| HTTP            | `HttpClient` with a credentials interceptor                 |
+| Testing         | [Vitest](https://vitest.dev/) with jsdom                    |
+| Linting         | ESLint + `angular-eslint`                                   |
+| Formatting      | Prettier                                                    |
+| Package manager | pnpm                                                        |
 
 ## Prerequisites
 
@@ -73,13 +73,13 @@ The application will be available at **http://localhost:4200** and automatically
 
 ## Available Scripts
 
-| Script | Description |
-|---|---|
-| `pnpm start` | Start the dev server at `http://localhost:4200` |
-| `pnpm run build` | Build for production into `dist/` |
-| `pnpm run watch` | Build in watch mode (development) |
-| `pnpm run test` | Run unit tests with Vitest |
-| `pnpm run lint` | Lint the codebase with ESLint |
+| Script           | Description                                     |
+| ---------------- | ----------------------------------------------- |
+| `pnpm start`     | Start the dev server at `http://localhost:4200` |
+| `pnpm run build` | Build for production into `dist/`               |
+| `pnpm run watch` | Build in watch mode (development)               |
+| `pnpm run test`  | Run unit tests with Vitest                      |
+| `pnpm run lint`  | Lint the codebase with ESLint                   |
 
 ## Application Structure
 
@@ -108,33 +108,33 @@ src/
 
 ### Route Map
 
-| Route | Access |
-|---|---|
-| `/` | Public |
-| `/pizzerias/:id` | Public |
-| `/auth/login` | Guests only (redirected if already logged in) |
-| `/auth/register` | Guests only |
-| `/invite/:token` | Public |
-| `/cart` | Public — build a cart without an account; checkout requires sign-in |
-| `/checkout` | Authenticated |
-| `/orders` | Authenticated |
-| `/orders/:id` | Authenticated |
-| `/profile` | Authenticated |
-| `/admin/pizzerias` | `PIZZERIA_ADMIN` |
-| `/admin/pizzerias/new` | `PIZZERIA_ADMIN` |
-| `/admin/pizzerias/:id` | `PIZZERIA_ADMIN` — layout shell; redirects to a default tab |
-| `/admin/pizzerias/:id/orders` | `PIZZERIA_ADMIN` |
-| `/admin/pizzerias/:id/pizzas` | `PIZZERIA_ADMIN` |
-| `/admin/pizzerias/:id/configuration` | `PIZZERIA_ADMIN` |
+| Route                                | Access                                                              |
+| ------------------------------------ | ------------------------------------------------------------------- |
+| `/`                                  | Public                                                              |
+| `/pizzerias/:id`                     | Public                                                              |
+| `/auth/login`                        | Guests only (redirected if already logged in)                       |
+| `/auth/register`                     | Guests only                                                         |
+| `/invite/:token`                     | Public                                                              |
+| `/cart`                              | Public — build a cart without an account; checkout requires sign-in |
+| `/checkout`                          | Authenticated                                                       |
+| `/orders`                            | Authenticated                                                       |
+| `/orders/:id`                        | Authenticated                                                       |
+| `/profile`                           | Authenticated                                                       |
+| `/admin/pizzerias`                   | `PIZZERIA_ADMIN`                                                    |
+| `/admin/pizzerias/new`               | `PIZZERIA_ADMIN`                                                    |
+| `/admin/pizzerias/:id`               | `PIZZERIA_ADMIN` — layout shell; redirects to a default tab         |
+| `/admin/pizzerias/:id/orders`        | `PIZZERIA_ADMIN`                                                    |
+| `/admin/pizzerias/:id/pizzas`        | `PIZZERIA_ADMIN`                                                    |
+| `/admin/pizzerias/:id/configuration` | `PIZZERIA_ADMIN`                                                    |
 
 ## Roles and Access
 
 The application supports two user roles:
 
-| Role | Description |
-|---|---|
-| `CUSTOMER` | Default role — can browse, order, and track their orders |
-| `PIZZERIA_ADMIN` | Can create and manage pizzerias, menus, and orders |
+| Role             | Description                                              |
+| ---------------- | -------------------------------------------------------- |
+| `CUSTOMER`       | Default role — can browse, order, and track their orders |
+| `PIZZERIA_ADMIN` | Can create and manage pizzerias, menus, and orders       |
 
 Role guards (`roleGuard`) protect admin routes client-side. The API also enforces roles server-side.
 
@@ -150,10 +150,10 @@ Contributions are welcome! Please follow these guidelines:
 - **Run lint and tests** before submitting: `pnpm run lint && pnpm run test`
 - Open a **pull request** with a clear description of the changes and motivation
 
-
 ### Reporting Issues
 
 If you find a bug or have a feature request, please [open an issue](../../issues) with:
+
 - A clear and descriptive title
 - Steps to reproduce (for bugs)
 - Expected vs. actual behavior

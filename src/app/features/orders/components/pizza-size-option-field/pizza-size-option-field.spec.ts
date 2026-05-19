@@ -15,7 +15,9 @@ describe('SizeOptionField', () => {
   let el: HTMLElement;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({}).overrideComponent(SizeOptionField, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.configureTestingModule({}).overrideComponent(SizeOptionField, {
+      set: { schemas: [NO_ERRORS_SCHEMA] },
+    });
     fixture = TestBed.createComponent(SizeOptionField);
     el = fixture.nativeElement;
     fixture.componentRef.setInput('options', options);
@@ -34,7 +36,9 @@ describe('SizeOptionField', () => {
   });
 
   it('should not show price for zero-price option', () => {
-    const smallLabel = Array.from(el.querySelectorAll('.option-item__label')).find(l => l.textContent?.includes('Small'));
+    const smallLabel = Array.from(el.querySelectorAll('.option-item__label')).find((l) =>
+      l.textContent?.includes('Small'),
+    );
     expect(smallLabel).not.toBeNull();
     const allText = el.textContent || '';
     const smallText = allText.substring(0, allText.indexOf('Medium'));

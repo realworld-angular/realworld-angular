@@ -41,7 +41,7 @@
                 </div>
                 <div>
                   <p class="pizza-row__name">{{ item.pizza.name }}</p>
-@if (item.size || item.extraToppings.length > 0) {
+                  @if (item.size || item.extraToppings.length > 0) {
                     <p class="pizza-row__options">
                       @if (item.size) {
                         {{ item.size.label }}
@@ -49,7 +49,7 @@
                       @if (item.size && item.extraToppings.length > 0) {
                         ,
                       }
-                      {{ item.extraToppings.map(t => t.label).join(', ') }}
+                      {{ item.extraToppings.map((t) => t.label).join(', ') }}
                     </p>
                   }
                   <p class="pizza-row__price">€{{ item.totalPrice | number: '1.2-2' }}</p>
@@ -63,7 +63,13 @@
                       aria-label="Decrease quantity"
                       (click)="cartStore.updateQuantity(item.id, item.quantity - 1)"
                     >
-                      <img ngSrc="/icons/remove.svg" alt="" width="24" height="24" aria-hidden="true" />
+                      <img
+                        ngSrc="/icons/remove.svg"
+                        alt=""
+                        width="24"
+                        height="24"
+                        aria-hidden="true"
+                      />
                     </button>
                     <span class="qty-value">{{ item.quantity }}</span>
                     <button
@@ -72,7 +78,13 @@
                       aria-label="Increase quantity"
                       (click)="cartStore.updateQuantity(item.id, item.quantity + 1)"
                     >
-                      <img ngSrc="/icons/add.svg" alt="" width="24" height="24" aria-hidden="true" />
+                      <img
+                        ngSrc="/icons/add.svg"
+                        alt=""
+                        width="24"
+                        height="24"
+                        aria-hidden="true"
+                      />
                     </button>
                   </div>
                   <button
@@ -81,7 +93,13 @@
                     [attr.aria-label]="'Remove ' + item.pizza.name"
                     (click)="cartStore.removeItem(item.id)"
                   >
-                    <img ngSrc="/icons/delete.svg" alt="" width="20" height="20" aria-hidden="true" />
+                    <img
+                      ngSrc="/icons/delete.svg"
+                      alt=""
+                      width="20"
+                      height="20"
+                      aria-hidden="true"
+                    />
                   </button>
                 </div>
               </li>
@@ -93,15 +111,8 @@
           <h2 class="cart-summary__title">Order summary</h2>
           @if (!auth.isAuthenticated()) {
             <div class="guest-checkout-notice">
-              <p class="guest-checkout-notice__text">
-                Please log in to place your order.
-              </p>
-              <rw-button
-                class="btn--full"
-                routerLink="/auth/login"
-              >
-                Log in to checkout
-              </rw-button>
+              <p class="guest-checkout-notice__text">Please log in to place your order.</p>
+              <rw-button class="btn--full" routerLink="/auth/login"> Log in to checkout </rw-button>
               <a routerLink="/auth/register" class="guest-checkout-notice__register">
                 No account? Join for free
               </a>
@@ -125,12 +136,7 @@
             <strong>€{{ data.total | number: '1.2-2' }}</strong>
           </div>
           @if (auth.isAuthenticated()) {
-            <rw-button
-              class="btn--full"
-              routerLink="/checkout"
-            >
-              Proceed to checkout
-            </rw-button>
+            <rw-button class="btn--full" routerLink="/checkout"> Proceed to checkout </rw-button>
           }
         </aside>
       </div>

@@ -8,7 +8,9 @@ describe('HeroBanner', () => {
   let el: HTMLElement;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({}).overrideComponent(HeroBanner, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.configureTestingModule({}).overrideComponent(HeroBanner, {
+      set: { schemas: [NO_ERRORS_SCHEMA] },
+    });
     fixture = TestBed.createComponent(HeroBanner);
     el = fixture.nativeElement;
     await fixture.whenStable();

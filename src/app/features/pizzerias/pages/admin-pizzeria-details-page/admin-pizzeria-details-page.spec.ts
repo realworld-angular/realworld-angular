@@ -20,7 +20,12 @@ const mockPizzeria: PizzeriaDetail = {
   staff: [],
 };
 
-const userSignal = signal<any>({ id: '1', role: 'PIZZERIA_ADMIN', name: 'Admin', email: 'a@b.com' });
+const userSignal = signal<any>({
+  id: '1',
+  role: 'PIZZERIA_ADMIN',
+  name: 'Admin',
+  email: 'a@b.com',
+});
 const authStub = { user: userSignal };
 
 describe('AdminPizzeriaDetailsPage', () => {
@@ -61,7 +66,8 @@ describe('AdminPizzeriaDetailsPage', () => {
 
   it('should show error callout on HTTP error', async () => {
     httpTesting.expectOne('/api/pizzerias/admin/pizzeria').flush('error', {
-      status: 500, statusText: 'Server Error',
+      status: 500,
+      statusText: 'Server Error',
     });
     await fixture.whenStable();
     expect(el.querySelector('rw-callout')).not.toBeNull();

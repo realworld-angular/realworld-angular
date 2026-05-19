@@ -15,7 +15,15 @@ const mockOrder: AdminOrderListItem = {
   updatedAt: '2024-01-01T10:00:00Z',
   pizzeria: { id: 'p1', name: 'Roma', city: 'Rome', country: 'Italy' },
   client: { id: 'u1', name: 'Test User' },
-  items: [{ id: 'i1', quantity: 2, unitPrice: 10, selectedOptions: [], pizza: { id: 'p1', name: 'Margherita' } }],
+  items: [
+    {
+      id: 'i1',
+      quantity: 2,
+      unitPrice: 10,
+      selectedOptions: [],
+      pizza: { id: 'p1', name: 'Margherita' },
+    },
+  ],
 };
 
 function createDialogStub() {
@@ -32,10 +40,7 @@ describe('AdminOrderRow', () => {
   beforeEach(() => {
     dialogStub = createDialogStub();
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClientTesting(),
-        { provide: Dialog, useValue: dialogStub },
-      ],
+      providers: [provideHttpClientTesting(), { provide: Dialog, useValue: dialogStub }],
     }).overrideComponent(AdminOrderRow, { set: { schemas: [NO_ERRORS_SCHEMA] } });
     fixture = TestBed.createComponent(AdminOrderRow);
     el = fixture.nativeElement;

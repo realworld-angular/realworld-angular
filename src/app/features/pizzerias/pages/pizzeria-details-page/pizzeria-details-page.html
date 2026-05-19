@@ -17,7 +17,7 @@
   <section class="pizzeria-hero">
     <div class="pizzeria-hero__image-wrap">
       <img
-        [ngSrc]=" 'banner-' + pizzeria.image | catalogImageUrl: 'pizzeria'"
+        [ngSrc]="'banner-' + pizzeria.image | catalogImageUrl: 'pizzeria'"
         alt=""
         class="pizzeria-hero__image"
         width="1200"
@@ -97,12 +97,7 @@
 }
 
 @if (addedToCartBannerVisible()) {
-  <div
-    class="cart-added-banner"
-    role="status"
-    aria-live="polite"
-    aria-atomic="true"
-  >
+  <div class="cart-added-banner" role="status" aria-live="polite" aria-atomic="true">
     <div class="cart-added-banner__inner container">
       <span class="cart-added-banner__message">Added to your cart.</span>
       <div class="cart-added-banner__actions">

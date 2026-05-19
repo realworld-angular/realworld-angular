@@ -19,9 +19,7 @@ const mockPizza: Pizza = {
   basePrice: 9.5,
   image: 'marg.jpg',
   createdAt: '2024-01-01',
-  toppings: [
-    { id: 't1', label: 'Mozzarella', price: 0, sortOrder: 1 },
-  ],
+  toppings: [{ id: 't1', label: 'Mozzarella', price: 0, sortOrder: 1 }],
 };
 
 describe('AdminPizzaFormDialog', () => {

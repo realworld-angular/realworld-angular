@@ -16,10 +16,7 @@ describe('LoginPage', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClientTesting(),
-        provideRouter([]),
-      ],
+      providers: [provideHttpClientTesting(), provideRouter([])],
     }).overrideComponent(LoginPage, { set: { schemas: [NO_ERRORS_SCHEMA] } });
 
     fixture = TestBed.createComponent(LoginPage);
@@ -45,9 +42,12 @@ describe('LoginPage', () => {
     const auth = TestBed.inject(Auth);
     auth.user.set(null);
 
-    const emailInput = el.querySelector<HTMLInputElement>('rw-input[label="Email"] input, input[type="email"]') ??
+    const emailInput =
+      el.querySelector<HTMLInputElement>('rw-input[label="Email"] input, input[type="email"]') ??
       el.querySelector<HTMLInputElement>('input[autocomplete="email"]');
-    const passwordInput = el.querySelector<HTMLInputElement>('input[autocomplete="current-password"]');
+    const passwordInput = el.querySelector<HTMLInputElement>(
+      'input[autocomplete="current-password"]',
+    );
 
     if (emailInput && passwordInput) {
       emailInput.value = 'test@example.com';

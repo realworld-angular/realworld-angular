@@ -8,7 +8,9 @@ describe('Avatar', () => {
   let el: HTMLElement;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({}).overrideComponent(Avatar, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.configureTestingModule({}).overrideComponent(Avatar, {
+      set: { schemas: [NO_ERRORS_SCHEMA] },
+    });
     fixture = TestBed.createComponent(Avatar);
     el = fixture.nativeElement;
     fixture.componentRef.setInput('name', '');

@@ -33,10 +33,7 @@ describe('AdminPizzaRow', () => {
   beforeEach(() => {
     dialogStub = createDialogStub();
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClientTesting(),
-        { provide: Dialog, useValue: dialogStub },
-      ],
+      providers: [provideHttpClientTesting(), { provide: Dialog, useValue: dialogStub }],
     }).overrideComponent(AdminPizzaRow, { set: { schemas: [NO_ERRORS_SCHEMA] } });
     fixture = TestBed.createComponent(AdminPizzaRow);
     el = fixture.nativeElement;

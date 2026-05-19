@@ -24,10 +24,7 @@ describe('ProfilePage', () => {
     authStub.logout.mockReturnValue({ pipe: () => ({ subscribe: (obs: any) => obs.next?.() }) });
 
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClientTesting(),
-        { provide: Auth, useValue: authStub },
-      ],
+      providers: [provideHttpClientTesting(), { provide: Auth, useValue: authStub }],
     }).overrideComponent(ProfilePage, { set: { schemas: [NO_ERRORS_SCHEMA] } });
 
     fixture = TestBed.createComponent(ProfilePage);

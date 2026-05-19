@@ -7,14 +7,38 @@
 
     <nav class="nav" aria-label="Main navigation">
       @if (!auth.isAdmin()) {
-        <a routerLink="/" routerLinkActive="nav__link--active" [routerLinkActiveOptions]="{ exact: true }" class="nav__link">Pizzerias</a>
+        <a
+          routerLink="/"
+          routerLinkActive="nav__link--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav__link"
+          >Pizzerias</a
+        >
       }
 
-      <a *rwRole="'CUSTOMER'" routerLink="/orders" routerLinkActive="nav__link--active" class="nav__link">My Orders</a>
+      <a
+        *rwRole="'CUSTOMER'"
+        routerLink="/orders"
+        routerLinkActive="nav__link--active"
+        class="nav__link"
+        >My Orders</a
+      >
 
-      <a *rwRole="'PIZZERIA_ADMIN'" routerLink="/pizzerias/admin" routerLinkActive="nav__link--active" class="nav__link">My Pizzeria</a>
+      <a
+        *rwRole="'PIZZERIA_ADMIN'"
+        routerLink="/pizzerias/admin"
+        routerLinkActive="nav__link--active"
+        class="nav__link"
+        >My Pizzeria</a
+      >
 
-      <a *rwRole="'PIZZERIA_ADMIN'" routerLink="/orders" routerLinkActive="nav__link--active" class="nav__link">Orders</a>
+      <a
+        *rwRole="'PIZZERIA_ADMIN'"
+        routerLink="/orders"
+        routerLinkActive="nav__link--active"
+        class="nav__link"
+        >Orders</a
+      >
     </nav>
 
     <!-- Actions -->
@@ -24,7 +48,10 @@
           routerLink="/cart"
           class="cart-link"
           [attr.aria-label]="
-            'Cart – ' + cartStore.itemCount() + ' ' + (cartStore.itemCount() === 1 ? 'pizza' : 'pizzas')
+            'Cart – ' +
+            cartStore.itemCount() +
+            ' ' +
+            (cartStore.itemCount() === 1 ? 'pizza' : 'pizzas')
           "
         >
           <span class="cart-link__icon" aria-hidden="true">
@@ -88,11 +115,29 @@
             <a routerLink="/" class="mobile-menu__link" (click)="closeMobileMenu()">Pizzerias</a>
           }
 
-          <a *rwRole="'CUSTOMER'" routerLink="/orders" class="mobile-menu__link" (click)="closeMobileMenu()">My Orders</a>
+          <a
+            *rwRole="'CUSTOMER'"
+            routerLink="/orders"
+            class="mobile-menu__link"
+            (click)="closeMobileMenu()"
+            >My Orders</a
+          >
 
-          <a *rwRole="'PIZZERIA_ADMIN'" routerLink="/pizzerias/admin" class="mobile-menu__link" (click)="closeMobileMenu()">My Pizzeria</a>
+          <a
+            *rwRole="'PIZZERIA_ADMIN'"
+            routerLink="/pizzerias/admin"
+            class="mobile-menu__link"
+            (click)="closeMobileMenu()"
+            >My Pizzeria</a
+          >
 
-          <a *rwRole="'PIZZERIA_ADMIN'" routerLink="/orders" class="mobile-menu__link" (click)="closeMobileMenu()">Orders</a>
+          <a
+            *rwRole="'PIZZERIA_ADMIN'"
+            routerLink="/orders"
+            class="mobile-menu__link"
+            (click)="closeMobileMenu()"
+            >Orders</a
+          >
 
           @if (!auth.isAdmin()) {
             <a routerLink="/cart" class="mobile-menu__link" (click)="closeMobileMenu()">
@@ -104,7 +149,9 @@
           }
 
           <ng-container *rwRole="['CUSTOMER', 'PIZZERIA_ADMIN']">
-            <a routerLink="/profile" class="mobile-menu__link" (click)="closeMobileMenu()">Profile</a>
+            <a routerLink="/profile" class="mobile-menu__link" (click)="closeMobileMenu()"
+              >Profile</a
+            >
           </ng-container>
         </div>
 
@@ -113,8 +160,18 @@
             <p class="mobile-menu__auth-title">Welcome back</p>
             <p class="mobile-menu__auth-subtitle">Log in to your account or create a new one.</p>
             <div class="mobile-menu__auth-actions">
-              <a routerLink="/auth/login" class="mobile-menu__auth-btn mobile-menu__auth-btn--secondary" (click)="closeMobileMenu()">Log in</a>
-              <a routerLink="/auth/register" class="mobile-menu__auth-btn mobile-menu__auth-btn--primary" (click)="closeMobileMenu()">Join</a>
+              <a
+                routerLink="/auth/login"
+                class="mobile-menu__auth-btn mobile-menu__auth-btn--secondary"
+                (click)="closeMobileMenu()"
+                >Log in</a
+              >
+              <a
+                routerLink="/auth/register"
+                class="mobile-menu__auth-btn mobile-menu__auth-btn--primary"
+                (click)="closeMobileMenu()"
+                >Join</a
+              >
             </div>
           </div>
         </ng-container>

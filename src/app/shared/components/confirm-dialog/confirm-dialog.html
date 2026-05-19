@@ -3,19 +3,10 @@
     <p class="confirm-dialog__message">{{ data.message }}</p>
   }
   <rw-modal-footer class="confirm-dialog__footer">
-    <rw-button
-      type="button"
-      variant="ghost"
-      palette="secondary"
-      (click)="dismiss()"
-    >
+    <rw-button type="button" variant="ghost" palette="secondary" (click)="dismiss()">
       {{ data.cancelLabel ?? 'Cancel' }}
     </rw-button>
-    <rw-button
-      type="button"
-      [palette]="'danger'"
-      (click)="confirm()"
-    >
+    <rw-button type="button" [palette]="'danger'" (click)="confirm()">
       {{ data.confirmLabel ?? 'Confirm' }}
     </rw-button>
   </rw-modal-footer>

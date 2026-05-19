@@ -18,12 +18,14 @@ const STATUS_CONFIG: Record<OrderStatus, { label: string; variant: BadgeVariant 
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class]': 'badgeClasses()',
-  }
+  },
 })
 export class StatusBadge {
   public readonly status = input.required<OrderStatus>();
 
-  protected readonly config = computed<{ label: string; variant: BadgeVariant }>(() => STATUS_CONFIG[this.status()] ?? STATUS_CONFIG.PENDING);
+  protected readonly config = computed<{ label: string; variant: BadgeVariant }>(
+    () => STATUS_CONFIG[this.status()] ?? STATUS_CONFIG.PENDING,
+  );
 
   protected readonly badgeClasses = computed<string>(() => `badge badge--${this.config().variant}`);
 }

@@ -16,8 +16,8 @@ This project follows a modern, zoneless testing approach. State changes schedule
 ### Basic Test Structure Example
 
 ```ts
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MyComponent} from './my.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MyComponent } from './my.component';
 
 describe('MyComponent', () => {
   let component: MyComponent;

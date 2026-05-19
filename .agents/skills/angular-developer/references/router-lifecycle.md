@@ -17,7 +17,7 @@ Angular Router emits events through the `Router.events` observable, allowing you
 Inject the `Router` and filter the `events` observable.
 
 ```ts
-import {Router, NavigationStart, NavigationEnd} from '@angular/router';
+import { Router, NavigationStart, NavigationEnd } from '@angular/router';
 
 export class MyService {
   private router = inject(Router);

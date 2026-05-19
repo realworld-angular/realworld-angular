@@ -29,11 +29,13 @@
 }
 
 @keyframes pizza-slice-step {
-  0%, 16.66% {
+  0%,
+  16.66% {
     opacity: 0.15;
     transform: scale(0.92);
   }
-  16.67%, 100% {
+  16.67%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }

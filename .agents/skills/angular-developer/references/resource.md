@@ -69,7 +69,7 @@ The `Resource` object provides several signals to read its current state:
 You can optimistically update the resource's value directly. This changes the status to `'local'`.
 
 ```ts
-this.userResource.value.set({name: 'Optimistic Update'});
+this.userResource.value.set({ name: 'Optimistic Update' });
 ```
 
 ## Reactive Data Fetching with `httpResource`

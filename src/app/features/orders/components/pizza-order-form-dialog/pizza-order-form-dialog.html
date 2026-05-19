@@ -1,51 +1,50 @@
 <rw-modal [title]="data.pizza.name">
   <form [formRoot]="orderForm" class="order-modal">
-      <div class="order-modal__image-wrap">
-        <img
-          class="order-modal__image"
-          [ngSrc]="data.pizza.image | catalogImageUrl: 'pizza'"
-          alt=""
-          width="520"
-          height="390"
-          disableOptimizedSrcset
-        />
-      </div>
+    <div class="order-modal__image-wrap">
+      <img
+        class="order-modal__image"
+        [ngSrc]="data.pizza.image | catalogImageUrl: 'pizza'"
+        alt=""
+        width="520"
+        height="390"
+        disableOptimizedSrcset
+      />
+    </div>
 
     <div class="order-modal__body">
-        <p class="order-modal__toppings">Comes with: {{ defaultToppings }}</p>
+      <p class="order-modal__toppings">Comes with: {{ defaultToppings }}</p>
 
-<rw-size-option-field
-          [options]="sizesResource.value()!"
-          [formField]="orderForm.selectedSize"
-        />
+      <rw-size-option-field
+        [options]="sizesResource.value()!"
+        [formField]="orderForm.selectedSize"
+      />
 
-        <fieldset class="option-group">
-          <legend class="option-group__label">
-            Extra Toppings
-          </legend>
-          @if (toppingsResource.isLoading()) {
-            <div class="option-group__loading" aria-label="Loading toppings">
-              <rw-spinner />
-            </div>
-          } @else if (toppingsResource.error()) {
-            <p class="option-group__error" role="alert">Could not load toppings. Check that the API is running.</p>
-          } @else {
-            <div class="option-list">
-              @for (topping of orderForm.extraToppings; track topping) {
-                <label class="option-item" [class.option-item--selected]="toppingInput.checked">
-                  <input
-                    #toppingInput
-                    type="checkbox"
-                    class="sr-only"
-                    [formField]="topping"
-                  />
-                  <span class="option-item__label">{{ toppingsResource.value()![$index].label }}</span>
-                  <span class="option-item__price">+€{{ toppingsResource.value()![$index].price | number: '1.2-2' }}</span>
-                </label>
-              }
-            </div>
-          }
-        </fieldset>
+      <fieldset class="option-group">
+        <legend class="option-group__label">Extra Toppings</legend>
+        @if (toppingsResource.isLoading()) {
+          <div class="option-group__loading" aria-label="Loading toppings">
+            <rw-spinner />
+          </div>
+        } @else if (toppingsResource.error()) {
+          <p class="option-group__error" role="alert">
+            Could not load toppings. Check that the API is running.
+          </p>
+        } @else {
+          <div class="option-list">
+            @for (topping of orderForm.extraToppings; track topping) {
+              <label class="option-item" [class.option-item--selected]="toppingInput.checked">
+                <input #toppingInput type="checkbox" class="sr-only" [formField]="topping" />
+                <span class="option-item__label">{{
+                  toppingsResource.value()![$index].label
+                }}</span>
+                <span class="option-item__price"
+                  >+€{{ toppingsResource.value()![$index].price | number: '1.2-2' }}</span
+                >
+              </label>
+            }
+          </div>
+        }
+      </fieldset>
 
       <div class="quantity-row">
         <span class="quantity-row__label">Quantity</span>
@@ -59,11 +58,7 @@
           >
             <img ngSrc="/icons/remove.svg" alt="" width="24" height="24" aria-hidden="true" />
           </button>
-          <rw-input
-            class="quantity-input"
-            type="number"
-            [formField]="orderForm.quantity"
-          />
+          <rw-input class="quantity-input" type="number" [formField]="orderForm.quantity" />
           <button
             type="button"
             class="quantity-btn"

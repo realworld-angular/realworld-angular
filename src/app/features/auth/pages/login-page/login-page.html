@@ -7,20 +7,24 @@
       @if (loginForm().errors()[0]; as err) {
         <rw-callout variant="error" [message]="err.message!" />
       }
-      <rw-input
-        label="Email"
-        type="email"
-        autocomplete="email"
-        [formField]="loginForm.email"
-      />
+      <rw-input label="Email" type="email" autocomplete="email" [formField]="loginForm.email" />
       <rw-input
         label="Password"
         [type]="showPassword.checked ? 'text' : 'password'"
         autocomplete="current-password"
         [formField]="loginForm.password"
       >
-        <label rwInputSuffix class="password-toggle" [attr.aria-label]="showPassword.checked ? 'Hide password' : 'Show password'">
-          <input #showPassword type="checkbox" class="password-toggle__checkbox" (change)="void 0" />
+        <label
+          rwInputSuffix
+          class="password-toggle"
+          [attr.aria-label]="showPassword.checked ? 'Hide password' : 'Show password'"
+        >
+          <input
+            #showPassword
+            type="checkbox"
+            class="password-toggle__checkbox"
+            (change)="(void 0)"
+          />
           <img
             [src]="showPassword.checked ? '/icons/visibility-off.svg' : '/icons/visibility.svg'"
             width="24"

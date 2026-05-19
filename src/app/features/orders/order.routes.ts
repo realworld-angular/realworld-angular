@@ -8,7 +8,9 @@ export const ordersRoutes: Routes = [
     title: 'Orders - Admin',
     canMatch: [roleGuard(ROLES.PIZZERIA_ADMIN)],
     loadComponent: () =>
-      import('./pages/admin-order-list-page/admin-order-list-page').then((m) => m.AdminOrderListPage),
+      import('./pages/admin-order-list-page/admin-order-list-page').then(
+        (m) => m.AdminOrderListPage,
+      ),
   },
   {
     path: '',

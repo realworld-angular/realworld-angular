@@ -15,13 +15,17 @@ export const pizzeriasRoutes: Routes = [
     title: 'Create Pizzeria',
     canMatch: [roleGuard(ROLES.PIZZERIA_ADMIN), noPizzeriaGuard],
     loadComponent: () =>
-      import('./pages/admin-pizzeria-form-page/admin-pizzeria-form-page').then((m) => m.AdminPizzeriaFormPage),
+      import('./pages/admin-pizzeria-form-page/admin-pizzeria-form-page').then(
+        (m) => m.AdminPizzeriaFormPage,
+      ),
   },
   {
     path: 'admin',
     canMatch: [roleGuard(ROLES.PIZZERIA_ADMIN)],
     loadComponent: () =>
-      import('./pages/admin-pizzeria-details-page/admin-pizzeria-details-page').then((m) => m.AdminPizzeriaDetailsPage),
+      import('./pages/admin-pizzeria-details-page/admin-pizzeria-details-page').then(
+        (m) => m.AdminPizzeriaDetailsPage,
+      ),
     children: [
       {
         path: '',
@@ -32,7 +36,9 @@ export const pizzeriasRoutes: Routes = [
         path: 'pizzas',
         title: 'Manage Pizzas',
         loadComponent: () =>
-          import('./pages/admin-pizza-list-page/admin-pizza-list-page').then((m) => m.AdminPizzaListPage),
+          import('./pages/admin-pizza-list-page/admin-pizza-list-page').then(
+            (m) => m.AdminPizzaListPage,
+          ),
       },
       {
         path: 'configuration',
@@ -46,6 +52,8 @@ export const pizzeriasRoutes: Routes = [
   {
     path: ':id',
     loadComponent: () =>
-      import('./pages/pizzeria-details-page/pizzeria-details-page').then((m) => m.PizzeriaDetailsPage),
+      import('./pages/pizzeria-details-page/pizzeria-details-page').then(
+        (m) => m.PizzeriaDetailsPage,
+      ),
   },
 ];

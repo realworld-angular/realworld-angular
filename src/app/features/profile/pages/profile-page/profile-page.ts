@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Auth } from '../../../../core/services/auth';
@@ -26,12 +20,13 @@ export class ProfilePage {
 
   protected logout(): void {
     this.isLoggingOut.set(true);
-    this.auth.logout().pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: () => {
-        window.location.href = '/';
-      }
-    });
+    this.auth
+      .logout()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          window.location.href = '/';
+        },
+      });
   }
 }

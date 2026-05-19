@@ -30,25 +30,31 @@ export class AdminPizzeriaFormPage {
     image: null,
   });
 
-  protected readonly pizzeriaForm = form(this.model, (schema) => {
-    required(schema.location, { message: 'Choose a location from the list' });
-    required(schema.image, { message: 'Please select an image' });
-  }, {
-    submission: {
-      action: async (form) => {
-        const value = form().value();
-        try {
-          await firstValueFrom(this.api.createPizzeria({
-            city: value.location!.city,
-            country: value.location!.country,
-            imageFilename: value.image!,
-          }));
-        } catch {
-          return { kind: 'serverError', message: 'Failed to create pizzeria' };
-        }
-        void this.router.navigate(['/pizzerias/admin/pizzas']);
-        return null;
+  protected readonly pizzeriaForm = form(
+    this.model,
+    (schema) => {
+      required(schema.location, { message: 'Choose a location from the list' });
+      required(schema.image, { message: 'Please select an image' });
+    },
+    {
+      submission: {
+        action: async (form) => {
+          const value = form().value();
+          try {
+            await firstValueFrom(
+              this.api.createPizzeria({
+                city: value.location!.city,
+                country: value.location!.country,
+                imageFilename: value.image!,
+              }),
+            );
+          } catch {
+            return { kind: 'serverError', message: 'Failed to create pizzeria' };
+          }
+          void this.router.navigate(['/pizzerias/admin/pizzas']);
+          return null;
+        },
       },
     },
-  });
+  );
 }

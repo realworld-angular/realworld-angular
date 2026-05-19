@@ -19,31 +19,26 @@ export const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () =>
-      import('./features/auth/auth.routes').then((m) => m.authRoutes),
+    loadChildren: () => import('./features/auth/auth.routes').then((m) => m.authRoutes),
     canMatch: [guestGuard],
   },
   {
     path: 'cart',
-    loadChildren: () =>
-      import('./features/cart/cart.routes').then((m) => m.cartRoutes),
+    loadChildren: () => import('./features/cart/cart.routes').then((m) => m.cartRoutes),
   },
   {
     path: 'checkout',
-    loadChildren: () =>
-      import('./features/checkout/checkout.routes').then((m) => m.checkoutRoutes),
+    loadChildren: () => import('./features/checkout/checkout.routes').then((m) => m.checkoutRoutes),
     canMatch: [authGuard, cartNotEmptyGuard],
   },
   {
     path: 'orders',
-    loadChildren: () =>
-      import('./features/orders/order.routes').then((m) => m.ordersRoutes),
+    loadChildren: () => import('./features/orders/order.routes').then((m) => m.ordersRoutes),
     canMatch: [authGuard],
   },
   {
     path: 'profile',
-    loadChildren: () =>
-      import('./features/profile/profile.routes').then((m) => m.profileRoutes),
+    loadChildren: () => import('./features/profile/profile.routes').then((m) => m.profileRoutes),
     canMatch: [authGuard],
   },
   {
@@ -53,8 +48,7 @@ export const routes: Routes = [
   },
   {
     path: 'terms-and-conditions',
-    loadChildren: () =>
-      import('./features/legal/legal.routes').then((m) => m.legalRoutes),
+    loadChildren: () => import('./features/legal/legal.routes').then((m) => m.legalRoutes),
   },
   {
     path: '**',

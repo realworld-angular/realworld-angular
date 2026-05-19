@@ -45,7 +45,8 @@ describe('ImagePicker', () => {
 
   it('should show error message on HTTP failure', async () => {
     httpTesting.expectOne('/api/pizzerias/images').flush('error', {
-      status: 500, statusText: 'Server Error',
+      status: 500,
+      statusText: 'Server Error',
     });
     await fixture.whenStable();
     expect(el.textContent).toContain('Could not load image list');

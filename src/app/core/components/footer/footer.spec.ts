@@ -16,10 +16,7 @@ describe('Footer', () => {
   beforeEach(async () => {
     userSignal.set(null);
     TestBed.configureTestingModule({
-      providers: [
-        provideRouter([]),
-        { provide: Auth, useValue: authStub },
-      ],
+      providers: [provideRouter([]), { provide: Auth, useValue: authStub }],
     }).overrideComponent(Footer, { set: { schemas: [NO_ERRORS_SCHEMA] } });
 
     fixture = TestBed.createComponent(Footer);

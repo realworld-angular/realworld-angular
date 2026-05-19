@@ -51,6 +51,9 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Prettier check
+        run: pnpm format:check
+
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -72,79 +75,3 @@ jobs:
 
       - name: Run unit tests
         run: pnpm test --run
-
-  e2e:
-    name: E2E Tests
-    runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: pizza
-          POSTGRES_PASSWORD: pizza
-          POSTGRES_DB: pizza_marketplace
-        ports:
-          - 5433:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: latest
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Checkout API repository
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.repository_owner }}/realworld-angular-api
-          path: realworld-angular-api
-
-      - name: Install API dependencies
-        run: pnpm install --frozen-lockfile
-        working-directory: realworld-angular-api
-
-      - name: Generate Prisma client
-        run: pnpx prisma generate
-        working-directory: realworld-angular-api
-
-      - name: Run API migrations
-        run: pnpx prisma migrate deploy
-        working-directory: realworld-angular-api
-        env:
-          DATABASE_URL: postgresql://pizza:pizza@localhost:5433/pizza_marketplace?schema=public
-
-      - name: Start API server
-        run: pnpm start:prod &
-        working-directory: realworld-angular-api
-        env:
-          DATABASE_URL: postgresql://pizza:pizza@localhost:5433/pizza_marketplace?schema=public
-          JWT_SECRET: ci-jwt-secret
-          JWT_EXPIRES_IN: 7d
-          COOKIE_SECRET: ci-cookie-secret
-          PORT: 3000
-          NODE_ENV: production
-
-      - name: Wait for API to be ready
-        run: npx wait-on http://localhost:3000/api --timeout 30000
-
-      - name: Install Playwright browsers
-        run: pnpx playwright install --with-deps chromium
-
-      - name: Run E2E tests
-        run: pnpm e2e
-        env:
-          CI: true

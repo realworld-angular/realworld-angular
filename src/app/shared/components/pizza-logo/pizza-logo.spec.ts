@@ -9,7 +9,9 @@ describe('PizzaLogo', () => {
   let svg: SVGElement;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({}).overrideComponent(PizzaLogo, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.configureTestingModule({}).overrideComponent(PizzaLogo, {
+      set: { schemas: [NO_ERRORS_SCHEMA] },
+    });
     fixture = TestBed.createComponent(PizzaLogo);
     el = fixture.nativeElement;
     svg = el.querySelector('svg')!;

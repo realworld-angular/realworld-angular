@@ -10,5 +10,4 @@ import { Footer } from './core/components/footer/footer';
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class App {
-}
+export class App {}

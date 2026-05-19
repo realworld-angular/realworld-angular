@@ -5,7 +5,12 @@ import { Auth } from './auth';
 import { User } from '../models/user.model';
 
 const mockUser: User = { id: '1', email: 'test@example.com', role: 'CUSTOMER', name: 'Test User' };
-const mockAdmin: User = { id: '2', email: 'admin@example.com', role: 'PIZZERIA_ADMIN', name: 'Admin User' };
+const mockAdmin: User = {
+  id: '2',
+  email: 'admin@example.com',
+  role: 'PIZZERIA_ADMIN',
+  name: 'Admin User',
+};
 
 describe('Auth', () => {
   let service: Auth;

@@ -18,10 +18,7 @@ describe('roleGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideRouter([]),
-        { provide: Auth, useValue: authStub },
-      ],
+      providers: [provideRouter([]), { provide: Auth, useValue: authStub }],
     });
     router = TestBed.inject(Router);
     userSignal.set(null);

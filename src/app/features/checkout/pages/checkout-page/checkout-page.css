@@ -15,7 +15,9 @@
 }
 
 @media (max-width: 768px) {
-  .checkout-layout { grid-template-columns: 1fr; }
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 .section-heading {

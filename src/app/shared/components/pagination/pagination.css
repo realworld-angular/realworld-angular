@@ -19,7 +19,10 @@
   background-color: var(--color-surface);
   border: 1.5px solid var(--color-border);
   cursor: pointer;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .pagination__btn.pagination__btn--icon {

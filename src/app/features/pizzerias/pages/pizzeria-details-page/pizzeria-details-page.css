@@ -1,4 +1,3 @@
-
 .pizzeria-hero {
   position: relative;
   height: 300px;
@@ -7,7 +6,6 @@
   max-width: var(--container-max);
   margin-inline: auto;
 }
-
 
 .pizzeria-hero__image-wrap {
   position: absolute;
@@ -23,7 +21,7 @@
 .pizzeria-hero__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.2) 100%);
   display: flex;
   align-items: flex-end;
   padding-block-end: var(--space-8);
@@ -212,7 +210,9 @@
   color: var(--color-text-muted);
   font-size: var(--text-base);
   cursor: pointer;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .cart-added-banner__dismiss:hover {

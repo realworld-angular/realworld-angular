@@ -8,7 +8,9 @@
   padding: 0;
 }
 
-.admin-action-link:hover { text-decoration: underline; }
+.admin-action-link:hover {
+  text-decoration: underline;
+}
 
 .admin-action-delete {
   font-size: var(--text-sm);
@@ -19,8 +21,13 @@
   padding: 0;
 }
 
-.admin-action-delete:hover { text-decoration: underline; }
-.admin-action-delete:disabled { opacity: 0.4; cursor: not-allowed; }
+.admin-action-delete:hover {
+  text-decoration: underline;
+}
+.admin-action-delete:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
 .admin-icon-action {
   display: inline-flex;

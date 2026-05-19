@@ -16,10 +16,7 @@ describe('cartNotEmptyGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideRouter([]),
-        { provide: CartStore, useValue: cartStoreStub },
-      ],
+      providers: [provideRouter([]), { provide: CartStore, useValue: cartStoreStub }],
     });
     router = TestBed.inject(Router);
   });

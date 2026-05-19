@@ -1,11 +1,23 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { Dialog } from '@angular/cdk/dialog';
 import { filter, switchMap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Pizza } from '../../models/pizza.models';
 import { PizzaApi } from '../../services/pizza-api';
-import { ConfirmDialog, ConfirmDialogData, ConfirmDialogResult } from '../../../../shared/components/confirm-dialog/confirm-dialog';
+import {
+  ConfirmDialog,
+  ConfirmDialogData,
+  ConfirmDialogResult,
+} from '../../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: '[rw-admin-pizza-row]',
@@ -44,23 +56,25 @@ export class AdminPizzaRow {
       data: { title: 'Delete pizza?', message, cancelLabel: 'Cancel', confirmLabel: 'Delete' },
     });
 
-    ref.closed.pipe(
-      filter((result) => result === 'confirmed' && !this.deleting()),
-      switchMap(() => {
-        this.deleteError.emit('');
-        this.deleting.set(true);
-        return this.api.deletePizza(pizza.id);
-      }),
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: () => {
-        this.deleting.set(false);
-        this.deleted.emit(pizza);
-      },
-      error: (err) => {
-        this.deleting.set(false);
-        this.deleteError.emit(err?.error?.message ?? 'Delete failed');
-      },
-    });
+    ref.closed
+      .pipe(
+        filter((result) => result === 'confirmed' && !this.deleting()),
+        switchMap(() => {
+          this.deleteError.emit('');
+          this.deleting.set(true);
+          return this.api.deletePizza(pizza.id);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: () => {
+          this.deleting.set(false);
+          this.deleted.emit(pizza);
+        },
+        error: (err) => {
+          this.deleting.set(false);
+          this.deleteError.emit(err?.error?.message ?? 'Delete failed');
+        },
+      });
   }
 }

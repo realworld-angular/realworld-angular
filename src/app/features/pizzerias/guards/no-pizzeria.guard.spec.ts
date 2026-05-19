@@ -24,10 +24,7 @@ describe('noPizzeriaGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideRouter([]),
-        provideHttpClientTesting(),
-      ],
+      providers: [provideRouter([]), provideHttpClientTesting()],
     });
     router = TestBed.inject(Router);
     httpTesting = TestBed.inject(HttpTestingController);
@@ -39,9 +36,11 @@ describe('noPizzeriaGuard', () => {
 
   it('should redirect to /pizzerias/admin when pizzeria exists', () => {
     let result: unknown;
-    (TestBed.runInInjectionContext(() =>
-      noPizzeriaGuard({} as any, {} as any),
-    ) as Observable<unknown>).subscribe((r) => (result = r));
+    (
+      TestBed.runInInjectionContext(() =>
+        noPizzeriaGuard({} as any, {} as any),
+      ) as Observable<unknown>
+    ).subscribe((r) => (result = r));
     httpTesting.expectOne('/api/pizzerias/admin/pizzeria').flush(mockPizzeria);
     expect(result).toBeInstanceOf(UrlTree);
     expect(router.serializeUrl(result as UrlTree)).toBe('/pizzerias/admin');
@@ -49,9 +48,11 @@ describe('noPizzeriaGuard', () => {
 
   it('should return true on HTTP 404 (no pizzeria for this admin)', () => {
     let result: unknown;
-    (TestBed.runInInjectionContext(() =>
-      noPizzeriaGuard({} as any, {} as any),
-    ) as Observable<unknown>).subscribe((r) => (result = r));
+    (
+      TestBed.runInInjectionContext(() =>
+        noPizzeriaGuard({} as any, {} as any),
+      ) as Observable<unknown>
+    ).subscribe((r) => (result = r));
     httpTesting.expectOne('/api/pizzerias/admin/pizzeria').flush('Not found', {
       status: 404,
       statusText: 'Not Found',
@@ -61,9 +62,11 @@ describe('noPizzeriaGuard', () => {
 
   it('should return true on any other HTTP error', () => {
     let result: unknown;
-    (TestBed.runInInjectionContext(() =>
-      noPizzeriaGuard({} as any, {} as any),
-    ) as Observable<unknown>).subscribe((r) => (result = r));
+    (
+      TestBed.runInInjectionContext(() =>
+        noPizzeriaGuard({} as any, {} as any),
+      ) as Observable<unknown>
+    ).subscribe((r) => (result = r));
     httpTesting.expectOne('/api/pizzerias/admin/pizzeria').flush('error', {
       status: 500,
       statusText: 'Server Error',

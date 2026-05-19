@@ -12,12 +12,7 @@
       @if (registerForm().errors()[0]; as err) {
         <rw-callout variant="error" [message]="err.message!" />
       }
-      <rw-input
-        label="Email"
-        type="email"
-        autocomplete="email"
-        [formField]="registerForm.email"
-      />
+      <rw-input label="Email" type="email" autocomplete="email" [formField]="registerForm.email" />
       <rw-input
         label="Password"
         [type]="showPassword.checked ? 'text' : 'password'"
@@ -25,8 +20,17 @@
         [formField]="registerForm.password"
         hint="At least 8 characters"
       >
-        <label rwInputSuffix class="password-toggle" [attr.aria-label]="showPassword.checked ? 'Hide password' : 'Show password'">
-          <input #showPassword type="checkbox" class="password-toggle__checkbox" (change)="void 0" />
+        <label
+          rwInputSuffix
+          class="password-toggle"
+          [attr.aria-label]="showPassword.checked ? 'Hide password' : 'Show password'"
+        >
+          <input
+            #showPassword
+            type="checkbox"
+            class="password-toggle__checkbox"
+            (change)="(void 0)"
+          />
           <img
             [src]="showPassword.checked ? '/icons/visibility-off.svg' : '/icons/visibility.svg'"
             width="24"
@@ -42,10 +46,23 @@
         autocomplete="new-password"
         [formField]="registerForm.confirmPassword"
       >
-        <label rwInputSuffix class="password-toggle" [attr.aria-label]="showConfirmPassword.checked ? 'Hide confirm password' : 'Show confirm password'">
-          <input #showConfirmPassword type="checkbox" class="password-toggle__checkbox" (change)="void 0" />
+        <label
+          rwInputSuffix
+          class="password-toggle"
+          [attr.aria-label]="
+            showConfirmPassword.checked ? 'Hide confirm password' : 'Show confirm password'
+          "
+        >
+          <input
+            #showConfirmPassword
+            type="checkbox"
+            class="password-toggle__checkbox"
+            (change)="(void 0)"
+          />
           <img
-            [src]="showConfirmPassword.checked ? '/icons/visibility-off.svg' : '/icons/visibility.svg'"
+            [src]="
+              showConfirmPassword.checked ? '/icons/visibility-off.svg' : '/icons/visibility.svg'
+            "
             width="24"
             height="24"
             alt=""

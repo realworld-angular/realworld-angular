@@ -29,6 +29,6 @@ export class Button {
       this.isLoading() ? 'btn--loading' : '',
     ]
       .filter(Boolean)
-      .join(' ')
+      .join(' '),
   );
 }

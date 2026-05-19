@@ -8,7 +8,9 @@ describe('EmptyState', () => {
   let el: HTMLElement;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({}).overrideComponent(EmptyState, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.configureTestingModule({}).overrideComponent(EmptyState, {
+      set: { schemas: [NO_ERRORS_SCHEMA] },
+    });
     fixture = TestBed.createComponent(EmptyState);
     el = fixture.nativeElement;
     await fixture.whenStable();

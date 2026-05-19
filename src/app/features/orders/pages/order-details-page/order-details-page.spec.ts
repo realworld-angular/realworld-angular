@@ -26,7 +26,10 @@ class FakeEventSource {
   onerror: (() => void) | null = null;
   closed = false;
 
-  constructor(public url: string, public init?: EventSourceInit) {
+  constructor(
+    public url: string,
+    public init?: EventSourceInit,
+  ) {
     FakeEventSource.instances.push(this);
   }
 
@@ -53,10 +56,7 @@ describe('OrderDetailPage', () => {
     vi.stubGlobal('EventSource', FakeEventSource);
 
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClientTesting(),
-        provideRouter([]),
-      ],
+      providers: [provideHttpClientTesting(), provideRouter([])],
     }).overrideComponent(OrderDetailPage, { set: { schemas: [NO_ERRORS_SCHEMA] } });
 
     fixture = TestBed.createComponent(OrderDetailPage);

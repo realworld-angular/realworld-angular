@@ -10,7 +10,15 @@ import { Callout } from '../../../../shared/components/callout/callout';
 
 @Component({
   selector: 'rw-admin-pizzeria-page',
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, NgOptimizedImage, RoleDirective, Spinner, Callout],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet,
+    NgOptimizedImage,
+    RoleDirective,
+    Spinner,
+    Callout,
+  ],
   templateUrl: './admin-pizzeria-details-page.html',
   styleUrl: './admin-pizzeria-details-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

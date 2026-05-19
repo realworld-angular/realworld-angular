@@ -40,17 +40,17 @@
                 <input
                   type="checkbox"
                   class="billing-toggle__input"
-                 [formField]="checkoutForm.useSameAsBilling"
-                 />
-                 <span class="billing-toggle__label">
-                   Same as delivery address
-                   <span class="billing-toggle__hint">
-                     Uncheck to bill to a different address for this order.
-                   </span>
-                 </span>
-               </label>
+                  [formField]="checkoutForm.useSameAsBilling"
+                />
+                <span class="billing-toggle__label">
+                  Same as delivery address
+                  <span class="billing-toggle__hint">
+                    Uncheck to bill to a different address for this order.
+                  </span>
+                </span>
+              </label>
 
-               @if (!model().useSameAsBilling) {
+              @if (!model().useSameAsBilling) {
                 <div class="billing-fields">
                   <rw-photon-location-field
                     label="City and country"
@@ -58,7 +58,7 @@
                   />
                   <rw-input
                     label="Street address"
-                     [formField]="checkoutForm.billing.street"
+                    [formField]="checkoutForm.billing.street"
                     placeholder="Street, number, building, floor…"
                   />
                 </div>

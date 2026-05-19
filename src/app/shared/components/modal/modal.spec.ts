@@ -12,9 +12,7 @@ describe('Modal', () => {
   beforeEach(async () => {
     closeFn = vi.fn();
     TestBed.configureTestingModule({
-      providers: [
-        { provide: DialogRef, useValue: { close: closeFn } },
-      ],
+      providers: [{ provide: DialogRef, useValue: { close: closeFn } }],
     }).overrideComponent(Modal, { set: { schemas: [NO_ERRORS_SCHEMA] } });
     fixture = TestBed.createComponent(Modal);
     el = fixture.nativeElement;

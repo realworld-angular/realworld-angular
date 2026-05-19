@@ -35,7 +35,9 @@
   border-radius: var(--radius-full);
   color: var(--color-text-muted);
   font-size: var(--text-base);
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
   cursor: pointer;
   border: none;
   background: none;
@@ -58,8 +60,14 @@
 }
 
 @keyframes panel-in {
-  from { opacity: 0; transform: scale(0.95) translateY(-8px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 @media (max-width: 480px) {
@@ -71,7 +79,13 @@
   }
 
   @keyframes panel-in {
-    from { opacity: 0; transform: translateY(100%); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

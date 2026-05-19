@@ -8,7 +8,9 @@ describe('Pagination', () => {
   let el: HTMLElement;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({}).overrideComponent(Pagination, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.configureTestingModule({}).overrideComponent(Pagination, {
+      set: { schemas: [NO_ERRORS_SCHEMA] },
+    });
     fixture = TestBed.createComponent(Pagination);
     el = fixture.nativeElement;
     fixture.componentRef.setInput('currentPage', 1);

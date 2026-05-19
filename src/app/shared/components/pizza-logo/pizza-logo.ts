@@ -43,8 +43,14 @@ function buildSlices(): readonly Slice[] {
     const o2Corner = rimPoint(th2, OUTER_R);
 
     // Points on radial lines, shortened from rim toward center for rounded outer corners (≈ octant fillet distance).
-    const pr1 = roundPoint(CENTER + (OUTER_R - OUTER_CORNER_R) * Math.cos(rad1), CENTER + (OUTER_R - OUTER_CORNER_R) * Math.sin(rad1));
-    const pr2 = roundPoint(CENTER + (OUTER_R - OUTER_CORNER_R) * Math.cos(rad2), CENTER + (OUTER_R - OUTER_CORNER_R) * Math.sin(rad2));
+    const pr1 = roundPoint(
+      CENTER + (OUTER_R - OUTER_CORNER_R) * Math.cos(rad1),
+      CENTER + (OUTER_R - OUTER_CORNER_R) * Math.sin(rad1),
+    );
+    const pr2 = roundPoint(
+      CENTER + (OUTER_R - OUTER_CORNER_R) * Math.cos(rad2),
+      CENTER + (OUTER_R - OUTER_CORNER_R) * Math.sin(rad2),
+    );
 
     const outerArcStart = rimPoint(th1 + trimDeg, OUTER_R);
     const outerArcEnd = rimPoint(th2 - trimDeg, OUTER_R);

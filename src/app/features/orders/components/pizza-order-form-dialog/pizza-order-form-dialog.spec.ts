@@ -18,9 +18,7 @@ const mockPizza: Pizza = {
   basePrice: 9.5,
   image: 'marg.jpg',
   createdAt: '2024-01-01',
-  toppings: [
-    { id: 't1', label: 'Mozzarella', price: 0, sortOrder: 1 },
-  ],
+  toppings: [{ id: 't1', label: 'Mozzarella', price: 0, sortOrder: 1 }],
 };
 
 const dialogData: PizzaOrderFormDialogData = {
@@ -47,7 +45,10 @@ describe('PizzaOrderFormDialog', () => {
         { provide: DIALOG_DATA, useValue: dialogData },
       ],
     }).overrideComponent(PizzaOrderFormDialog, {
-      set: { imports: [DecimalPipe, CatalogImageUrlPipe, Modal, Button], schemas: [NO_ERRORS_SCHEMA] },
+      set: {
+        imports: [DecimalPipe, CatalogImageUrlPipe, Modal, Button],
+        schemas: [NO_ERRORS_SCHEMA],
+      },
     });
     fixture = TestBed.createComponent(PizzaOrderFormDialog);
     el = fixture.nativeElement;

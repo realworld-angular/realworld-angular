@@ -8,7 +8,9 @@ describe('TermsAndConditionsPage', () => {
   let el: HTMLElement;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({}).overrideComponent(TermsAndConditionsPage, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.configureTestingModule({}).overrideComponent(TermsAndConditionsPage, {
+      set: { schemas: [NO_ERRORS_SCHEMA] },
+    });
     fixture = TestBed.createComponent(TermsAndConditionsPage);
     el = fixture.nativeElement;
     await fixture.whenStable();

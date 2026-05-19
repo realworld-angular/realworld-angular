@@ -12,13 +12,7 @@ import { AdminPizzaRow } from '../../components/admin-pizza-row/admin-pizza-row'
 
 @Component({
   selector: 'rw-admin-pizzas-page',
-  imports: [
-    Button,
-    Spinner,
-    Callout,
-    EmptyState,
-    AdminPizzaRow,
-  ],
+  imports: [Button, Spinner, Callout, EmptyState, AdminPizzaRow],
   templateUrl: './admin-pizza-list-page.html',
   styleUrl: './admin-pizza-list-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,9 +21,7 @@ export class AdminPizzaListPage {
   private readonly api = inject(PizzaApi);
   private readonly dialog = inject(Dialog);
 
-  protected readonly pizzasResource = httpResource<Pizza[]>(
-    () => '/api/admin/pizzeria/pizzas',
-  );
+  protected readonly pizzasResource = httpResource<Pizza[]>(() => '/api/admin/pizzeria/pizzas');
 
   protected readonly deleteError = signal('');
 
@@ -42,7 +34,11 @@ export class AdminPizzaListPage {
   }
 
   private openPizzaFormDialog(pizza: Pizza | null): void {
-    const ref = this.dialog.open<{ pizza: Pizza; mode: 'create' | 'edit' }, Pizza | null, AdminPizzaFormDialog>(AdminPizzaFormDialog, {
+    const ref = this.dialog.open<
+      { pizza: Pizza; mode: 'create' | 'edit' },
+      Pizza | null,
+      AdminPizzaFormDialog
+    >(AdminPizzaFormDialog, {
       data: pizza,
     });
 
@@ -50,7 +46,11 @@ export class AdminPizzaListPage {
       if (!event) return;
       const { pizza, mode } = event;
       if (mode === 'edit') {
-        this.pizzasResource.set((this.pizzasResource.value() ?? []).map((existingPizza) => (existingPizza.id === pizza.id ? pizza : existingPizza)));
+        this.pizzasResource.set(
+          (this.pizzasResource.value() ?? []).map((existingPizza) =>
+            existingPizza.id === pizza.id ? pizza : existingPizza,
+          ),
+        );
       } else {
         this.pizzasResource.set([...(this.pizzasResource.value() ?? []), pizza]);
       }

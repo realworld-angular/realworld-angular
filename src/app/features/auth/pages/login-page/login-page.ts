@@ -22,22 +22,26 @@ export class LoginPage {
 
   protected readonly model = signal({ email: '', password: '' });
 
-  protected readonly loginForm = form(this.model, (schema) => {
-    required(schema.email, { message: 'Email is required' });
-    email(schema.email, { message: 'Enter a valid email' });
-    required(schema.password, { message: 'Password is required' });
-  }, {
-    submission: {
-      action: async (formRef) => {
-        const { email, password } = formRef().value();
-        try {
-          await firstValueFrom(this.auth.login(email, password));
-          void this.router.navigate(['/']);
-        } catch {
-          return { kind: 'serverError', message: 'Invalid credentials' };
-        }
-        return null;
+  protected readonly loginForm = form(
+    this.model,
+    (schema) => {
+      required(schema.email, { message: 'Email is required' });
+      email(schema.email, { message: 'Enter a valid email' });
+      required(schema.password, { message: 'Password is required' });
+    },
+    {
+      submission: {
+        action: async (formRef) => {
+          const { email, password } = formRef().value();
+          try {
+            await firstValueFrom(this.auth.login(email, password));
+            void this.router.navigate(['/']);
+          } catch {
+            return { kind: 'serverError', message: 'Invalid credentials' };
+          }
+          return null;
+        },
       },
     },
-  });
+  );
 }

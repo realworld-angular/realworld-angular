@@ -30,10 +30,7 @@ describe('PizzeriaListPage', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClientTesting(),
-        provideRouter([]),
-      ],
+      providers: [provideHttpClientTesting(), provideRouter([])],
     }).overrideComponent(PizzeriaListPage, {
       set: { schemas: [NO_ERRORS_SCHEMA] },
     });
@@ -68,16 +65,17 @@ describe('PizzeriaListPage', () => {
 
   it('should render multiple pizzeria cards', async () => {
     const second: PizzeriaSummary = { ...mockPizzeria, id: '2', name: 'Napoli Express' };
-    httpTesting.expectOne((r) => r.url.includes('/api/pizzerias')).flush(makePage([mockPizzeria, second]));
+    httpTesting
+      .expectOne((r) => r.url.includes('/api/pizzerias'))
+      .flush(makePage([mockPizzeria, second]));
     await fixture.whenStable();
     expect(el.querySelectorAll('.pizzeria-card').length).toBe(2);
   });
 
   it('should show error callout on HTTP error', async () => {
-    httpTesting.expectOne((r) => r.url.includes('/api/pizzerias')).flush(
-      'Server error',
-      { status: 500, statusText: 'Internal Server Error' },
-    );
+    httpTesting
+      .expectOne((r) => r.url.includes('/api/pizzerias'))
+      .flush('Server error', { status: 500, statusText: 'Internal Server Error' });
     await fixture.whenStable();
     expect(el.querySelector('rw-callout')).not.toBeNull();
   });
@@ -89,7 +87,9 @@ describe('PizzeriaListPage', () => {
   });
 
   it('should make a new request with updated page param when page changes', async () => {
-    httpTesting.expectOne((r) => r.url.includes('/api/pizzerias')).flush(makePage([mockPizzeria], 3));
+    httpTesting
+      .expectOne((r) => r.url.includes('/api/pizzerias'))
+      .flush(makePage([mockPizzeria], 3));
     await fixture.whenStable();
 
     const pagination = fixture.debugElement.query(By.css('rw-pagination'));

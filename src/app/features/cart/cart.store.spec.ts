@@ -66,7 +66,9 @@ describe('CartStore', () => {
       store.addItem('pizza1', 2, 's1', [], 'p1');
       expect(store.items().length).toBe(1);
       expect(store.items()[0].quantity).toBe(3);
-      httpTesting.match((r) => r.url.includes('/api/orders/cart')).forEach((r) => r.flush(mockCartData));
+      httpTesting
+        .match((r) => r.url.includes('/api/orders/cart'))
+        .forEach((r) => r.flush(mockCartData));
     });
 
     it('should clear and reset when adding item from different pizzeria', () => {
@@ -74,7 +76,9 @@ describe('CartStore', () => {
       store.addItem('pizza2', 1, null, [], 'p2');
       expect(store.pizzeria()).toEqual({ id: 'p2' });
       expect(store.items().length).toBe(1);
-      httpTesting.match((r) => r.url.includes('/api/orders/cart')).forEach((r) => r.flush(mockCartData));
+      httpTesting
+        .match((r) => r.url.includes('/api/orders/cart'))
+        .forEach((r) => r.flush(mockCartData));
     });
 
     it('should trigger a POST to /api/orders/cart after adding item', () => {
@@ -90,14 +94,18 @@ describe('CartStore', () => {
   describe('updateQuantity()', () => {
     beforeEach(() => {
       store.addItem('pizza1', 2, null, [], 'p1');
-      httpTesting.match((r) => r.url.includes('/api/orders/cart')).forEach((r) => r.flush(mockCartData));
+      httpTesting
+        .match((r) => r.url.includes('/api/orders/cart'))
+        .forEach((r) => r.flush(mockCartData));
     });
 
     it('should update the quantity of an existing item', () => {
       const itemId = store.items()[0].id;
       store.updateQuantity(itemId, 5);
       expect(store.items()[0].quantity).toBe(5);
-      httpTesting.match((r) => r.url.includes('/api/orders/cart')).forEach((r) => r.flush(mockCartData));
+      httpTesting
+        .match((r) => r.url.includes('/api/orders/cart'))
+        .forEach((r) => r.flush(mockCartData));
     });
 
     it('should remove item when quantity set to 0', () => {
@@ -111,7 +119,9 @@ describe('CartStore', () => {
   describe('removeItem()', () => {
     it('should remove the item from the cart', () => {
       store.addItem('pizza1', 1, null, [], 'p1');
-      httpTesting.match((r) => r.url.includes('/api/orders/cart')).forEach((r) => r.flush(mockCartData));
+      httpTesting
+        .match((r) => r.url.includes('/api/orders/cart'))
+        .forEach((r) => r.flush(mockCartData));
       const itemId = store.items()[0].id;
       store.removeItem(itemId);
       expect(store.items().length).toBe(0);
@@ -119,7 +129,9 @@ describe('CartStore', () => {
 
     it('should clear pizzeria when last item is removed', () => {
       store.addItem('pizza1', 1, null, [], 'p1');
-      httpTesting.match((r) => r.url.includes('/api/orders/cart')).forEach((r) => r.flush(mockCartData));
+      httpTesting
+        .match((r) => r.url.includes('/api/orders/cart'))
+        .forEach((r) => r.flush(mockCartData));
       const itemId = store.items()[0].id;
       store.removeItem(itemId);
       expect(store.pizzeria()).toBeNull();
@@ -129,7 +141,9 @@ describe('CartStore', () => {
   describe('clear()', () => {
     it('should reset items and pizzeria', () => {
       store.addItem('pizza1', 1, null, [], 'p1');
-      httpTesting.match((r) => r.url.includes('/api/orders/cart')).forEach((r) => r.flush(mockCartData));
+      httpTesting
+        .match((r) => r.url.includes('/api/orders/cart'))
+        .forEach((r) => r.flush(mockCartData));
       store.clear();
       expect(store.items()).toEqual([]);
       expect(store.pizzeria()).toBeNull();
@@ -144,13 +158,17 @@ describe('CartStore', () => {
 
     it('should return false when pizzeria matches', () => {
       store.addItem('pizza1', 1, null, [], 'p1');
-      httpTesting.match((r) => r.url.includes('/api/orders/cart')).forEach((r) => r.flush(mockCartData));
+      httpTesting
+        .match((r) => r.url.includes('/api/orders/cart'))
+        .forEach((r) => r.flush(mockCartData));
       expect(store.hasItemsForOtherPizzeria('p1')).toBe(false);
     });
 
     it('should return true when pizzeria differs', () => {
       store.addItem('pizza1', 1, null, [], 'p1');
-      httpTesting.match((r) => r.url.includes('/api/orders/cart')).forEach((r) => r.flush(mockCartData));
+      httpTesting
+        .match((r) => r.url.includes('/api/orders/cart'))
+        .forEach((r) => r.flush(mockCartData));
       expect(store.hasItemsForOtherPizzeria('p2')).toBe(true);
     });
   });
