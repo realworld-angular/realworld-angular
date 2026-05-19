@@ -1,6 +1,8 @@
-# Pizza Marketplace — Angular Frontend
+![RealWorld Angular banner](public/images/realworld-angular-banner.png)
 
-The frontend single-page application for the Pizza Marketplace, built with [Angular v21](https://angular.dev/). This is a learning and reference implementation that demonstrates modern Angular patterns — standalone components, signals, reactive forms, lazy loading, route guards, and server-sent events — within a cohesive, opinionated codebase. It is part of the [RealWorld Angular](https://github.com/realworld-angular/realworld-angular) initiative.
+# Realworld Angular playground
+
+The frontend single-page application for Realworld Angular, built with [Angular v21](https://angular.dev/). This is a learning and reference implementation that demonstrates modern Angular patterns — standalone components, signals, reactive forms, lazy loading, route guards, and server-sent events — within a cohesive, opinionated codebase. It is part of the [RealWorld Angular](https://github.com/realworld-angular/realworld-angular) initiative.
 
 Customers can browse pizzerias, build their cart, place orders, and track their delivery. Pizzeria admins and kitchen staff have a dedicated admin panel to manage menus, orders, and staff.
 
@@ -29,8 +31,6 @@ Key features of the frontend:
 
 > **This is a playground application for developers learning Angular and full-stack patterns.** It is not a real marketplace — no actual orders are fulfilled, no payment is processed, and mock data is encouraged.
 
-The app communicates with the [Pizza Marketplace API](../realworld-angular-api) and proxies all `/api/*` requests to `http://localhost:3000` in development.
-
 ## Tech Stack
 
 | Layer | Technology |
@@ -48,7 +48,6 @@ The app communicates with the [Pizza Marketplace API](../realworld-angular-api) 
 
 - **Node.js** >= 20
 - **pnpm** >= 9 — install with `npm install -g pnpm`
-- The **Pizza Marketplace API** running on `http://localhost:3000` — see [realworld-angular-api](../realworld-angular-api)
 
 ## Getting Started
 
@@ -60,18 +59,7 @@ cd realworld-angular
 pnpm install
 ```
 
-### 2. Make sure the API is running
-
-The frontend proxies all API calls to `http://localhost:3000`. Start the backend before running the frontend:
-
-```bash
-# In the realworld-angular-api directory
-pnpm run db:up
-pnpm run db:migrate
-pnpm run start:dev
-```
-
-### 3. Start the development server
+### 2. Start the development server
 
 ```bash
 pnpm start
