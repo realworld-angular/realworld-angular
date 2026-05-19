@@ -1,6 +1,8 @@
 # Pizza Marketplace — Angular Frontend
 
-The frontend single-page application for the Pizza Marketplace, built with [Angular v21](https://angular.dev/). Customers can browse pizzerias, build their cart, place orders, and track their delivery. Pizzeria admins and kitchen staff have a dedicated admin panel to manage menus, orders, and staff.
+The frontend single-page application for the Pizza Marketplace, built with [Angular v21](https://angular.dev/). This is a learning and reference implementation that demonstrates modern Angular patterns — standalone components, signals, reactive forms, lazy loading, route guards, and server-sent events — within a cohesive, opinionated codebase. It is part of the [RealWorld Angular](https://github.com/realworld-angular/realworld-angular) initiative.
+
+Customers can browse pizzerias, build their cart, place orders, and track their delivery. Pizzeria admins and kitchen staff have a dedicated admin panel to manage menus, orders, and staff.
 
 ## Table of Contents
 
@@ -14,9 +16,6 @@ The frontend single-page application for the Pizza Marketplace, built with [Angu
 - [Contributing](#contributing)
 - [License](#license)
 
-
-foo
-
 ## Overview
 
 Key features of the frontend:
@@ -27,6 +26,8 @@ Key features of the frontend:
 - **Authentication** — register, log in, and manage your profile
 - **Staff invite flow** — accept a pizzeria invite via a token link to join as kitchen staff
 - **Admin panel** — manage pizzerias, pizza menus, orders, and staff (role-gated)
+
+> **This is a playground application for developers learning Angular and full-stack patterns.** It is not a real marketplace — no actual orders are fulfilled, no payment is processed, and mock data is encouraged.
 
 The app communicates with the [Pizza Marketplace API](../realworld-angular-api) and proxies all `/api/*` requests to `http://localhost:3000` in development.
 
@@ -166,13 +167,3 @@ If you find a bug or have a feature request, please [open an issue](../../issues
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
-
-### TODO
-
-- use native html element select for photon location field
-- check Number() usage on angular side
-- think about refactoring the 'feedback' callout system
-
-## components to check
-- order details
