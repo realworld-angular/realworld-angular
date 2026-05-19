@@ -63,7 +63,7 @@
                       aria-label="Decrease quantity"
                       (click)="cartStore.updateQuantity(item.id, item.quantity - 1)"
                     >
-                      <img src="/icons/remove.svg" alt="" width="24" height="24" aria-hidden="true" />
+                      <img ngSrc="/icons/remove.svg" alt="" width="24" height="24" aria-hidden="true" />
                     </button>
                     <span class="qty-value">{{ item.quantity }}</span>
                     <button
@@ -72,7 +72,7 @@
                       aria-label="Increase quantity"
                       (click)="cartStore.updateQuantity(item.id, item.quantity + 1)"
                     >
-                      <img src="/icons/add.svg" alt="" width="24" height="24" aria-hidden="true" />
+                      <img ngSrc="/icons/add.svg" alt="" width="24" height="24" aria-hidden="true" />
                     </button>
                   </div>
                   <button
@@ -81,7 +81,7 @@
                     [attr.aria-label]="'Remove ' + item.pizza.name"
                     (click)="cartStore.removeItem(item.id)"
                   >
-                    <img src="/icons/delete.svg" alt="" width="20" height="20" aria-hidden="true" />
+                    <img ngSrc="/icons/delete.svg" alt="" width="20" height="20" aria-hidden="true" />
                   </button>
                 </div>
               </li>

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, output, signal } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { Dialog } from '@angular/cdk/dialog';
 import { filter, switchMap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -9,7 +9,7 @@ import { ConfirmDialog, ConfirmDialogData, ConfirmDialogResult } from '../../../
 
 @Component({
   selector: '[rw-admin-pizza-row]',
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, NgOptimizedImage],
   templateUrl: './admin-pizza-row.html',
   styleUrl: './admin-pizza-row.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

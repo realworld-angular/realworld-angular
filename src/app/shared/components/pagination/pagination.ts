@@ -1,7 +1,9 @@
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output, computed } from '@angular/core';
 
 @Component({
   selector: 'rw-pagination',
+  imports: [NgOptimizedImage],
   templateUrl: './pagination.html',
   styleUrl: './pagination.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

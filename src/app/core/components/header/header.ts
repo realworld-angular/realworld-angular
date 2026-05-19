@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,7 +16,7 @@ import { RoleDirective } from '../../../shared/directives/role.directive';
 
 @Component({
   selector: 'rw-header',
-  imports: [RouterLink, RouterLinkActive, Avatar, PizzaLogo, RoleDirective],
+  imports: [RouterLink, RouterLinkActive, NgOptimizedImage, Avatar, PizzaLogo, RoleDirective],
   templateUrl: './header.html',
   styleUrl: './header.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

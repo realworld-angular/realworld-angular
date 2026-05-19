@@ -8,7 +8,7 @@ import {
   output,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { OrderApi } from '../../../order-api';
 import { AdminOrderListItem } from '../../../order.models';
 import { Dialog } from '@angular/cdk/dialog';
@@ -18,7 +18,7 @@ import { StatusBadge } from "../../../../../shared/components/status-badge/statu
 
 @Component({
   selector: 'tr[rw-admin-order-row]',
-  imports: [DecimalPipe, DatePipe, StatusBadge],
+  imports: [DecimalPipe, DatePipe, NgOptimizedImage, StatusBadge],
   templateUrl: './admin-order-row.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

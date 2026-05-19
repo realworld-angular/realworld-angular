@@ -11,7 +11,7 @@
         aria-label="Mark order as delivered"
         (click)="promptDeliverOrder()"
       >
-        <img src="/icons/delivery.svg" alt="" width="20" height="20" aria-hidden="true" />
+        <img ngSrc="/icons/delivery.svg" alt="" width="20" height="20" aria-hidden="true" />
       </button>
     }
     @if (order().status === 'PENDING') {
@@ -21,7 +21,7 @@
         aria-label="Cancel pending order"
         (click)="promptCancelOrder()"
       >
-        <img src="/icons/cancel.svg" alt="" width="20" height="20" aria-hidden="true" />
+        <img ngSrc="/icons/cancel.svg" alt="" width="20" height="20" aria-hidden="true" />
       </button>
     }
   </span>

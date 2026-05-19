@@ -1,7 +1,9 @@
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'rw-callout',
+  imports: [NgOptimizedImage],
   templateUrl: './callout.html',
   styleUrl: './callout.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

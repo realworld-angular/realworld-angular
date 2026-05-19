@@ -28,7 +28,7 @@
           "
         >
           <span class="cart-link__icon" aria-hidden="true">
-            <img src="/icons/shopping-cart.svg" alt="" width="24" height="24" />
+            <img ngSrc="/icons/shopping-cart.svg" alt="" width="24" height="24" />
           </span>
           @if (cartStore.itemCount() > 0) {
             <span class="cart-link__badge" aria-hidden="true">{{ cartStore.itemCount() }}</span>
@@ -55,7 +55,7 @@
         aria-label="Toggle mobile menu"
         (click)="toggleMobileMenu()"
       >
-        <img src="/icons/menu.svg" alt="" aria-hidden="true" width="24" height="24" />
+        <img ngSrc="/icons/menu.svg" alt="" aria-hidden="true" width="24" height="24" />
       </button>
     </div>
   </div>
@@ -79,7 +79,7 @@
           aria-label="Close mobile menu"
           (click)="closeMobileMenu()"
         >
-          <img src="/icons/close.svg" alt="" aria-hidden="true" width="24" height="24" />
+          <img ngSrc="/icons/close.svg" alt="" aria-hidden="true" width="24" height="24" />
         </button>
       </div>
       <div class="container mobile-menu__body">

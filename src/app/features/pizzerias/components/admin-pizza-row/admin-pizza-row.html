@@ -12,7 +12,7 @@
       [attr.aria-label]="'Edit ' + pizza().name"
       (click)="edit.emit(pizza())"
     >
-      <img src="/icons/edit.svg" alt="" width="20" height="20" aria-hidden="true" />
+      <img ngSrc="/icons/edit.svg" alt="" width="20" height="20" aria-hidden="true" />
     </button>
     <button
       type="button"
@@ -21,7 +21,7 @@
       [attr.aria-label]="'Delete ' + pizza().name"
       (click)="promptDelete()"
     >
-      <img src="/icons/delete.svg" alt="" width="20" height="20" aria-hidden="true" />
+      <img ngSrc="/icons/delete.svg" alt="" width="20" height="20" aria-hidden="true" />
     </button>
   </span>
 </td>
