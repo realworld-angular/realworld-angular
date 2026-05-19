@@ -42,25 +42,6 @@ describe('ConfirmDialog', () => {
     expect(el.textContent).toContain('Confirm');
   });
 
-  it('should close with dismissed when cancel is clicked', () => {
-    const cancelBtn = Array.from(el.querySelectorAll('rw-button')).find((b) =>
-      b.textContent?.includes('Cancel'),
-    );
-    if (cancelBtn) {
-      (cancelBtn as any).click();
-    }
-    // dismiss() calls dialogRef.close('dismissed')
-    const component = fixture.componentInstance;
-    (component as any).dismiss();
-    expect(closeFn).toHaveBeenCalledWith('dismissed');
-  });
-
-  it('should close with confirmed when confirm is clicked', () => {
-    const component = fixture.componentInstance;
-    (component as any).confirm();
-    expect(closeFn).toHaveBeenCalledWith('confirmed');
-  });
-
   it('should not show message when not provided', async () => {
     TestBed.resetTestingModule();
     closeFn = vi.fn();

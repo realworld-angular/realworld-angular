@@ -23,7 +23,7 @@ const cartStoreStub = {
   isLoading: signal(false),
   pizzeria: pizzeriaSignal,
   items: itemsSignal,
-  clear: () => {},
+  clear: vi.fn(),
 };
 
 describe('CheckoutPage', () => {

@@ -1,4 +1,4 @@
-import { Component, signal, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { RoleDirective } from './role.directive';
@@ -21,6 +21,7 @@ const authStub = {
     <span *rwRole="'CUSTOMER'; else guestTpl" id="customer-or-else">Customer</span>
     <ng-template #guestTpl><span id="else-content">Please sign in</span></ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class TestHostComponent {}
 

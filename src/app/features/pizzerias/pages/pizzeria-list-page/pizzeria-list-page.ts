@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal, computed, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 import { httpResource } from '@angular/common/http';

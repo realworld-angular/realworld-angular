@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { checkoutDeactivateGuard } from './checkout-deactivate.guard';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
-const canDeactivateTrue = { canDeactivate: () => true };
-const canDeactivateFalse = { canDeactivate: () => false };
-const canDeactivateObservable = { canDeactivate: () => of(true) };
+const canDeactivateTrue = { canDeactivate: (): boolean => true };
+const canDeactivateFalse = { canDeactivate: (): boolean => false };
+const canDeactivateObservable = { canDeactivate: (): Observable<boolean> => of(true) };
 
 describe('checkoutDeactivateGuard', () => {
   beforeEach(() => {
@@ -14,7 +14,7 @@ describe('checkoutDeactivateGuard', () => {
 
   it('should return true when component.canDeactivate() returns true', () => {
     const result = TestBed.runInInjectionContext(() =>
-      checkoutDeactivateGuard(canDeactivateTrue as any, {} as any, {} as any, {} as any),
+      checkoutDeactivateGuard(canDeactivateTrue, {} as any, {} as any, {} as any),
     );
     expect(result).toBe(true);
   });

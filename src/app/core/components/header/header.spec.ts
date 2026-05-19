@@ -10,9 +10,9 @@ import { User } from '../../models/user.model';
 const userSignal = signal<User | null>(null);
 const authStub = {
   user: userSignal,
-  isAuthenticated: () => userSignal() !== null,
-  isAdmin: () => userSignal()?.role === 'PIZZERIA_ADMIN',
-  isCustomer: () => userSignal()?.role === 'CUSTOMER',
+  isAuthenticated: (): boolean => userSignal() !== null,
+  isAdmin: (): boolean => userSignal()?.role === 'PIZZERIA_ADMIN',
+  isCustomer: (): boolean => userSignal()?.role === 'CUSTOMER',
 };
 
 const itemCountSignal = signal(0);

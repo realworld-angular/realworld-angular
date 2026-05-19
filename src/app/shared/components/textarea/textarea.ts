@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, computed } from '@angular/core';
-import { FieldState, FieldTree, FormField } from '@angular/forms/signals';
+import { FieldTree, FormField } from '@angular/forms/signals';
 
 @Component({
   selector: 'rw-textarea',

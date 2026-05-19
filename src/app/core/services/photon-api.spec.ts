@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { PhotonApi } from './photon-api';
+import { PhotonApi, PhotonLocationSuggestion } from './photon-api';
 
 const mockGeoJson = {
   features: [
@@ -71,7 +71,7 @@ describe('PhotonApi', () => {
       service.searchPlaces('rome').subscribe((r) => (results = r));
       const req = httpTesting.expectOne((r) => r.url.includes('photon.komoot.io'));
       req.flush(mockGeoJson);
-      expect((results! as any[]).every((s) => s.city && s.country)).toBe(true);
+      expect((results! as PhotonLocationSuggestion[]).every((s) => s.city && s.country)).toBe(true);
     });
 
     it('should return empty array on HTTP error', () => {
@@ -83,7 +83,7 @@ describe('PhotonApi', () => {
     });
 
     it('should map features to suggestions with city and country', () => {
-      let results: any[] = [];
+      let results: PhotonLocationSuggestion[] = [];
       service.searchPlaces('naples').subscribe((r) => (results = r));
       const req = httpTesting.expectOne((r) => r.url.includes('photon.komoot.io'));
       req.flush(mockGeoJson);
