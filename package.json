@@ -13,7 +13,6 @@
     "format:check": "prettier --check ."
   },
   "private": true,
-  "packageManager": "pnpm@10.17.0",
   "dependencies": {
     "@angular/cdk": "^21.2.10",
     "@angular/common": "^21.2.0",
