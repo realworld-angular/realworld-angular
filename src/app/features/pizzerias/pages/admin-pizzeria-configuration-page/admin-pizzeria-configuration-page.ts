@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, effect, DestroyRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, effect, DestroyRef, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField, form, required, FormRoot } from '@angular/forms/signals';
 import { httpResource } from '@angular/common/http';
@@ -30,7 +30,7 @@ export class AdminPizzeriaConfigurationPage {
   private readonly dialog = inject(Dialog);
   private readonly title = inject(Title);
 
-  protected readonly pizzeriaResource = httpResource<PizzeriaDetail | null>(
+  protected readonly pizzeriaResource = httpResource<PizzeriaDetail>(
     () => '/api/pizzerias/admin/pizzeria',
   );
 
@@ -69,19 +69,24 @@ export class AdminPizzeriaConfigurationPage {
 
   public constructor() {
     effect(() => {
-      if(this.pizzeriaResource.value()) {
-        this.title.setTitle(`Configure your pizzeria - ${this.pizzeriaResource.value()!.name}`);
+      if (this.pizzeriaResource.status() === 'resolved') {
+        const pizzeria = untracked(() => this.pizzeriaResource.value());
+        if (pizzeria) {
+          this.title.setTitle(`Configure your pizzeria - ${pizzeria.name}`);
+        }
       }
     });
 
     effect(() => {
-      const pizzeria = this.pizzeriaResource.value();
-      if(pizzeria) {
-        this.model.update((modelState) => ({
-          ...modelState,
-          location: { city: pizzeria.city, country: pizzeria.country },
-          image: pizzeria.image,
-        }));
+      if (this.pizzeriaResource.status() === 'resolved') {
+        const pizzeria = untracked(() => this.pizzeriaResource.value());
+        if (pizzeria) {
+          this.model.update((modelState) => ({
+            ...modelState,
+            location: { city: pizzeria.city, country: pizzeria.country },
+            image: pizzeria.image,
+          }));
+        }
       }
     });
   }

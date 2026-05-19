@@ -91,8 +91,11 @@ export class PizzeriaDetailsPage {
 
   public constructor() {
     effect(() => {
-      if(this.pizzeriaResource.value()) {
-        this.title.setTitle(`${this.pizzeriaResource.value()!.name} - Pizzeria`);
+      if (this.pizzeriaResource.status() === 'resolved') {
+        const pizzeria = this.pizzeriaResource.value();
+        if (pizzeria) {
+          this.title.setTitle(`${pizzeria.name} - Pizzeria`);
+        }
       }
     });
   }
@@ -104,7 +107,7 @@ export class PizzeriaDetailsPage {
 
   protected openOrderModal(pizza: Pizza): void {
     const ref = this.dialog.open<string, PizzaOrderFormDialogData, PizzaOrderFormDialog>(PizzaOrderFormDialog, {
-      data: { pizza, pizzeriaId: this.id(), displayPizzeriaName: this.pizzeriaResource.value()!.name },
+      data: { pizza, pizzeriaId: this.id(), displayPizzeriaName: this.pizzeriaResource.value()?.name ?? '' },
       hasBackdrop: false,
     });
 

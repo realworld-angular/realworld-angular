@@ -17,14 +17,17 @@ import { Callout } from '../../../../shared/components/callout/callout';
 export class AdminPizzeriaDetailsPage {
   private readonly title = inject(Title);
 
-  protected readonly pizzeriaResource = httpResource<PizzeriaDetail | null>(
+  protected readonly pizzeriaResource = httpResource<PizzeriaDetail>(
     () => '/api/pizzerias/admin/pizzeria',
   );
 
   public constructor() {
     effect(() => {
-      if(this.pizzeriaResource.value()) {
-        this.title.setTitle(`${this.pizzeriaResource.value()!.name} - Admin`);
+      if (this.pizzeriaResource.status() === 'resolved') {
+        const pizzeria = this.pizzeriaResource.value();
+        if (pizzeria) {
+          this.title.setTitle(`${pizzeria.name} - Admin`);
+        }
       }
     });
   }

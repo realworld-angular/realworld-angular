@@ -8,12 +8,7 @@ export const noPizzeriaGuard: CanMatchFn = () => {
   const router = inject(Router);
 
   return pizzeriaApi.getMyPizzeria().pipe(
-    map((pizzeria) => {
-      if (pizzeria) {
-        return router.createUrlTree(['/pizzerias/admin']);
-      }
-      return true;
-    }),
+    map(() => router.createUrlTree(['/pizzerias/admin'])),
     catchError(() => of(true)),
   );
 };

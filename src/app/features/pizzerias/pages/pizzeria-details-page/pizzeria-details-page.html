@@ -10,7 +10,7 @@
       text="We could not find this pizzeria, or it is no longer available."
     />
   </div>
-} @else {
+} @else if (pizzeriaResource.hasValue()) {
   @let pizzeria = pizzeriaResource.value()!;
   @let pizzas = pizzasResource.value() ?? [];
   <!-- Pizzeria hero -->

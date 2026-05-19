@@ -4,9 +4,7 @@
       <div class="loading-center" aria-label="Loading pizzeria"><rw-spinner /></div>
     } @else if (pizzeriaResource.error()) {
       <rw-callout variant="error" message="Could not load pizzeria. Please try again." />
-    } @else if (!pizzeriaResource.value()) {
-      <rw-callout variant="error" message="No pizzeria found. Create one first." />
-    } @else {
+    } @else if (pizzeriaResource.hasValue()) {
       @let pizzeria = pizzeriaResource.value()!;
       <div class="admin-page__header">
         <h1 class="admin-page__title">
@@ -48,9 +46,7 @@
         </ul>
       </nav>
 
-      <main
-        class="admin-pizzeria-panel"
-      >
+      <main class="admin-pizzeria-panel">
         <router-outlet />
       </main>
     }
