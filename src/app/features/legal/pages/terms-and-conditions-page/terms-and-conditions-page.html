@@ -102,6 +102,55 @@
             >RealWorld Angular</a>
           repository for documentation, issues, and how to run the stack locally.
         </dd>
+
+        <dt>Does this app use real payment processing?</dt>
+        <dd>
+          No. The checkout flow collects delivery and billing addresses and order notes only. There is no credit card
+          form, no payment gateway integration, and no real transaction of any kind. All orders are purely
+          fictional—no money changes hands.
+        </dd>
+
+        <dt>Why does the app ask for my address during checkout?</dt>
+        <dd>
+          The address fields exist to demonstrate Angular&rsquo;s signals-based reactive forms, form validation, and
+          integration with an external geocoding service. When you type an address, your input is sent to
+          <a href="https://photon.komoot.io" target="_blank" rel="noopener noreferrer">Photon</a>
+          (a free, open-source geocoder by komoot) for autocomplete suggestions. No real delivery takes place.
+        </dd>
+
+        <dt>Does this app show content that other users have typed?</dt>
+        <dd>
+          No. Text input from one user is never displayed to other users. There are no reviews, comments, ratings, or
+          any form of user-generated content visible to others. This is a deliberate design choice to avoid moderation
+          risks, including exposure to NSFW content from bad actors. Images are also curated—users select from
+          pre-uploaded pizza and pizzeria images rather than uploading their own files.
+        </dd>
+
+        <dt>Why isn&rsquo;t every feature of a real marketplace implemented?</dt>
+        <dd>
+          Sliced is first and foremost an Angular learning playground. Features are added only when they provide
+          meaningful opportunities to demonstrate Angular capabilities—signals, resource APIs, server-sent events,
+          signals-based forms, lazy-loading, guards, and so on. The project deliberately avoids adding features just
+          for the sake of completeness. If a feature does not showcase an interesting Angular pattern, it likely will
+          not be built.
+        </dd>
+
+        <dt>Does this project use any paid third-party libraries?</dt>
+        <dd>
+          No. Every dependency is open-source and available under permissive licenses (MIT, Apache 2.0, and similar).
+          There is no Stripe, no Sentry, no paid SDK of any kind. If your company would like its product showcased in
+          a dedicated playground feature, sponsorship opportunities are available—contact the maintainer through the
+          <a href="https://github.com/realworld-angular/realworld-angular" target="_blank" rel="noopener noreferrer"
+            >repository</a>.
+        </dd>
+
+        <dt>What version of Angular does this project use?</dt>
+        <dd>
+          Sliced tracks the latest stable release of Angular (currently v21.2). It is an early adopter of new
+          APIs—signals, <code>httpResource</code>, <code>rxResource</code>, and the signals-based reactive forms
+          API—making it a living reference for modern Angular patterns and a useful migration guide for teams
+          upgrading their own codebases.
+        </dd>
       </dl>
     </section>
   </div>
