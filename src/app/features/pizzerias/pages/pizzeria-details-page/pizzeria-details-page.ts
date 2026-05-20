@@ -4,11 +4,10 @@ import {
   DestroyRef,
   inject,
   signal,
-  computed,
   input,
   effect,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { httpResource } from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
@@ -19,14 +18,19 @@ import { RoleDirective } from '../../../../shared/directives/role.directive';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 import { PizzaOrderFormDialog } from '../../../orders/components/pizza-order-form-dialog/pizza-order-form-dialog';
 import { PizzaOrderFormDialogData } from '../../../orders/order.models';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map, switchMap } from 'rxjs/operators';
 import { merge, of, Subject, timer } from 'rxjs';
-import { FormsModule } from '@angular/forms';
+import { form, FormRoot, FormField, debounce } from '@angular/forms/signals';
 import { Dialog } from '@angular/cdk/dialog';
 import { CatalogImageUrlPipe } from '../../../../shared/pipes/catalog-image-url.pipe';
 import { Button } from '../../../../shared/components/button/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+interface FilterFormModel {
+  searchName: string;
+  maxPrice: number;
+}
 
 @Component({
   selector: 'rw-pizzeria-detail-page',
@@ -37,7 +41,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     Spinner,
     RoleDirective,
     EmptyState,
-    FormsModule,
+    FormRoot,
+    FormField,
     CatalogImageUrlPipe,
     Button,
   ],
@@ -49,8 +54,11 @@ export class PizzeriaDetailsPage {
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialog = inject(Dialog);
   private readonly title = inject(Title);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   public readonly id = input.required<string>();
+  public readonly maxPrice = input<string>();
 
   private readonly showBanner$ = new Subject<void>();
   private readonly dismissBanner$ = new Subject<void>();
@@ -59,27 +67,24 @@ export class PizzeriaDetailsPage {
     () => `/api/pizzerias/${this.id()}`,
   );
 
-  // Pizza name search
-  protected readonly pizzaNameSearch = signal('');
-  private readonly debouncedSearch = toSignal(
-    toObservable(this.pizzaNameSearch).pipe(
-      debounceTime(300),
-      map((search: string) => search.trim()),
-      distinctUntilChanged(),
-    ),
-    { initialValue: '' },
-  );
+  // Signal forms model
+  protected readonly model = signal<FilterFormModel>({
+    searchName: '',
+    maxPrice: Number(this.maxPrice() ?? 50),
+  });
+
+  protected readonly filterForm = form(this.model, path => {
+    debounce(path.maxPrice, 500);
+    debounce(path.searchName, 500);
+  });
 
   protected readonly pizzasResource = httpResource<Pizza[]>(() => ({
     url: `/api/pizzerias/${this.id()}/pizzas`,
     params: {
-      ...(this.hasActivePizzaSearch() ? { name: this.debouncedSearch() } : {}),
+      ...(this.filterForm.searchName().value().trim().length > 0 ? { name: this.filterForm.searchName().value().trim() } : {}),
+      ...(this.filterForm.maxPrice().dirty() ? { maxPrice: this.filterForm.maxPrice().value() } : {}),
     },
   }));
-
-  protected readonly hasActivePizzaSearch = computed<boolean>(
-    () => this.debouncedSearch().length > 0,
-  );
 
   protected readonly addedToCartBannerVisible = toSignal(
     merge(
@@ -98,11 +103,18 @@ export class PizzeriaDetailsPage {
         }
       }
     });
-  }
 
-  protected onPizzaNameSearch(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.pizzaNameSearch.set(value);
+    // Sync maxPrice to URL query params
+    effect(() => {
+      this.router.navigate([], {
+        queryParams: {
+          ...(this.filterForm.searchName().value().trim().length > 0 ? { name: this.filterForm.searchName().value().trim() } : {}),
+          ...(this.filterForm.maxPrice().dirty() ? { maxPrice: this.filterForm.maxPrice().value() } : {}),
+        },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    });
   }
 
   protected openOrderModal(pizza: Pizza): void {

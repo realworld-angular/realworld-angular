@@ -45,11 +45,18 @@
 
 .menu-toolbar {
   margin-block-end: var(--space-8);
-  max-width: 420px;
+}
+
+.toolbar-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-6);
+  flex-wrap: wrap;
 }
 
 .pizza-menu-search__input {
-  width: 100%;
+  flex: 1;
+  min-width: 200px;
   padding-block: var(--space-3);
   padding-inline-end: var(--space-4);
   font-size: var(--text-base);
@@ -66,6 +73,41 @@
 .pizza-menu-search__input:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.filter-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.filter-range-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.filter-range {
+  width: 120px;
+  accent-color: var(--color-primary);
+}
+
+.filter-range-value {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  width: 2rem;
 }
 
 .pizza-grid {

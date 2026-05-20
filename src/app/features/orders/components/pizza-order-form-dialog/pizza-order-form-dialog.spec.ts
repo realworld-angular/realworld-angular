@@ -80,7 +80,7 @@ describe('PizzaOrderFormDialog', () => {
   it('should increment quantity', () => {
     httpTesting.expectOne('/api/options/sizes').flush([]);
     httpTesting.expectOne('/api/options/toppings').flush([]);
-    (fixture.componentInstance as PizzaOrderFormDialog).incrementQuantity();
+    (fixture.componentInstance as any).incrementQuantity();
     expect((fixture.componentInstance as any).model().quantity).toBe(2);
   });
 

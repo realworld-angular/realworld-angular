@@ -14,7 +14,7 @@ describe('checkoutDeactivateGuard', () => {
 
   it('should return true when component.canDeactivate() returns true', () => {
     const result = TestBed.runInInjectionContext(() =>
-      checkoutDeactivateGuard(canDeactivateTrue, {} as any, {} as any, {} as any),
+      checkoutDeactivateGuard(canDeactivateTrue as any, {} as any, {} as any, {} as any),
     );
     expect(result).toBe(true);
   });
