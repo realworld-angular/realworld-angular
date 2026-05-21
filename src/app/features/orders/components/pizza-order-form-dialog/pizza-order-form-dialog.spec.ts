@@ -1,14 +1,13 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { PizzaOrderFormDialog } from './pizza-order-form-dialog';
 import { PizzaOrderFormDialogData } from '../../order.models';
-import { Pizza, PizzaOption, SelectedPizzaOption } from '../../../pizzerias/models/pizza.models';
+import { Pizza } from '../../../pizzerias/models/pizza.models';
 import { CatalogImageUrlPipe } from '../../../../shared/pipes/catalog-image-url.pipe';
-import { FormValueControl, FormField, FormRoot, ValidationError } from '@angular/forms/signals';
+import { FormField, FormRoot } from '@angular/forms/signals';
 import { Button } from '../../../../shared/components/button/button';
 import { Modal } from '../../../../shared/components/modal/modal';
 import { Input } from '../../../../shared/components/input/input';
