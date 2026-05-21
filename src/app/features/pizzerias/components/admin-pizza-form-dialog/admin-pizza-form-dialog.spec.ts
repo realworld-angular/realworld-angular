@@ -1,16 +1,11 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Component, input, model } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { submit } from '@angular/forms/signals';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { AdminPizzaFormDialog } from './admin-pizza-form-dialog';
-import { Modal } from '../../../../shared/components/modal/modal';
-import { ModalFooter } from '../../../../shared/components/modal/modal-footer';
-import { Button } from '../../../../shared/components/button/button';
-import { Callout } from '../../../../shared/components/callout/callout';
-
+import { FormValueControl, FormField, FormRoot, ValidationError } from '@angular/forms/signals';
 import { Pizza } from '../../models/pizza.models';
 
 const mockPizza: Pizza = {
@@ -22,13 +17,75 @@ const mockPizza: Pizza = {
   toppings: [{ id: 't1', label: 'Mozzarella', price: 0, sortOrder: 1 }],
 };
 
+@Component({ selector: 'rw-modal', template: '{{ title() }}<ng-content/>', standalone: true })
+class MockModal {
+  readonly title = input<string>('');
+}
+
+@Component({ selector: 'rw-modal-footer', template: '<ng-content/>', standalone: true })
+class MockModalFooter {}
+
+@Component({ selector: 'rw-callout', template: '<ng-content/>', standalone: true })
+class MockCallout {
+  readonly variant = input<string>('');
+  readonly message = input<string>('');
+}
+
+@Component({
+  selector: 'rw-button',
+  template: '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
+  standalone: true,
+})
+class MockButton {
+  readonly type = input<string>('button');
+  readonly disabled = input(false);
+  readonly isLoading = input(false);
+  readonly palette = input<string>('');
+  readonly variant = input<string>('');
+}
+
+@Component({
+  selector: 'rw-input',
+  template: '<input [value]="value()" (input)="onInput($event)" [attr.type]="type()"/>',
+  standalone: true,
+})
+class MockInput implements FormValueControl<string> {
+  readonly value = model<string>('');
+  readonly touched = model(false);
+  readonly invalid = input(false);
+  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
+  readonly disabled = input(false);
+  readonly placeholder = input<string>('');
+  readonly type = input<string>('text');
+  readonly label = input<string>('');
+  onInput(ev: Event) {
+    this.value.set((ev.target as HTMLInputElement).value);
+  }
+}
+
+@Component({
+  selector: 'rw-image-picker',
+  template: '',
+  standalone: true,
+})
+class MockImagePicker implements FormValueControl<string | null> {
+  readonly value = model<string | null>(null);
+  readonly touched = model(false);
+  readonly invalid = input(false);
+  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
+  readonly disabled = input(false);
+  readonly required = input(false);
+  readonly category = input<string>('');
+  readonly label = input<string>('');
+}
+
 describe('AdminPizzaFormDialog', () => {
   let fixture: ComponentFixture<AdminPizzaFormDialog>;
   let el: HTMLElement;
   let httpTesting: HttpTestingController;
   let closeFn: ReturnType<typeof vi.fn>;
 
-  const componentImports = [DecimalPipe, Modal, ModalFooter, Button, Callout];
+  const componentImports = [DecimalPipe, MockModal, MockModalFooter, MockButton, MockCallout, MockInput, MockImagePicker, FormRoot, FormField];
 
   function setupModule(data: Pizza | null) {
     TestBed.resetTestingModule();
@@ -40,7 +97,7 @@ describe('AdminPizzaFormDialog', () => {
         { provide: DIALOG_DATA, useValue: data },
       ],
     }).overrideComponent(AdminPizzaFormDialog, {
-      set: { imports: componentImports, schemas: [NO_ERRORS_SCHEMA] },
+      set: { imports: componentImports },
     });
     fixture = TestBed.createComponent(AdminPizzaFormDialog);
     el = fixture.nativeElement;
@@ -74,22 +131,25 @@ describe('AdminPizzaFormDialog', () => {
     await fixture.whenStable();
     TestBed.flushEffects();
 
-    (fixture.componentInstance as any).model.update((m: any) => ({ ...m, image: 'test.jpg' }));
+    const imagePickerDe = fixture.debugElement.query(
+      (de) => de.componentInstance instanceof MockImagePicker,
+    );
+    imagePickerDe.componentInstance.value.set('test.jpg');
     TestBed.flushEffects();
 
-    const submitPromise = submit((fixture.componentInstance as any).pizzaForm);
+    el.querySelector<HTMLButtonElement>('button[type="submit"]')!.click();
 
     const req = httpTesting.expectOne('/api/admin/pizzeria/pizzas');
     expect(req.request.method).toBe('POST');
     req.flush(mockPizza);
 
-    await submitPromise;
+    await fixture.whenStable();
     expect(closeFn).toHaveBeenCalled();
   });
 
   it('should close on dismiss', () => {
     httpTesting.expectOne('/api/options/toppings').flush([]);
-    (fixture.componentInstance as any).dismiss();
+    el.querySelector<HTMLButtonElement>('button')!.click();
     expect(closeFn).toHaveBeenCalled();
   });
 
@@ -100,8 +160,8 @@ describe('AdminPizzaFormDialog', () => {
     ]);
     await fixture.whenStable();
     TestBed.flushEffects();
-    const total = (fixture.componentInstance as any).pizzaTotalPrice();
-    expect(total).toBe(10);
+    const totalEl = el.querySelector('.admin-modal-footer__total-value');
+    expect(totalEl?.textContent).toContain('10');
   });
 
   it('should show edit mode title when data is provided', () => {

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Router, provideRouter } from '@angular/router';
+import { Router, provideRouter, Route, UrlSegment } from '@angular/router';
 import { describe, it, expect, beforeEach, vi, type Mocked } from 'vitest';
 import { authGuard, guestGuard } from './auth.guard';
 import { Auth } from '../../services/auth';
@@ -21,13 +21,13 @@ describe('authGuard', () => {
 
   it('should return true when user is authenticated', () => {
     authStub.isAuthenticated.mockReturnValue(true);
-    const result = TestBed.runInInjectionContext(() => authGuard({} as any, {} as any));
+    const result = TestBed.runInInjectionContext(() => authGuard({ path: '' } as Route, [] as unknown as UrlSegment[]));
     expect(result).toBe(true);
   });
 
   it('should return a UrlTree to /auth/login when not authenticated', () => {
     authStub.isAuthenticated.mockReturnValue(false);
-    const result = TestBed.runInInjectionContext(() => authGuard({} as any, {} as any));
+    const result = TestBed.runInInjectionContext(() => authGuard({ path: '' } as Route, [] as unknown as UrlSegment[]));
     expect(result).toBeInstanceOf(UrlTree);
     expect(router.serializeUrl(result as UrlTree)).toBe('/auth/login');
   });

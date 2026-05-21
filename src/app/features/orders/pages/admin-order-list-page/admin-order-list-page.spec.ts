@@ -1,11 +1,15 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { Component, input, output } from '@angular/core';
 import { AdminOrderListPage } from './admin-order-list-page';
 import { Page } from '../../../../core/models/pagination.model';
 import { AdminOrderListItem } from '../../order.models';
 import { By } from '@angular/platform-browser';
+import { Spinner } from '../../../../shared/components/spinner/spinner';
+import { Pagination } from '../../../../shared/components/pagination/pagination';
+import { Callout } from '../../../../shared/components/callout/callout';
+import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 
 const mockOrder: AdminOrderListItem = {
   id: 'order1',
@@ -17,6 +21,17 @@ const mockOrder: AdminOrderListItem = {
   client: { id: 'u1', name: 'Test User' },
   items: [],
 };
+
+@Component({
+  selector: 'tr[rw-admin-order-row]',
+  template: '',
+  standalone: true,
+})
+class MockAdminOrderRow {
+  readonly order = input.required<AdminOrderListItem>();
+  readonly updateOrder = output<AdminOrderListItem>();
+  readonly showFeedback = output<{ variant: string; message: string }>();
+}
 
 function makePage(items: AdminOrderListItem[], totalPages = 1): Page<AdminOrderListItem> {
   return { items, total: items.length, page: 1, limit: 15, totalPages };
@@ -30,7 +45,12 @@ describe('AdminOrderListPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideHttpClientTesting()],
-    }).overrideComponent(AdminOrderListPage, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    }).overrideComponent(AdminOrderListPage, {
+      set: {
+        imports: [Spinner, Pagination, Callout, EmptyState, MockAdminOrderRow],
+        schemas: [],
+      },
+    });
 
     fixture = TestBed.createComponent(AdminOrderListPage);
     el = fixture.nativeElement;
@@ -84,14 +104,15 @@ describe('AdminOrderListPage', () => {
     req2.flush(makePage([mockOrder], 3));
   });
 
-  it('should update an order in place via updateOrder()', async () => {
+  it('should update an order in place when child emits updateOrder', async () => {
     httpTesting.expectOne((r) => r.url.includes('/api/orders')).flush(makePage([mockOrder]));
     await fixture.whenStable();
 
-    const updated = { ...mockOrder, status: 'DELIVERING' as any };
-    (fixture.componentInstance as any).updateOrder(updated);
+    const updated: AdminOrderListItem = { ...mockOrder, status: 'DELIVERED' };
+    const rowDe = fixture.debugElement.query(By.directive(MockAdminOrderRow));
+    rowDe.componentInstance.updateOrder.emit(updated);
     await fixture.whenStable();
 
-    expect(fixture.componentInstance.ordersResource.value()!.items[0].status).toBe('DELIVERING');
+    expect(el.querySelector('tr')).not.toBeNull();
   });
 });

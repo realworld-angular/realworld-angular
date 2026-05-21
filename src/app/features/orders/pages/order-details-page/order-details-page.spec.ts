@@ -1,7 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { OrderDetailPage } from './order-details-page';
 import { Order } from '../../order.models';
@@ -57,7 +56,7 @@ describe('OrderDetailPage', () => {
 
     TestBed.configureTestingModule({
       providers: [provideHttpClientTesting(), provideRouter([])],
-    }).overrideComponent(OrderDetailPage, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    });
 
     fixture = TestBed.createComponent(OrderDetailPage);
     fixture.componentRef.setInput('id', 'order1');
@@ -104,11 +103,13 @@ describe('OrderDetailPage', () => {
     expect(es.closed).toBe(true);
   });
 
-  it('should call PATCH /api/orders/:id/cancel when cancel() is triggered', () => {
+  it('should call PATCH /api/orders/:id/cancel when cancel button is clicked', async () => {
     FakeEventSource.instances[0].emit(mockOrder);
     TestBed.flushEffects();
+    await fixture.whenStable();
 
-    (fixture.componentInstance as any).cancel();
+    const cancelBtn = el.querySelector<HTMLElement>('rw-button')!;
+    cancelBtn.click();
     const req = httpTesting.expectOne('/api/orders/order1/cancel');
     expect(req.request.method).toBe('PATCH');
     req.flush({ ...mockOrder, status: 'CANCELLED' });

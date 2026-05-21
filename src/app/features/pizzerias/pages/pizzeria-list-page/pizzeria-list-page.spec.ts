@@ -1,8 +1,7 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { PizzeriaListPage } from './pizzeria-list-page';
 import { Page } from '../../../../core/models/pagination.model';
 import { PizzeriaSummary } from '../../models/pizzeria.models';
@@ -31,8 +30,6 @@ describe('PizzeriaListPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideHttpClientTesting(), provideRouter([])],
-    }).overrideComponent(PizzeriaListPage, {
-      set: { schemas: [NO_ERRORS_SCHEMA] },
     });
 
     fixture = TestBed.createComponent(PizzeriaListPage);
@@ -102,11 +99,13 @@ describe('PizzeriaListPage', () => {
     await fixture.whenStable();
   });
 
-  it('should include search param after debounce when searchInput signal is set', async () => {
+  it('should include search param after debounce when search input is typed', async () => {
     httpTesting.expectOne((r) => r.url.includes('/api/pizzerias')).flush(makePage([]));
     await fixture.whenStable();
 
-    (fixture.componentInstance as any).searchInput.set('roma');
+    const input = el.querySelector<HTMLInputElement>('#pizzeria-search')!;
+    input.value = 'roma';
+    input.dispatchEvent(new Event('input'));
     await new Promise((resolve) => setTimeout(resolve, 350));
     TestBed.flushEffects();
 

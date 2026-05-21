@@ -1,6 +1,5 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Subject } from 'rxjs';
 import { AdminPizzaRow } from './admin-pizza-row';
@@ -34,7 +33,7 @@ describe('AdminPizzaRow', () => {
     dialogStub = createDialogStub();
     TestBed.configureTestingModule({
       providers: [provideHttpClientTesting(), { provide: Dialog, useValue: dialogStub }],
-    }).overrideComponent(AdminPizzaRow, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    });
     fixture = TestBed.createComponent(AdminPizzaRow);
     el = fixture.nativeElement;
     httpTesting = TestBed.inject(HttpTestingController);
@@ -84,7 +83,7 @@ describe('AdminPizzaRow', () => {
     const deleted: Pizza[] = [];
     fixture.componentInstance.deleted.subscribe((p) => deleted.push(p));
 
-    (fixture.componentInstance as any).promptDelete();
+    el.querySelector<HTMLButtonElement>('[aria-label*="Delete"]')!.click();
     dialogStub.closed$.next('confirmed');
 
     const req = httpTesting.expectOne('/api/admin/pizzeria/pizzas/pizza1');
@@ -99,7 +98,7 @@ describe('AdminPizzaRow', () => {
     const errors: string[] = [];
     fixture.componentInstance.deleteError.subscribe((e) => errors.push(e));
 
-    (fixture.componentInstance as any).promptDelete();
+    el.querySelector<HTMLButtonElement>('[aria-label*="Delete"]')!.click();
     dialogStub.closed$.next('confirmed');
 
     const req = httpTesting.expectOne('/api/admin/pizzeria/pizzas/pizza1');
@@ -109,7 +108,7 @@ describe('AdminPizzaRow', () => {
   });
 
   it('should not call API when dialog is dismissed', () => {
-    (fixture.componentInstance as any).promptDelete();
+    el.querySelector<HTMLButtonElement>('[aria-label*="Delete"]')!.click();
     dialogStub.closed$.next('dismissed');
     httpTesting.expectNone(() => true);
   });

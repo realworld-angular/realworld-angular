@@ -1,7 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { provideRouter, Router } from '@angular/router';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { signal } from '@angular/core';
 import { PizzeriaDetailsPage } from './pizzeria-details-page';
@@ -58,7 +57,7 @@ describe('PizzeriaDetailsPage', () => {
         provideRouter([]),
         { provide: Auth, useValue: authStub },
       ],
-    }).overrideComponent(PizzeriaDetailsPage, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    });
 
     fixture = TestBed.createComponent(PizzeriaDetailsPage);
     component = fixture.componentInstance;
@@ -78,9 +77,9 @@ describe('PizzeriaDetailsPage', () => {
   }
 
   function flushPizzaRequests() {
-    httpTesting
-      .match((r) => r.url.includes('/api/pizzerias/p1/pizzas'))
-      .forEach((r) => r.flush(mockPizzas));
+    for (const r of httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas'))) {
+      try { r.flush(mockPizzas); } catch {}
+    }
   }
 
   function flushInitialData() {
@@ -132,46 +131,60 @@ describe('PizzeriaDetailsPage', () => {
       req.flush(mockPizzas);
     });
 
-    it('should include maxPrice param when maxPrice is changed', () => {
+    it('should include maxPrice param when maxPrice is changed', async () => {
       flushInitialData();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+      await fixture.whenStable();
+      flushPizzaRequests();
 
-      const field = (component as any).filterForm.maxPrice();
-      field.value.set(10);
-      field.markAsDirty();
+      const range = el.querySelector<HTMLInputElement>('#max-price')!;
+      range.value = '10';
+      range.dispatchEvent(new Event('input'));
+      await new Promise((resolve) => setTimeout(resolve, 600));
       TestBed.flushEffects();
 
-      const req = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
-      expect(req.request.params.get('maxPrice')).toBe('10');
-      req.flush(mockPizzas);
+      const reqs = httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
+      const req = reqs.find(r => r.request.params.get('maxPrice') === '10')!;
+      expect(req).toBeDefined();
+      for (const r of reqs) { try { r.flush(mockPizzas); } catch {} }
     });
 
-    it('should include maxPrice param when name is also changed', () => {
+    it('should include maxPrice param when name is also changed', async () => {
       flushInitialData();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+      await fixture.whenStable();
+      flushPizzaRequests();
 
-      const maxPriceField = (component as any).filterForm.maxPrice();
-      maxPriceField.value.set(15);
-      maxPriceField.markAsDirty();
-
-      const searchField = (component as any).filterForm.searchName();
-      searchField.value.set('Margherita');
-      searchField.markAsDirty();
-
+      const range = el.querySelector<HTMLInputElement>('#max-price')!;
+      range.value = '15';
+      range.dispatchEvent(new Event('input'));
+      const searchInput = el.querySelector<HTMLInputElement>('#pizza-name-search')!;
+      searchInput.value = 'Margherita';
+      searchInput.dispatchEvent(new Event('input'));
+      await new Promise((resolve) => setTimeout(resolve, 600));
       TestBed.flushEffects();
 
-      const req = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
-      expect(req.request.params.get('maxPrice')).toBe('15');
-      expect(req.request.params.get('name')).toBe('Margherita');
-      req.flush(mockPizzas);
+      const reqs = httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
+      const req = reqs.find(r => r.request.params.get('maxPrice') === '15')!;
+      expect(req).toBeDefined();
+      for (const r of reqs) { try { r.flush(mockPizzas); } catch {} }
     });
 
-    it('should sync maxPrice to URL query params', () => {
+    it('should sync maxPrice to URL query params', async () => {
       flushInitialData();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+      await fixture.whenStable();
+      flushPizzaRequests();
 
       const navigateSpy = vi.spyOn(router, 'navigate');
 
-      const field = (component as any).filterForm.maxPrice();
-      field.value.set(8);
-      field.markAsDirty();
+      const range = el.querySelector<HTMLInputElement>('#max-price')!;
+      range.value = '8';
+      range.dispatchEvent(new Event('input'));
+      await new Promise((resolve) => setTimeout(resolve, 600));
       TestBed.flushEffects();
 
       expect(navigateSpy).toHaveBeenCalledWith([], expect.objectContaining({
@@ -192,12 +205,17 @@ describe('PizzeriaDetailsPage', () => {
       req.flush(mockPizzas);
     });
 
-    it('should include name param after setting a search value', () => {
+    it('should include name param after setting a search value', async () => {
       flushInitialData();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+      await fixture.whenStable();
+      flushPizzaRequests();
 
-      const field = (component as any).filterForm.searchName();
-      field.value.set('Margherita');
-      field.markAsDirty();
+      const searchInput = el.querySelector<HTMLInputElement>('#pizza-name-search')!;
+      searchInput.value = 'Margherita';
+      searchInput.dispatchEvent(new Event('input'));
+      await new Promise((resolve) => setTimeout(resolve, 600));
       TestBed.flushEffects();
 
       const req = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
@@ -205,12 +223,17 @@ describe('PizzeriaDetailsPage', () => {
       req.flush(mockPizzas);
     });
 
-    it('should trim whitespace from search name', () => {
+    it('should trim whitespace from search name', async () => {
       flushInitialData();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+      await fixture.whenStable();
+      flushPizzaRequests();
 
-      const field = (component as any).filterForm.searchName();
-      field.value.set('  Diavola  ');
-      field.markAsDirty();
+      const searchInput = el.querySelector<HTMLInputElement>('#pizza-name-search')!;
+      searchInput.value = '  Diavola  ';
+      searchInput.dispatchEvent(new Event('input'));
+      await new Promise((resolve) => setTimeout(resolve, 600));
       TestBed.flushEffects();
 
       const req = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));

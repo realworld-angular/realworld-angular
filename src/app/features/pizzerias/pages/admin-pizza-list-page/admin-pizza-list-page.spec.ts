@@ -1,9 +1,14 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { Component, input, output } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { AdminPizzaListPage } from './admin-pizza-list-page';
 import { Pizza } from '../../models/pizza.models';
+import { Button } from '../../../../shared/components/button/button';
+import { Spinner } from '../../../../shared/components/spinner/spinner';
+import { Callout } from '../../../../shared/components/callout/callout';
+import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 
 const mockPizza: Pizza = {
   id: 'pizza1',
@@ -14,6 +19,18 @@ const mockPizza: Pizza = {
   toppings: [],
 };
 
+@Component({
+  selector: '[rw-admin-pizza-row]',
+  template: '',
+  standalone: true,
+})
+class MockAdminPizzaRow {
+  readonly pizza = input.required<Pizza>();
+  readonly edit = output<Pizza>();
+  readonly deleted = output<Pizza>();
+  readonly deleteError = output<string>();
+}
+
 describe('AdminPizzaListPage', () => {
   let fixture: ComponentFixture<AdminPizzaListPage>;
   let el: HTMLElement;
@@ -22,7 +39,12 @@ describe('AdminPizzaListPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideHttpClientTesting()],
-    }).overrideComponent(AdminPizzaListPage, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    }).overrideComponent(AdminPizzaListPage, {
+      set: {
+        imports: [Button, Spinner, Callout, EmptyState, MockAdminPizzaRow],
+        schemas: [],
+      },
+    });
 
     fixture = TestBed.createComponent(AdminPizzaListPage);
     el = fixture.nativeElement;
@@ -67,13 +89,15 @@ describe('AdminPizzaListPage', () => {
     expect(el.querySelector('rw-button')).not.toBeNull();
   });
 
-  it('should optimistically remove deleted pizza via onPizzaDeleted()', async () => {
+  it('should optimistically remove deleted pizza when child emits deleted', async () => {
     httpTesting.expectOne('/api/admin/pizzeria/pizzas').flush([mockPizza]);
     await fixture.whenStable();
 
-    (fixture.componentInstance as any).onPizzaDeleted(mockPizza);
+    const rowDe = fixture.debugElement.query(By.directive(MockAdminPizzaRow));
+    rowDe.componentInstance.deleted.emit(mockPizza);
     await fixture.whenStable();
 
-    expect(fixture.componentInstance['pizzasResource'].value()).toEqual([]);
+    expect(el.querySelector('table')).toBeNull();
+    expect(el.querySelector('rw-empty-state')).not.toBeNull();
   });
 });

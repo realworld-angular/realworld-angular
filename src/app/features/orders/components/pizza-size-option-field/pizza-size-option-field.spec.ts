@@ -1,5 +1,4 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { SizeOptionField } from './pizza-size-option-field';
 import { PizzaOption } from '../../../pizzerias/models/pizza.models';
@@ -15,14 +14,16 @@ describe('SizeOptionField', () => {
   let el: HTMLElement;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({}).overrideComponent(SizeOptionField, {
-      set: { schemas: [NO_ERRORS_SCHEMA] },
-    });
+    TestBed.configureTestingModule({});
     fixture = TestBed.createComponent(SizeOptionField);
     el = fixture.nativeElement;
     fixture.componentRef.setInput('options', options);
     await fixture.whenStable();
   });
+
+  function optionLabels(): NodeListOf<HTMLElement> {
+    return el.querySelectorAll('.option-item');
+  }
 
   it('should render all options', () => {
     expect(el.textContent).toContain('Small');
@@ -46,24 +47,25 @@ describe('SizeOptionField', () => {
   });
 
   it('should select an option when toggled', () => {
-    (fixture.componentInstance as any).toggle(options[1]);
+    optionLabels()[1].click();
     expect(fixture.componentInstance.value()).toEqual({ id: 's2', label: 'Medium', price: 2 });
   });
 
   it('should deselect when toggling the same option', () => {
-    (fixture.componentInstance as any).toggle(options[1]);
-    (fixture.componentInstance as any).toggle(options[1]);
+    optionLabels()[1].click();
+    fixture.detectChanges();
+    optionLabels()[1].querySelector<HTMLInputElement>('input')!.dispatchEvent(new Event('change'));
     expect(fixture.componentInstance.value()).toBeNull();
   });
 
   it('should mark touched on toggle', () => {
     expect(fixture.componentInstance.touched()).toBe(false);
-    (fixture.componentInstance as any).toggle(options[0]);
+    optionLabels()[0].click();
     expect(fixture.componentInstance.touched()).toBe(true);
   });
 
   it('should apply selected class for active option', () => {
-    (fixture.componentInstance as any).toggle(options[2]);
+    optionLabels()[2].click();
     fixture.detectChanges();
     const selectedLabels = el.querySelectorAll('.option-item--selected');
     expect(selectedLabels.length).toBe(1);
@@ -72,7 +74,7 @@ describe('SizeOptionField', () => {
 
   it('should not toggle when disabled', () => {
     fixture.componentRef.setInput('disabled', true);
-    (fixture.componentInstance as any).toggle(options[0]);
+    optionLabels()[0].click();
     expect(fixture.componentInstance.value()).toBeNull();
   });
 });

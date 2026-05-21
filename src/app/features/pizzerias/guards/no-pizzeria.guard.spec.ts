@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Router, provideRouter, UrlTree } from '@angular/router';
+import { Router, provideRouter, UrlTree, Route, UrlSegment } from '@angular/router';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Observable } from 'rxjs';
@@ -38,8 +38,8 @@ describe('noPizzeriaGuard', () => {
     let result: unknown;
     (
       TestBed.runInInjectionContext(() =>
-        noPizzeriaGuard({} as any, {} as any),
-      ) as Observable<unknown>
+        noPizzeriaGuard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+      ) as Observable<boolean | UrlTree>
     ).subscribe((r) => (result = r));
     httpTesting.expectOne('/api/pizzerias/admin/pizzeria').flush(mockPizzeria);
     expect(result).toBeInstanceOf(UrlTree);
@@ -50,8 +50,8 @@ describe('noPizzeriaGuard', () => {
     let result: unknown;
     (
       TestBed.runInInjectionContext(() =>
-        noPizzeriaGuard({} as any, {} as any),
-      ) as Observable<unknown>
+        noPizzeriaGuard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+      ) as Observable<boolean | UrlTree>
     ).subscribe((r) => (result = r));
     httpTesting.expectOne('/api/pizzerias/admin/pizzeria').flush('Not found', {
       status: 404,
@@ -64,8 +64,8 @@ describe('noPizzeriaGuard', () => {
     let result: unknown;
     (
       TestBed.runInInjectionContext(() =>
-        noPizzeriaGuard({} as any, {} as any),
-      ) as Observable<unknown>
+        noPizzeriaGuard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+      ) as Observable<boolean | UrlTree>
     ).subscribe((r) => (result = r));
     httpTesting.expectOne('/api/pizzerias/admin/pizzeria').flush('error', {
       status: 500,

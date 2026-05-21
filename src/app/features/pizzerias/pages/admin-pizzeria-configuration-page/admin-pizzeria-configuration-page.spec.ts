@@ -1,12 +1,13 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Component, input, model } from '@angular/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Subject } from 'rxjs';
 import { AdminPizzeriaConfigurationPage } from './admin-pizzeria-configuration-page';
 import { Dialog } from '@angular/cdk/dialog';
 import { provideRouter } from '@angular/router';
-import { Component } from '@angular/core';
+import { FormValueControl, FormField, FormRoot, ValidationError } from '@angular/forms/signals';
+import { LocationValue } from '../../../../shared/components/photon-location-field/photon-location-field';
 
 @Component({ template: '' })
 class StubComponent {}
@@ -29,6 +30,57 @@ function createDialogStub() {
   return { open: vi.fn(() => ({ closed: closed$ })), closed$ };
 }
 
+@Component({ selector: 'rw-spinner', template: '', standalone: true })
+class MockSpinner {}
+
+@Component({ selector: 'rw-callout', template: '<ng-content/>', standalone: true })
+class MockCallout {
+  readonly variant = input<string>('');
+  readonly message = input<string>('');
+}
+
+@Component({
+  selector: 'rw-button',
+  template: '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
+  standalone: true,
+})
+class MockButton {
+  readonly type = input<string>('button');
+  readonly disabled = input(false);
+  readonly isLoading = input(false);
+  readonly palette = input<string>('');
+  readonly variant = input<string>('');
+}
+
+@Component({
+  selector: 'rw-image-picker',
+  template: '',
+  standalone: true,
+})
+class MockImagePicker implements FormValueControl<string | null> {
+  readonly value = model<string | null>(null);
+  readonly touched = model(false);
+  readonly invalid = input(false);
+  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
+  readonly disabled = input(false);
+  readonly required = input(false);
+  readonly category = input<string>('');
+  readonly label = input<string>('');
+}
+
+@Component({
+  selector: 'rw-photon-location-field',
+  template: '',
+  standalone: true,
+})
+class MockPhotonLocationField implements FormValueControl<LocationValue | null> {
+  readonly value = model<LocationValue | null>(null);
+  readonly touched = model(false);
+  readonly invalid = input(false);
+  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
+  readonly disabled = input(false);
+}
+
 describe('AdminPizzeriaConfigurationPage', () => {
   let fixture: ComponentFixture<AdminPizzeriaConfigurationPage>;
   let el: HTMLElement;
@@ -44,7 +96,7 @@ describe('AdminPizzeriaConfigurationPage', () => {
         { provide: Dialog, useValue: dialogStub },
       ],
     }).overrideComponent(AdminPizzeriaConfigurationPage, {
-      set: { imports: [], schemas: [NO_ERRORS_SCHEMA] },
+      set: { imports: [MockSpinner, MockCallout, MockButton, MockImagePicker, MockPhotonLocationField, FormRoot, FormField] },
     });
     fixture = TestBed.createComponent(AdminPizzeriaConfigurationPage);
     el = fixture.nativeElement;
@@ -83,9 +135,16 @@ describe('AdminPizzeriaConfigurationPage', () => {
     httpTesting.expectOne('/api/pizzerias/admin/pizzeria').flush(mockPizzeria);
     await fixture.whenStable();
     TestBed.flushEffects();
-    const model = (fixture.componentInstance as any).model();
-    expect(model.location).toEqual({ city: 'Rome', country: 'Italy' });
-    expect(model.image).toBe('roma.jpg');
+
+    const locationDe = fixture.debugElement.query(
+      (de) => de.componentInstance instanceof MockPhotonLocationField,
+    );
+    expect(locationDe.componentInstance.value()).toEqual({ city: 'Rome', country: 'Italy' });
+
+    const imageDe = fixture.debugElement.query(
+      (de) => de.componentInstance instanceof MockImagePicker,
+    );
+    expect(imageDe.componentInstance.value()).toBe('roma.jpg');
   });
 
   it('should open confirm dialog on delete click and call DELETE on confirm', async () => {
@@ -93,7 +152,7 @@ describe('AdminPizzeriaConfigurationPage', () => {
     await fixture.whenStable();
     TestBed.flushEffects();
 
-    (fixture.componentInstance as any).deletePizzeria();
+    el.querySelector<HTMLButtonElement>('.danger-zone button')!.click();
     expect(dialogStub.open).toHaveBeenCalled();
 
     dialogStub.closed$.next('confirmed');
@@ -107,8 +166,14 @@ describe('AdminPizzeriaConfigurationPage', () => {
     await fixture.whenStable();
     TestBed.flushEffects();
 
-    (fixture.componentInstance as any).submitSuccess.set(true);
-    fixture.detectChanges();
+    el.querySelector<HTMLButtonElement>('button[type="submit"]')!.click();
+    await fixture.whenStable();
+    const putReq = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/admin/pizzeria') && r.method === 'PATCH');
+    expect(putReq.request.method).toBe('PATCH');
+    putReq.flush({ message: 'Updated' });
+    await fixture.whenStable();
+    TestBed.flushEffects();
+
     expect(el.querySelector('rw-callout')).not.toBeNull();
   });
 });
