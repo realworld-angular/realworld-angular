@@ -7,6 +7,11 @@ import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { AdminPizzaFormDialog } from './admin-pizza-form-dialog';
 import { FormValueControl, FormField, FormRoot, ValidationError } from '@angular/forms/signals';
 import { Pizza } from '../../models/pizza.models';
+import { Button } from '../../../../shared/components/button/button';
+import { Callout } from '../../../../shared/components/callout/callout';
+import { Input } from '../../../../shared/components/input/input';
+import { Modal } from '../../../../shared/components/modal/modal';
+import { ModalFooter } from '../../../../shared/components/modal/modal-footer';
 
 const mockPizza: Pizza = {
   id: 'p1',
@@ -16,70 +21,6 @@ const mockPizza: Pizza = {
   createdAt: '2024-01-01',
   toppings: [{ id: 't1', label: 'Mozzarella', price: 0, sortOrder: 1 }],
 };
-
-@Component({
-  selector: 'rw-modal',
-  template: '{{ title() }}<ng-content/>',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockModal {
-  readonly title = input<string>('');
-}
-
-@Component({
-  selector: 'rw-modal-footer',
-  template: '<ng-content/>',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockModalFooter {}
-
-@Component({
-  selector: 'rw-callout',
-  template: '<ng-content/>',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockCallout {
-  readonly variant = input<string>('');
-  readonly message = input<string>('');
-}
-
-@Component({
-  selector: 'rw-button',
-  template:
-    '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockButton {
-  readonly type = input<string>('button');
-  readonly disabled = input(false);
-  readonly isLoading = input(false);
-  readonly palette = input<string>('');
-  readonly variant = input<string>('');
-}
-
-@Component({
-  selector: 'rw-input',
-  template: '<input [value]="value()" (input)="onInput($event)" [attr.type]="type()"/>',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockInput implements FormValueControl<string> {
-  readonly value = model<string>('');
-  readonly touched = model(false);
-  readonly invalid = input(false);
-  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
-  readonly disabled = input(false);
-  readonly placeholder = input<string>('');
-  readonly type = input<string>('text');
-  readonly label = input<string>('');
-  onInput(ev: Event): void {
-    this.value.set((ev.target as HTMLInputElement).value);
-  }
-}
 
 @Component({
   selector: 'rw-image-picker',
@@ -106,11 +47,11 @@ describe('AdminPizzaFormDialog', () => {
 
   const componentImports = [
     DecimalPipe,
-    MockModal,
-    MockModalFooter,
-    MockButton,
-    MockCallout,
-    MockInput,
+    Modal,
+    ModalFooter,
+    Button,
+    Callout,
+    Input,
     MockImagePicker,
     FormRoot,
     FormField,

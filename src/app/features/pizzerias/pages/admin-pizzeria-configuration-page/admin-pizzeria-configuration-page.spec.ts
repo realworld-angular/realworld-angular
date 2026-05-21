@@ -9,6 +9,9 @@ import { Dialog } from '@angular/cdk/dialog';
 import { provideRouter } from '@angular/router';
 import { FormValueControl, FormField, FormRoot, ValidationError } from '@angular/forms/signals';
 import { LocationValue } from '../../../../shared/components/photon-location-field/photon-location-field';
+import { Spinner } from '../../../../shared/components/spinner/spinner';
+import { Button } from '../../../../shared/components/button/button';
+import { Callout } from '../../../../shared/components/callout/callout';
 
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
 class StubComponent {}
@@ -28,40 +31,6 @@ const mockPizzeria: PizzeriaDetail = {
 function createDialogStub(): { open: ReturnType<typeof vi.fn>; closed$: Subject<string | null> } {
   const closed$ = new Subject<string | null>();
   return { open: vi.fn(() => ({ closed: closed$ })), closed$ };
-}
-
-@Component({
-  selector: 'rw-spinner',
-  template: '',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockSpinner {}
-
-@Component({
-  selector: 'rw-callout',
-  template: '<ng-content/>',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockCallout {
-  readonly variant = input<string>('');
-  readonly message = input<string>('');
-}
-
-@Component({
-  selector: 'rw-button',
-  template:
-    '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockButton {
-  readonly type = input<string>('button');
-  readonly disabled = input(false);
-  readonly isLoading = input(false);
-  readonly palette = input<string>('');
-  readonly variant = input<string>('');
 }
 
 @Component({
@@ -112,9 +81,9 @@ describe('AdminPizzeriaConfigurationPage', () => {
     }).overrideComponent(AdminPizzeriaConfigurationPage, {
       set: {
         imports: [
-          MockSpinner,
-          MockCallout,
-          MockButton,
+          Spinner,
+          Callout,
+          Button,
           MockImagePicker,
           MockPhotonLocationField,
           FormRoot,

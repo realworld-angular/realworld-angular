@@ -9,6 +9,11 @@ import { PizzaOrderFormDialogData } from '../../order.models';
 import { Pizza, PizzaOption, SelectedPizzaOption } from '../../../pizzerias/models/pizza.models';
 import { CatalogImageUrlPipe } from '../../../../shared/pipes/catalog-image-url.pipe';
 import { FormValueControl, FormField, FormRoot, ValidationError } from '@angular/forms/signals';
+import { Button } from '../../../../shared/components/button/button';
+import { Modal } from '../../../../shared/components/modal/modal';
+import { Input } from '../../../../shared/components/input/input';
+import { Spinner } from '../../../../shared/components/spinner/spinner';
+import { SizeOptionField } from '../pizza-size-option-field/pizza-size-option-field';
 
 const mockPizza: Pizza = {
   id: 'pizza1',
@@ -26,75 +31,6 @@ const dialogData: PizzaOrderFormDialogData = {
 };
 
 const mockSize = { id: 's1', label: 'Medium', price: 1.0, sortOrder: 1 };
-
-@Component({
-  selector: 'rw-modal',
-  template: '{{ title() }}<ng-content/>',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockModal {
-  readonly title = input<string>('');
-}
-
-@Component({
-  selector: 'rw-spinner',
-  template: '',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockSpinner {}
-
-@Component({
-  selector: 'rw-button',
-  template:
-    '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockButton {
-  readonly type = input<string>('button');
-  readonly disabled = input(false);
-  readonly isLoading = input(false);
-}
-
-@Component({
-  selector: 'rw-input',
-  template: '<input [value]="value()" (input)="onInput($event)" [attr.type]="type()"/>',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockInput implements FormValueControl<string> {
-  readonly value = model<string>('');
-  readonly touched = model(false);
-  readonly invalid = input(false);
-  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
-  readonly disabled = input(false);
-  readonly placeholder = input<string>('');
-  readonly type = input<string>('text');
-  readonly label = input<string>('');
-  readonly class = input<string>('');
-
-  onInput(ev: Event): void {
-    this.value.set((ev.target as HTMLInputElement).value);
-  }
-}
-
-@Component({
-  selector: 'rw-size-option-field',
-  template: '',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockSizeOptionField implements FormValueControl<SelectedPizzaOption | null> {
-  readonly value = model<SelectedPizzaOption | null>(null);
-  readonly touched = model(false);
-  readonly invalid = input(false);
-  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
-  readonly disabled = input(false);
-  readonly required = input(true);
-  readonly options = input<PizzaOption[]>([]);
-}
 
 describe('PizzaOrderFormDialog', () => {
   let fixture: ComponentFixture<PizzaOrderFormDialog>;
@@ -117,11 +53,11 @@ describe('PizzaOrderFormDialog', () => {
           DecimalPipe,
           NgOptimizedImage,
           CatalogImageUrlPipe,
-          MockModal,
-          MockSpinner,
-          MockButton,
-          MockInput,
-          MockSizeOptionField,
+          Modal,
+          Spinner,
+          Button,
+          Input,
+          SizeOptionField,
           FormRoot,
           FormField,
         ],
@@ -198,7 +134,7 @@ describe('PizzaOrderFormDialog', () => {
     TestBed.flushEffects();
 
     const sizeDe = fixture.debugElement.query(
-      (de) => de.componentInstance instanceof MockSizeOptionField,
+      (de) => de.componentInstance instanceof SizeOptionField,
     );
     sizeDe.componentInstance.value.set({ id: 's1', label: 'Medium', price: 1 });
     TestBed.flushEffects();

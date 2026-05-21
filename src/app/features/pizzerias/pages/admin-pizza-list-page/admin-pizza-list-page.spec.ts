@@ -1,9 +1,9 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { AdminPizzaListPage } from './admin-pizza-list-page';
+import { AdminPizzaRow } from '../../components/admin-pizza-row/admin-pizza-row';
 import { Pizza } from '../../models/pizza.models';
 import { Button } from '../../../../shared/components/button/button';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
@@ -19,19 +19,6 @@ const mockPizza: Pizza = {
   toppings: [],
 };
 
-@Component({
-  selector: 'rw-admin-pizza-row',
-  template: '',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockAdminPizzaRow {
-  readonly pizza = input.required<Pizza>();
-  readonly edit = output<Pizza>();
-  readonly deleted = output<Pizza>();
-  readonly deleteError = output<string>();
-}
-
 describe('AdminPizzaListPage', () => {
   let fixture: ComponentFixture<AdminPizzaListPage>;
   let el: HTMLElement;
@@ -42,7 +29,7 @@ describe('AdminPizzaListPage', () => {
       providers: [provideHttpClientTesting()],
     }).overrideComponent(AdminPizzaListPage, {
       set: {
-        imports: [Button, Spinner, Callout, EmptyState, MockAdminPizzaRow],
+        imports: [Button, Spinner, Callout, EmptyState, AdminPizzaRow],
         schemas: [],
       },
     });
@@ -94,7 +81,7 @@ describe('AdminPizzaListPage', () => {
     httpTesting.expectOne('/api/admin/pizzeria/pizzas').flush([mockPizza]);
     await fixture.whenStable();
 
-    const rowDe = fixture.debugElement.query(By.directive(MockAdminPizzaRow));
+    const rowDe = fixture.debugElement.query(By.directive(AdminPizzaRow));
     rowDe.componentInstance.deleted.emit(mockPizza);
     await fixture.whenStable();
 

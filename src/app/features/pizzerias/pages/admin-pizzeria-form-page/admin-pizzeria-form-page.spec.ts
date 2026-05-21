@@ -6,33 +6,11 @@ import { AdminPizzeriaFormPage } from './admin-pizzeria-form-page';
 import { provideRouter } from '@angular/router';
 import { FormValueControl, FormField, FormRoot, ValidationError } from '@angular/forms/signals';
 import { LocationValue } from '../../../../shared/components/photon-location-field/photon-location-field';
+import { Button } from '../../../../shared/components/button/button';
+import { Callout } from '../../../../shared/components/callout/callout';
 
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
 class StubComponent {}
-
-@Component({
-  selector: 'rw-callout',
-  template: '<ng-content/>',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockCallout {
-  readonly variant = input<string>('');
-  readonly message = input<string>('');
-}
-
-@Component({
-  selector: 'rw-button',
-  template:
-    '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockButton {
-  readonly type = input<string>('button');
-  readonly disabled = input(false);
-  readonly isLoading = input(false);
-}
 
 @Component({
   selector: 'rw-image-picker',
@@ -79,8 +57,8 @@ describe('AdminPizzeriaFormPage', () => {
     }).overrideComponent(AdminPizzeriaFormPage, {
       set: {
         imports: [
-          MockCallout,
-          MockButton,
+          Button,
+          Callout,
           MockImagePicker,
           MockPhotonLocationField,
           FormRoot,

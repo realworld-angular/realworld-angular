@@ -1,8 +1,8 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { AdminOrderListPage } from './admin-order-list-page';
+import { AdminOrderRow } from './admin-order-row/admin-order-row';
 import { Page } from '../../../../core/models/pagination.model';
 import { AdminOrderListItem } from '../../order.models';
 import { By } from '@angular/platform-browser';
@@ -22,18 +22,6 @@ const mockOrder: AdminOrderListItem = {
   items: [],
 };
 
-@Component({
-  selector: 'rw-admin-order-row',
-  template: '',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class MockAdminOrderRow {
-  readonly order = input.required<AdminOrderListItem>();
-  readonly updateOrder = output<AdminOrderListItem>();
-  readonly showFeedback = output<{ variant: string; message: string }>();
-}
-
 function makePage(items: AdminOrderListItem[], totalPages = 1): Page<AdminOrderListItem> {
   return { items, total: items.length, page: 1, limit: 15, totalPages };
 }
@@ -48,7 +36,7 @@ describe('AdminOrderListPage', () => {
       providers: [provideHttpClientTesting()],
     }).overrideComponent(AdminOrderListPage, {
       set: {
-        imports: [Spinner, Pagination, Callout, EmptyState, MockAdminOrderRow],
+        imports: [Spinner, Pagination, Callout, EmptyState, AdminOrderRow],
         schemas: [],
       },
     });
@@ -110,7 +98,7 @@ describe('AdminOrderListPage', () => {
     await fixture.whenStable();
 
     const updated: AdminOrderListItem = { ...mockOrder, status: 'DELIVERED' };
-    const rowDe = fixture.debugElement.query(By.directive(MockAdminOrderRow));
+    const rowDe = fixture.debugElement.query(By.directive(AdminOrderRow));
     rowDe.componentInstance.updateOrder.emit(updated);
     await fixture.whenStable();
 
