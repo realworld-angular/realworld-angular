@@ -25,7 +25,6 @@ const mockPizza: Pizza = {
 @Component({
   selector: 'rw-image-picker',
   template: '',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockImagePicker implements FormValueControl<string | null> {

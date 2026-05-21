@@ -36,7 +36,6 @@ function createDialogStub(): { open: ReturnType<typeof vi.fn>; closed$: Subject<
 @Component({
   selector: 'rw-image-picker',
   template: '',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockImagePicker implements FormValueControl<string | null> {
@@ -53,7 +52,6 @@ class MockImagePicker implements FormValueControl<string | null> {
 @Component({
   selector: 'rw-photon-location-field',
   template: '',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockPhotonLocationField implements FormValueControl<LocationValue | null> {
