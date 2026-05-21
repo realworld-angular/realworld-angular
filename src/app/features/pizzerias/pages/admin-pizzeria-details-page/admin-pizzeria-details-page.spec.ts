@@ -1,12 +1,12 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { signal } from '@angular/core';
 import { AdminPizzeriaDetailsPage } from './admin-pizzeria-details-page';
 import { PizzeriaDetail } from '../../models/pizzeria.models';
 import { Auth } from '../../../../core/services/auth';
+import { User } from '../../../../core/models/user.model';
 
 const mockPizzeria: PizzeriaDetail = {
   id: 'p1',
@@ -20,7 +20,7 @@ const mockPizzeria: PizzeriaDetail = {
   staff: [],
 };
 
-const userSignal = signal<any>({
+const userSignal = signal<User>({
   id: '1',
   role: 'PIZZERIA_ADMIN',
   name: 'Admin',

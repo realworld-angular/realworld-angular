@@ -1,6 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { Component, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
@@ -27,18 +27,19 @@ const dialogData: PizzaOrderFormDialogData = {
 
 const mockSize = { id: 's1', label: 'Medium', price: 1.0, sortOrder: 1 };
 
-@Component({ selector: 'rw-modal', template: '{{ title() }}<ng-content/>', standalone: true })
+@Component({ selector: 'rw-modal', template: '{{ title() }}<ng-content/>', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
 class MockModal {
   readonly title = input<string>('');
 }
 
-@Component({ selector: 'rw-spinner', template: '', standalone: true })
+@Component({ selector: 'rw-spinner', template: '', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
 class MockSpinner {}
 
 @Component({
   selector: 'rw-button',
   template: '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockButton {
   readonly type = input<string>('button');
@@ -50,6 +51,7 @@ class MockButton {
   selector: 'rw-input',
   template: '<input [value]="value()" (input)="onInput($event)" [attr.type]="type()"/>',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockInput implements FormValueControl<string> {
   readonly value = model<string>('');
@@ -62,7 +64,7 @@ class MockInput implements FormValueControl<string> {
   readonly label = input<string>('');
   readonly class = input<string>('');
 
-  onInput(ev: Event) {
+  onInput(ev: Event): void {
     this.value.set((ev.target as HTMLInputElement).value);
   }
 }
@@ -71,6 +73,7 @@ class MockInput implements FormValueControl<string> {
   selector: 'rw-size-option-field',
   template: '',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockSizeOptionField implements FormValueControl<SelectedPizzaOption | null> {
   readonly value = model<SelectedPizzaOption | null>(null);

@@ -1,6 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Subject } from 'rxjs';
 import { PhotonLocationField } from './photon-location-field';
 import { PhotonApi, PhotonLocationSuggestion } from '../../../core/services/photon-api';

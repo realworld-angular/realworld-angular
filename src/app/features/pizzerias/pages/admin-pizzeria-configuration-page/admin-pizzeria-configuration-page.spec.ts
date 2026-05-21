@@ -1,6 +1,7 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { NO_ERRORS_SCHEMA, Component, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
+import { PizzeriaDetail } from '../../models/pizzeria.models';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Subject } from 'rxjs';
 import { AdminPizzeriaConfigurationPage } from './admin-pizzeria-configuration-page';
@@ -9,9 +10,9 @@ import { provideRouter } from '@angular/router';
 import { FormValueControl, FormField, FormRoot, ValidationError } from '@angular/forms/signals';
 import { LocationValue } from '../../../../shared/components/photon-location-field/photon-location-field';
 
-@Component({ template: '' })
+@Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
 class StubComponent {}
-import { PizzeriaDetail } from '../../models/pizzeria.models';
+
 
 const mockPizzeria: PizzeriaDetail = {
   id: 'p1',
@@ -25,15 +26,15 @@ const mockPizzeria: PizzeriaDetail = {
   staff: [],
 };
 
-function createDialogStub() {
-  const closed$ = new Subject<any>();
+function createDialogStub(): { open: ReturnType<typeof vi.fn>; closed$: Subject<string | null> } {
+  const closed$ = new Subject<string | null>();
   return { open: vi.fn(() => ({ closed: closed$ })), closed$ };
 }
 
-@Component({ selector: 'rw-spinner', template: '', standalone: true })
+@Component({ selector: 'rw-spinner', template: '', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
 class MockSpinner {}
 
-@Component({ selector: 'rw-callout', template: '<ng-content/>', standalone: true })
+@Component({ selector: 'rw-callout', template: '<ng-content/>', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
 class MockCallout {
   readonly variant = input<string>('');
   readonly message = input<string>('');
@@ -43,6 +44,7 @@ class MockCallout {
   selector: 'rw-button',
   template: '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockButton {
   readonly type = input<string>('button');
@@ -56,6 +58,7 @@ class MockButton {
   selector: 'rw-image-picker',
   template: '',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockImagePicker implements FormValueControl<string | null> {
   readonly value = model<string | null>(null);
@@ -72,6 +75,7 @@ class MockImagePicker implements FormValueControl<string | null> {
   selector: 'rw-photon-location-field',
   template: '',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockPhotonLocationField implements FormValueControl<LocationValue | null> {
   readonly value = model<LocationValue | null>(null);

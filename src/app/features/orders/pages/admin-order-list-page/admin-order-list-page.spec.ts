@@ -1,7 +1,7 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { AdminOrderListPage } from './admin-order-list-page';
 import { Page } from '../../../../core/models/pagination.model';
 import { AdminOrderListItem } from '../../order.models';
@@ -23,9 +23,10 @@ const mockOrder: AdminOrderListItem = {
 };
 
 @Component({
-  selector: 'tr[rw-admin-order-row]',
+  selector: 'rw-admin-order-row',
   template: '',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockAdminOrderRow {
   readonly order = input.required<AdminOrderListItem>();

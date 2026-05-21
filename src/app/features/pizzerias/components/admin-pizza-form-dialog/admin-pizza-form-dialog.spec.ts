@@ -1,6 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { NO_ERRORS_SCHEMA, Component, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
@@ -17,15 +17,15 @@ const mockPizza: Pizza = {
   toppings: [{ id: 't1', label: 'Mozzarella', price: 0, sortOrder: 1 }],
 };
 
-@Component({ selector: 'rw-modal', template: '{{ title() }}<ng-content/>', standalone: true })
+@Component({ selector: 'rw-modal', template: '{{ title() }}<ng-content/>', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
 class MockModal {
   readonly title = input<string>('');
 }
 
-@Component({ selector: 'rw-modal-footer', template: '<ng-content/>', standalone: true })
+@Component({ selector: 'rw-modal-footer', template: '<ng-content/>', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
 class MockModalFooter {}
 
-@Component({ selector: 'rw-callout', template: '<ng-content/>', standalone: true })
+@Component({ selector: 'rw-callout', template: '<ng-content/>', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
 class MockCallout {
   readonly variant = input<string>('');
   readonly message = input<string>('');
@@ -35,6 +35,7 @@ class MockCallout {
   selector: 'rw-button',
   template: '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockButton {
   readonly type = input<string>('button');
@@ -48,6 +49,7 @@ class MockButton {
   selector: 'rw-input',
   template: '<input [value]="value()" (input)="onInput($event)" [attr.type]="type()"/>',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockInput implements FormValueControl<string> {
   readonly value = model<string>('');
@@ -58,7 +60,7 @@ class MockInput implements FormValueControl<string> {
   readonly placeholder = input<string>('');
   readonly type = input<string>('text');
   readonly label = input<string>('');
-  onInput(ev: Event) {
+  onInput(ev: Event): void {
     this.value.set((ev.target as HTMLInputElement).value);
   }
 }
@@ -67,6 +69,7 @@ class MockInput implements FormValueControl<string> {
   selector: 'rw-image-picker',
   template: '',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockImagePicker implements FormValueControl<string | null> {
   readonly value = model<string | null>(null);
@@ -87,7 +90,7 @@ describe('AdminPizzaFormDialog', () => {
 
   const componentImports = [DecimalPipe, MockModal, MockModalFooter, MockButton, MockCallout, MockInput, MockImagePicker, FormRoot, FormField];
 
-  function setupModule(data: Pizza | null) {
+  function setupModule(data: Pizza | null): void {
     TestBed.resetTestingModule();
     closeFn = vi.fn();
     TestBed.configureTestingModule({

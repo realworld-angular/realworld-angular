@@ -21,7 +21,7 @@ describe('ProfilePage', () => {
 
   beforeEach(async () => {
     userSignal.set(mockUser);
-    authStub.logout.mockReturnValue({ pipe: () => ({ subscribe: (obs: any) => obs.next?.() }) });
+    authStub.logout.mockReturnValue({ pipe: (): { subscribe: (obs: { next?: () => void }) => void } => ({ subscribe: (obs) => obs.next?.() }) });
 
     TestBed.configureTestingModule({
       providers: [provideHttpClientTesting(), { provide: Auth, useValue: authStub }],

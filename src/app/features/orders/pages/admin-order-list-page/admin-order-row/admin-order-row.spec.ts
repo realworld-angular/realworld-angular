@@ -26,8 +26,8 @@ const mockOrder: AdminOrderListItem = {
   ],
 };
 
-function createDialogStub() {
-  const closed$ = new Subject<any>();
+function createDialogStub(): { open: ReturnType<typeof vi.fn>; closed$: Subject<string | null> } {
+  const closed$ = new Subject<string | null>();
   return { open: vi.fn(() => ({ closed: closed$ })), closed$ };
 }
 
@@ -113,7 +113,7 @@ describe('AdminOrderRow', () => {
   });
 
   it('should emit showFeedback on API error', () => {
-    const feedback: any[] = [];
+    const feedback: { variant: string; message: string }[] = [];
     fixture.componentInstance.showFeedback.subscribe((f) => feedback.push(f));
 
     fixture.componentInstance.promptDeliverOrder();

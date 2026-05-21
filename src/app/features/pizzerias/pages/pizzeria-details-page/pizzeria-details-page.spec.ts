@@ -45,7 +45,6 @@ const authStub = { user: userSignal };
 
 describe('PizzeriaDetailsPage', () => {
   let fixture: ComponentFixture<PizzeriaDetailsPage>;
-  let component: PizzeriaDetailsPage;
   let el: HTMLElement;
   let httpTesting: HttpTestingController;
   let router: Router;
@@ -60,7 +59,6 @@ describe('PizzeriaDetailsPage', () => {
     });
 
     fixture = TestBed.createComponent(PizzeriaDetailsPage);
-    component = fixture.componentInstance;
     fixture.componentRef.setInput('id', 'p1');
     el = fixture.nativeElement;
     httpTesting = TestBed.inject(HttpTestingController);
@@ -72,17 +70,17 @@ describe('PizzeriaDetailsPage', () => {
     httpTesting.verify();
   });
 
-  function expectPizzeriaRequest() {
+  function expectPizzeriaRequest(): ReturnType<HttpTestingController['expectOne']> {
     return httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1') && !r.url.includes('/pizzas'));
   }
 
-  function flushPizzaRequests() {
+  function flushPizzaRequests(): void {
     for (const r of httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas'))) {
-      try { r.flush(mockPizzas); } catch {}
+      try { r.flush(mockPizzas); } catch { /* request may have already been flushed */ }
     }
   }
 
-  function flushInitialData() {
+  function flushInitialData(): void {
     expectPizzeriaRequest().flush(mockPizzeria);
     flushPizzaRequests();
   }
@@ -147,7 +145,7 @@ describe('PizzeriaDetailsPage', () => {
       const reqs = httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
       const req = reqs.find(r => r.request.params.get('maxPrice') === '10')!;
       expect(req).toBeDefined();
-      for (const r of reqs) { try { r.flush(mockPizzas); } catch {} }
+      for (const r of reqs) { try { r.flush(mockPizzas); } catch { /* request may have already been flushed */ } }
     });
 
     it('should include maxPrice param when name is also changed', async () => {
@@ -169,9 +167,9 @@ describe('PizzeriaDetailsPage', () => {
       const reqs = httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
       const req = reqs.find(r => r.request.params.get('maxPrice') === '15')!;
       expect(req).toBeDefined();
-      for (const r of reqs) { try { r.flush(mockPizzas); } catch {} }
+      for (const r of reqs) { try { r.flush(mockPizzas); } catch { /* request may have already been flushed */ } }
     });
-
+  
     it('should sync maxPrice to URL query params', async () => {
       flushInitialData();
       TestBed.flushEffects();

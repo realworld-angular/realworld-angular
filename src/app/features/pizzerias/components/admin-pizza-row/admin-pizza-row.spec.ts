@@ -18,8 +18,8 @@ const mockPizza: Pizza = {
   ],
 };
 
-function createDialogStub() {
-  const closed$ = new Subject<any>();
+function createDialogStub(): { open: ReturnType<typeof vi.fn>; closed$: Subject<string | null> } {
+  const closed$ = new Subject<string | null>();
   return { open: vi.fn(() => ({ closed: closed$ })), closed$ };
 }
 

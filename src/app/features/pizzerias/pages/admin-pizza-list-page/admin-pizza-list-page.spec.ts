@@ -1,7 +1,7 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { AdminPizzaListPage } from './admin-pizza-list-page';
 import { Pizza } from '../../models/pizza.models';
@@ -20,9 +20,10 @@ const mockPizza: Pizza = {
 };
 
 @Component({
-  selector: '[rw-admin-pizza-row]',
+  selector: 'rw-admin-pizza-row',
   template: '',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockAdminPizzaRow {
   readonly pizza = input.required<Pizza>();
