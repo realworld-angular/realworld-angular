@@ -73,7 +73,7 @@ export class PizzeriaDetailsPage {
     maxPrice: Number(this.maxPrice() ?? 50),
   });
 
-  protected readonly filterForm = form(this.model, path => {
+  protected readonly filterForm = form(this.model, (path) => {
     debounce(path.maxPrice, 500);
     debounce(path.searchName, 500);
   });
@@ -81,8 +81,12 @@ export class PizzeriaDetailsPage {
   protected readonly pizzasResource = httpResource<Pizza[]>(() => ({
     url: `/api/pizzerias/${this.id()}/pizzas`,
     params: {
-      ...(this.filterForm.searchName().value().trim().length > 0 ? { name: this.filterForm.searchName().value().trim() } : {}),
-      ...(this.filterForm.maxPrice().dirty() ? { maxPrice: this.filterForm.maxPrice().value() } : {}),
+      ...(this.filterForm.searchName().value().trim().length > 0
+        ? { name: this.filterForm.searchName().value().trim() }
+        : {}),
+      ...(this.filterForm.maxPrice().dirty()
+        ? { maxPrice: this.filterForm.maxPrice().value() }
+        : {}),
     },
   }));
 
@@ -108,8 +112,12 @@ export class PizzeriaDetailsPage {
     effect(() => {
       this.router.navigate([], {
         queryParams: {
-          ...(this.filterForm.searchName().value().trim().length > 0 ? { name: this.filterForm.searchName().value().trim() } : {}),
-          ...(this.filterForm.maxPrice().dirty() ? { maxPrice: this.filterForm.maxPrice().value() } : {}),
+          ...(this.filterForm.searchName().value().trim().length > 0
+            ? { name: this.filterForm.searchName().value().trim() }
+            : {}),
+          ...(this.filterForm.maxPrice().dirty()
+            ? { maxPrice: this.filterForm.maxPrice().value() }
+            : {}),
         },
         queryParamsHandling: 'merge',
         replaceUrl: true,

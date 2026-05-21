@@ -13,7 +13,6 @@ import { LocationValue } from '../../../../shared/components/photon-location-fie
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
 class StubComponent {}
 
-
 const mockPizzeria: PizzeriaDetail = {
   id: 'p1',
   name: 'Roma',
@@ -31,10 +30,20 @@ function createDialogStub(): { open: ReturnType<typeof vi.fn>; closed$: Subject<
   return { open: vi.fn(() => ({ closed: closed$ })), closed$ };
 }
 
-@Component({ selector: 'rw-spinner', template: '', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({
+  selector: 'rw-spinner',
+  template: '',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 class MockSpinner {}
 
-@Component({ selector: 'rw-callout', template: '<ng-content/>', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({
+  selector: 'rw-callout',
+  template: '<ng-content/>',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 class MockCallout {
   readonly variant = input<string>('');
   readonly message = input<string>('');
@@ -42,7 +51,8 @@ class MockCallout {
 
 @Component({
   selector: 'rw-button',
-  template: '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
+  template:
+    '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -100,7 +110,17 @@ describe('AdminPizzeriaConfigurationPage', () => {
         { provide: Dialog, useValue: dialogStub },
       ],
     }).overrideComponent(AdminPizzeriaConfigurationPage, {
-      set: { imports: [MockSpinner, MockCallout, MockButton, MockImagePicker, MockPhotonLocationField, FormRoot, FormField] },
+      set: {
+        imports: [
+          MockSpinner,
+          MockCallout,
+          MockButton,
+          MockImagePicker,
+          MockPhotonLocationField,
+          FormRoot,
+          FormField,
+        ],
+      },
     });
     fixture = TestBed.createComponent(AdminPizzeriaConfigurationPage);
     el = fixture.nativeElement;
@@ -172,7 +192,9 @@ describe('AdminPizzeriaConfigurationPage', () => {
 
     el.querySelector<HTMLButtonElement>('button[type="submit"]')!.click();
     await fixture.whenStable();
-    const putReq = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/admin/pizzeria') && r.method === 'PATCH');
+    const putReq = httpTesting.expectOne(
+      (r) => r.url.includes('/api/pizzerias/admin/pizzeria') && r.method === 'PATCH',
+    );
     expect(putReq.request.method).toBe('PATCH');
     putReq.flush({ message: 'Updated' });
     await fixture.whenStable();

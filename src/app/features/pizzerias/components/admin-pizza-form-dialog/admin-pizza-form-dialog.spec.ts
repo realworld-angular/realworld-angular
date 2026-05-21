@@ -17,15 +17,30 @@ const mockPizza: Pizza = {
   toppings: [{ id: 't1', label: 'Mozzarella', price: 0, sortOrder: 1 }],
 };
 
-@Component({ selector: 'rw-modal', template: '{{ title() }}<ng-content/>', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({
+  selector: 'rw-modal',
+  template: '{{ title() }}<ng-content/>',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 class MockModal {
   readonly title = input<string>('');
 }
 
-@Component({ selector: 'rw-modal-footer', template: '<ng-content/>', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({
+  selector: 'rw-modal-footer',
+  template: '<ng-content/>',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 class MockModalFooter {}
 
-@Component({ selector: 'rw-callout', template: '<ng-content/>', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({
+  selector: 'rw-callout',
+  template: '<ng-content/>',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 class MockCallout {
   readonly variant = input<string>('');
   readonly message = input<string>('');
@@ -33,7 +48,8 @@ class MockCallout {
 
 @Component({
   selector: 'rw-button',
-  template: '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
+  template:
+    '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -88,7 +104,17 @@ describe('AdminPizzaFormDialog', () => {
   let httpTesting: HttpTestingController;
   let closeFn: ReturnType<typeof vi.fn>;
 
-  const componentImports = [DecimalPipe, MockModal, MockModalFooter, MockButton, MockCallout, MockInput, MockImagePicker, FormRoot, FormField];
+  const componentImports = [
+    DecimalPipe,
+    MockModal,
+    MockModalFooter,
+    MockButton,
+    MockCallout,
+    MockInput,
+    MockImagePicker,
+    FormRoot,
+    FormField,
+  ];
 
   function setupModule(data: Pizza | null): void {
     TestBed.resetTestingModule();

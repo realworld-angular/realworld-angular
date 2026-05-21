@@ -27,17 +27,28 @@ const dialogData: PizzaOrderFormDialogData = {
 
 const mockSize = { id: 's1', label: 'Medium', price: 1.0, sortOrder: 1 };
 
-@Component({ selector: 'rw-modal', template: '{{ title() }}<ng-content/>', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({
+  selector: 'rw-modal',
+  template: '{{ title() }}<ng-content/>',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 class MockModal {
   readonly title = input<string>('');
 }
 
-@Component({ selector: 'rw-spinner', template: '', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({
+  selector: 'rw-spinner',
+  template: '',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 class MockSpinner {}
 
 @Component({
   selector: 'rw-button',
-  template: '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
+  template:
+    '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -102,7 +113,18 @@ describe('PizzaOrderFormDialog', () => {
       ],
     }).overrideComponent(PizzaOrderFormDialog, {
       set: {
-        imports: [DecimalPipe, NgOptimizedImage, CatalogImageUrlPipe, MockModal, MockSpinner, MockButton, MockInput, MockSizeOptionField, FormRoot, FormField],
+        imports: [
+          DecimalPipe,
+          NgOptimizedImage,
+          CatalogImageUrlPipe,
+          MockModal,
+          MockSpinner,
+          MockButton,
+          MockInput,
+          MockSizeOptionField,
+          FormRoot,
+          FormField,
+        ],
       },
     });
     fixture = TestBed.createComponent(PizzaOrderFormDialog);
@@ -146,7 +168,9 @@ describe('PizzaOrderFormDialog', () => {
     httpTesting.expectOne('/api/options/sizes').flush([]);
     httpTesting.expectOne('/api/options/toppings').flush([]);
 
-    const increaseBtn = el.querySelector<HTMLButtonElement>('button[aria-label="Increase quantity"]')!;
+    const increaseBtn = el.querySelector<HTMLButtonElement>(
+      'button[aria-label="Increase quantity"]',
+    )!;
     increaseBtn.click();
     TestBed.flushEffects();
     increaseBtn.click();
@@ -161,7 +185,9 @@ describe('PizzaOrderFormDialog', () => {
     httpTesting.expectOne('/api/options/sizes').flush([]);
     httpTesting.expectOne('/api/options/toppings').flush([]);
 
-    const decreaseBtn = el.querySelector<HTMLButtonElement>('button[aria-label="Decrease quantity"]')!;
+    const decreaseBtn = el.querySelector<HTMLButtonElement>(
+      'button[aria-label="Decrease quantity"]',
+    )!;
     expect(decreaseBtn.disabled).toBe(true);
   });
 

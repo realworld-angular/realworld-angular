@@ -10,7 +10,12 @@ import { LocationValue } from '../../../../shared/components/photon-location-fie
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
 class StubComponent {}
 
-@Component({ selector: 'rw-callout', template: '<ng-content/>', standalone: true, changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({
+  selector: 'rw-callout',
+  template: '<ng-content/>',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 class MockCallout {
   readonly variant = input<string>('');
   readonly message = input<string>('');
@@ -18,7 +23,8 @@ class MockCallout {
 
 @Component({
   selector: 'rw-button',
-  template: '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
+  template:
+    '<button [attr.type]="type()" [disabled]="disabled() || isLoading()"><ng-content/></button>',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -71,7 +77,16 @@ describe('AdminPizzeriaFormPage', () => {
         provideRouter([{ path: '**', component: StubComponent }]),
       ],
     }).overrideComponent(AdminPizzeriaFormPage, {
-      set: { imports: [MockCallout, MockButton, MockImagePicker, MockPhotonLocationField, FormRoot, FormField] },
+      set: {
+        imports: [
+          MockCallout,
+          MockButton,
+          MockImagePicker,
+          MockPhotonLocationField,
+          FormRoot,
+          FormField,
+        ],
+      },
     });
     fixture = TestBed.createComponent(AdminPizzeriaFormPage);
     el = fixture.nativeElement;

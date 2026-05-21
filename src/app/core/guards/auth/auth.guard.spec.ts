@@ -21,13 +21,17 @@ describe('authGuard', () => {
 
   it('should return true when user is authenticated', () => {
     authStub.isAuthenticated.mockReturnValue(true);
-    const result = TestBed.runInInjectionContext(() => authGuard({ path: '' } as Route, [] as unknown as UrlSegment[]));
+    const result = TestBed.runInInjectionContext(() =>
+      authGuard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+    );
     expect(result).toBe(true);
   });
 
   it('should return a UrlTree to /auth/login when not authenticated', () => {
     authStub.isAuthenticated.mockReturnValue(false);
-    const result = TestBed.runInInjectionContext(() => authGuard({ path: '' } as Route, [] as unknown as UrlSegment[]));
+    const result = TestBed.runInInjectionContext(() =>
+      authGuard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+    );
     expect(result).toBeInstanceOf(UrlTree);
     expect(router.serializeUrl(result as UrlTree)).toBe('/auth/login');
   });

@@ -71,12 +71,18 @@ describe('PizzeriaDetailsPage', () => {
   });
 
   function expectPizzeriaRequest(): ReturnType<HttpTestingController['expectOne']> {
-    return httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1') && !r.url.includes('/pizzas'));
+    return httpTesting.expectOne(
+      (r) => r.url.includes('/api/pizzerias/p1') && !r.url.includes('/pizzas'),
+    );
   }
 
   function flushPizzaRequests(): void {
     for (const r of httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas'))) {
-      try { r.flush(mockPizzas); } catch { /* request may have already been flushed */ }
+      try {
+        r.flush(mockPizzas);
+      } catch {
+        /* request may have already been flushed */
+      }
     }
   }
 
@@ -143,9 +149,15 @@ describe('PizzeriaDetailsPage', () => {
       TestBed.flushEffects();
 
       const reqs = httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
-      const req = reqs.find(r => r.request.params.get('maxPrice') === '10')!;
+      const req = reqs.find((r) => r.request.params.get('maxPrice') === '10')!;
       expect(req).toBeDefined();
-      for (const r of reqs) { try { r.flush(mockPizzas); } catch { /* request may have already been flushed */ } }
+      for (const r of reqs) {
+        try {
+          r.flush(mockPizzas);
+        } catch {
+          /* request may have already been flushed */
+        }
+      }
     });
 
     it('should include maxPrice param when name is also changed', async () => {
@@ -165,11 +177,17 @@ describe('PizzeriaDetailsPage', () => {
       TestBed.flushEffects();
 
       const reqs = httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
-      const req = reqs.find(r => r.request.params.get('maxPrice') === '15')!;
+      const req = reqs.find((r) => r.request.params.get('maxPrice') === '15')!;
       expect(req).toBeDefined();
-      for (const r of reqs) { try { r.flush(mockPizzas); } catch { /* request may have already been flushed */ } }
+      for (const r of reqs) {
+        try {
+          r.flush(mockPizzas);
+        } catch {
+          /* request may have already been flushed */
+        }
+      }
     });
-  
+
     it('should sync maxPrice to URL query params', async () => {
       flushInitialData();
       TestBed.flushEffects();
@@ -185,11 +203,14 @@ describe('PizzeriaDetailsPage', () => {
       await new Promise((resolve) => setTimeout(resolve, 600));
       TestBed.flushEffects();
 
-      expect(navigateSpy).toHaveBeenCalledWith([], expect.objectContaining({
-        queryParams: expect.objectContaining({ maxPrice: 8 }),
-        queryParamsHandling: 'merge',
-        replaceUrl: true,
-      }));
+      expect(navigateSpy).toHaveBeenCalledWith(
+        [],
+        expect.objectContaining({
+          queryParams: expect.objectContaining({ maxPrice: 8 }),
+          queryParamsHandling: 'merge',
+          replaceUrl: true,
+        }),
+      );
 
       flushPizzaRequests();
     });

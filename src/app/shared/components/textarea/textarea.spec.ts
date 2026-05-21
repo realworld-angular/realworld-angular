@@ -3,12 +3,36 @@ import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { Textarea } from './textarea';
 
-function createFieldStub(): { field: () => { value: () => string; touched: () => boolean; errors: () => { message: string }[]; required: () => boolean; dirty: () => boolean; valid: () => boolean; disabled: () => boolean; pending: () => boolean }; touchedSig: ReturnType<typeof signal<boolean>>; errorsSig: ReturnType<typeof signal<{ message: string }[]>>; requiredSig: ReturnType<typeof signal<boolean>>; valueSig: ReturnType<typeof signal<string>> } {
+function createFieldStub(): {
+  field: () => {
+    value: () => string;
+    touched: () => boolean;
+    errors: () => { message: string }[];
+    required: () => boolean;
+    dirty: () => boolean;
+    valid: () => boolean;
+    disabled: () => boolean;
+    pending: () => boolean;
+  };
+  touchedSig: ReturnType<typeof signal<boolean>>;
+  errorsSig: ReturnType<typeof signal<{ message: string }[]>>;
+  requiredSig: ReturnType<typeof signal<boolean>>;
+  valueSig: ReturnType<typeof signal<string>>;
+} {
   const valueSig = signal('');
   const touchedSig = signal(false);
   const errorsSig = signal<{ message: string }[]>([]);
   const requiredSig = signal(false);
-  const field = (): { value: () => string; touched: () => boolean; errors: () => { message: string }[]; required: () => boolean; dirty: () => boolean; valid: () => boolean; disabled: () => boolean; pending: () => boolean } => ({
+  const field = (): {
+    value: () => string;
+    touched: () => boolean;
+    errors: () => { message: string }[];
+    required: () => boolean;
+    dirty: () => boolean;
+    valid: () => boolean;
+    disabled: () => boolean;
+    pending: () => boolean;
+  } => ({
     value: () => valueSig(),
     touched: () => touchedSig(),
     errors: () => errorsSig(),

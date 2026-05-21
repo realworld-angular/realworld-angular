@@ -33,9 +33,15 @@ const cartStoreStub = {
   itemCount: computed(() => cartDataSignal()?.items.reduce((s, i) => s + i.quantity, 0) ?? 0),
   pizzeria: signal(null),
   items: signal([]),
-  clear: (): void => { /* noop */ },
-  updateQuantity: (): void => { /* noop */ },
-  removeItem: (): void => { /* noop */ },
+  clear: (): void => {
+    /* noop */
+  },
+  updateQuantity: (): void => {
+    /* noop */
+  },
+  removeItem: (): void => {
+    /* noop */
+  },
 };
 
 const authStub = { user: signal(null), isAuthenticated: signal(false) };
