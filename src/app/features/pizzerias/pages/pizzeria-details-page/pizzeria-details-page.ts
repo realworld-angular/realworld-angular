@@ -6,13 +6,16 @@ import {
   signal,
   input,
   effect,
+  computed,
+  linkedSignal,
 } from '@angular/core';
-import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { httpResource } from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
 import { PizzeriaDetail } from '../../models/pizzeria.models';
 import { Pizza } from '../../models/pizza.models';
+import { Page } from '../../../../core/models/pagination.model';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { RoleDirective } from '../../../../shared/directives/role.directive';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
@@ -25,6 +28,7 @@ import { form, FormRoot, FormField, debounce } from '@angular/forms/signals';
 import { Dialog } from '@angular/cdk/dialog';
 import { CatalogImageUrlPipe } from '../../../../shared/pipes/catalog-image-url.pipe';
 import { Button } from '../../../../shared/components/button/button';
+import { LoadMore } from '../../../../shared/components/load-more/load-more';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface FilterFormModel {
@@ -45,6 +49,7 @@ interface FilterFormModel {
     FormField,
     CatalogImageUrlPipe,
     Button,
+    LoadMore,
   ],
   templateUrl: './pizzeria-details-page.html',
   styleUrl: './pizzeria-details-page.css',
@@ -55,7 +60,6 @@ export class PizzeriaDetailsPage {
   private readonly dialog = inject(Dialog);
   private readonly title = inject(Title);
   private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
 
   public readonly id = input.required<string>();
   public readonly maxPrice = input<string>();
@@ -67,7 +71,6 @@ export class PizzeriaDetailsPage {
     () => `/api/pizzerias/${this.id()}`,
   );
 
-  // Signal forms model
   protected readonly model = signal<FilterFormModel>({
     searchName: '',
     maxPrice: Number(this.maxPrice() ?? 50),
@@ -78,17 +81,62 @@ export class PizzeriaDetailsPage {
     debounce(path.searchName, 500);
   });
 
-  protected readonly pizzasResource = httpResource<Pizza[]>(() => ({
+  protected readonly page = signal(1);
+  protected readonly limit = 8;
+
+  private readonly filterParams = computed(() => ({
+    ...(this.filterForm.searchName().value().trim().length > 0
+      ? { name: this.filterForm.searchName().value().trim() }
+      : {}),
+    ...(this.filterForm.maxPrice().dirty()
+      ? { maxPrice: this.filterForm.maxPrice().value() }
+      : {}),
+  }));
+
+  protected readonly pizzasResource = httpResource<Page<Pizza>>(() => ({
     url: `/api/pizzerias/${this.id()}/pizzas`,
     params: {
-      ...(this.filterForm.searchName().value().trim().length > 0
-        ? { name: this.filterForm.searchName().value().trim() }
-        : {}),
-      ...(this.filterForm.maxPrice().dirty()
-        ? { maxPrice: this.filterForm.maxPrice().value() }
-        : {}),
+      page: this.page(),
+      limit: this.limit,
+      ...this.filterParams(),
     },
   }));
+
+  protected readonly pizzas = linkedSignal<
+    Page<Pizza> | undefined,
+    Pizza[]
+  >({
+    source: () =>
+      this.pizzasResource.error()
+        ? { items: [], total: 0, page: 0, limit: 0, totalPages: 0 }
+        : this.pizzasResource.value(),
+    computation: (data, previous) => {
+      const previousItems = previous?.value || [];
+
+      if (data?.items) {
+        if (
+          data.items.length === 0
+        ) {
+          return [];
+        }
+
+        return this.page() === 1
+          ? data.items
+          : [...previousItems, ...data.items];
+      }
+
+      return previousItems;
+    },
+  });
+
+  protected readonly hasMorePages = computed(
+    () => {
+      if (this.pizzeriaResource.status() === 'resolved') {
+        return this.pizzasResource.hasValue() && this.pizzasResource.value().totalPages > this.page();
+      }
+      return false;
+    }
+  );
 
   protected readonly addedToCartBannerVisible = toSignal(
     merge(
@@ -108,7 +156,11 @@ export class PizzeriaDetailsPage {
       }
     });
 
-    // Sync maxPrice to URL query params
+    effect(() => {
+      this.filterParams();
+      this.page.set(1);
+    });
+
     effect(() => {
       this.router.navigate([], {
         queryParams: {
@@ -123,6 +175,11 @@ export class PizzeriaDetailsPage {
         replaceUrl: true,
       });
     });
+
+  }
+
+  protected loadNextPage(): void {
+    this.page.update((current) => current + 1);
   }
 
   protected openOrderModal(pizza: Pizza): void {

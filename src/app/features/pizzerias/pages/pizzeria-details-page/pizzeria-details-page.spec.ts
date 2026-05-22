@@ -1,11 +1,14 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { provideRouter, Router } from '@angular/router';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
 import { signal } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { PizzeriaDetailsPage } from './pizzeria-details-page';
+import { LoadMore } from '../../../../shared/components/load-more/load-more';
 import { PizzeriaDetail } from '../../models/pizzeria.models';
 import { Pizza } from '../../models/pizza.models';
+import { Page } from '../../../../core/models/pagination.model';
 import { Auth } from '../../../../core/services/auth';
 import { User } from '../../../../core/models/user.model';
 
@@ -21,27 +24,42 @@ const mockPizzeria: PizzeriaDetail = {
   staff: [],
 };
 
-const mockPizzas: Pizza[] = [
-  {
-    id: 'pizza1',
-    name: 'Margherita',
-    basePrice: 9.5,
-    image: 'marg.jpg',
-    createdAt: '2024-01-01',
-    toppings: [],
-  },
-  {
-    id: 'pizza2',
-    name: 'Diavola',
-    basePrice: 11,
-    image: 'diav.jpg',
-    createdAt: '2024-01-01',
-    toppings: [],
-  },
-];
+const mockPizzasPage: Page<Pizza> = {
+  items: [
+    {
+      id: 'pizza1',
+      name: 'Margherita',
+      basePrice: 9.5,
+      image: 'marg.jpg',
+      createdAt: '2024-01-01',
+      toppings: [],
+    },
+    {
+      id: 'pizza2',
+      name: 'Diavola',
+      basePrice: 11,
+      image: 'diav.jpg',
+      createdAt: '2024-01-01',
+      toppings: [],
+    },
+  ],
+  total: 2,
+  page: 1,
+  limit: 8,
+  totalPages: 1,
+};
 
 const userSignal = signal<User | null>(null);
 const authStub = { user: userSignal };
+
+function stubViewportNotNearBottom(): void {
+  Object.defineProperty(document.documentElement, 'scrollHeight', {
+    value: 10_000,
+    configurable: true,
+  });
+  Object.defineProperty(window, 'scrollY', { value: 0, configurable: true });
+  Object.defineProperty(window, 'innerHeight', { value: 800, configurable: true });
+}
 
 describe('PizzeriaDetailsPage', () => {
   let fixture: ComponentFixture<PizzeriaDetailsPage>;
@@ -49,7 +67,20 @@ describe('PizzeriaDetailsPage', () => {
   let httpTesting: HttpTestingController;
   let router: Router;
 
+  beforeAll(() => {
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        public observe(): void {}
+        public disconnect(): void {}
+        public unobserve(): void {}
+      },
+    );
+  });
+
   beforeEach(() => {
+    stubViewportNotNearBottom();
+
     TestBed.configureTestingModule({
       providers: [
         provideHttpClientTesting(),
@@ -79,7 +110,7 @@ describe('PizzeriaDetailsPage', () => {
   function flushPizzaRequests(): void {
     for (const r of httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas'))) {
       try {
-        r.flush(mockPizzas);
+        r.flush(mockPizzasPage);
       } catch {
         /* request may have already been flushed */
       }
@@ -109,6 +140,142 @@ describe('PizzeriaDetailsPage', () => {
     expect(el.textContent).toContain('Diavola');
   });
 
+  function triggerLoadMore(): void {
+    const loadMoreDe = fixture.debugElement.query(By.directive(LoadMore));
+    loadMoreDe.triggerEventHandler('loadMore', undefined);
+    TestBed.flushEffects();
+    fixture.detectChanges();
+  }
+
+  it('should load the next page when load more is triggered and more pages exist', async () => {
+    expectPizzeriaRequest().flush(mockPizzeria);
+    const page1 = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
+    page1.flush({
+      ...mockPizzasPage,
+      total: 10,
+      totalPages: 2,
+    });
+    TestBed.flushEffects();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    triggerLoadMore();
+
+    const page2 = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
+    expect(page2.request.params.get('page')).toBe('2');
+    page2.flush({
+      items: [
+        {
+          id: 'pizza3',
+          name: 'Quattro Formaggi',
+          basePrice: 15.5,
+          image: 'quattro.jpg',
+          createdAt: '2024-01-01',
+          toppings: [],
+        },
+      ],
+      total: 10,
+      page: 2,
+      limit: 8,
+      totalPages: 2,
+    });
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(el.textContent).toContain('Margherita');
+    expect(el.textContent).toContain('Diavola');
+    expect(el.textContent).toContain('Quattro Formaggi');
+  });
+
+  it('should not request another page when load more fires while pizzas are loading', async () => {
+    expectPizzeriaRequest().flush(mockPizzeria);
+    const page1 = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
+    page1.flush({
+      ...mockPizzasPage,
+      total: 10,
+      totalPages: 2,
+    });
+    TestBed.flushEffects();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    triggerLoadMore();
+    const page2Req = httpTesting.expectOne(
+      (r) => r.url.includes('/api/pizzerias/p1/pizzas') && r.params.get('page') === '2',
+    );
+
+    triggerLoadMore();
+    expect(
+      httpTesting.match(
+        (r) => r.url.includes('/api/pizzerias/p1/pizzas') && r.params.get('page') === '3',
+      ).length,
+    ).toBe(0);
+
+    page2Req.flush({
+      items: [
+        {
+          id: 'pizza3',
+          name: 'Quattro Formaggi',
+          basePrice: 15.5,
+          image: 'quattro.jpg',
+          createdAt: '2024-01-01',
+          toppings: [],
+        },
+      ],
+      total: 10,
+      page: 2,
+      limit: 8,
+      totalPages: 2,
+    });
+  });
+
+  it('should not load the next page when there are no more pages', async () => {
+    flushInitialData();
+    TestBed.flushEffects();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const pizzaReqsBefore = httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
+    triggerLoadMore();
+    expect(httpTesting.match((r) => r.url.includes('/api/pizzerias/p1/pizzas')).length).toBe(
+      pizzaReqsBefore.length,
+    );
+  });
+
+  it('should show a spinner while loading more pizzas', async () => {
+    expectPizzeriaRequest().flush(mockPizzeria);
+    const page1 = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
+    page1.flush({
+      ...mockPizzasPage,
+      total: 10,
+      totalPages: 2,
+    });
+    TestBed.flushEffects();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    triggerLoadMore();
+    fixture.detectChanges();
+
+    expect(el.querySelector('[aria-label="Loading more pizzas"]')).not.toBeNull();
+    httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas')).flush({
+      items: [
+        {
+          id: 'pizza3',
+          name: 'Quattro Formaggi',
+          basePrice: 15.5,
+          image: 'quattro.jpg',
+          createdAt: '2024-01-01',
+          toppings: [],
+        },
+      ],
+      total: 10,
+      page: 2,
+      limit: 8,
+      totalPages: 2,
+    });
+  });
+
   it('should show error state when pizzeria request fails', async () => {
     httpTesting
       .match((r) => r.url.includes('/api/pizzerias/p1') && !r.url.includes('/pizzas'))
@@ -122,7 +289,7 @@ describe('PizzeriaDetailsPage', () => {
     expectPizzeriaRequest().flush(mockPizzeria);
     httpTesting
       .match((r) => r.url.includes('/api/pizzerias/p1/pizzas'))
-      .forEach((r) => r.flush([]));
+      .forEach((r) => r.flush({ items: [], total: 0, page: 1, limit: 8, totalPages: 0 }));
     await fixture.whenStable();
     expect(el.querySelector('rw-empty-state')).not.toBeNull();
   });
@@ -132,7 +299,7 @@ describe('PizzeriaDetailsPage', () => {
       expectPizzeriaRequest().flush(mockPizzeria);
       const req = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
       expect(req.request.params.has('maxPrice')).toBe(false);
-      req.flush(mockPizzas);
+      req.flush(mockPizzasPage);
     });
 
     it('should include maxPrice param when maxPrice is changed', async () => {
@@ -153,7 +320,7 @@ describe('PizzeriaDetailsPage', () => {
       expect(req).toBeDefined();
       for (const r of reqs) {
         try {
-          r.flush(mockPizzas);
+          r.flush(mockPizzasPage);
         } catch {
           /* request may have already been flushed */
         }
@@ -181,7 +348,7 @@ describe('PizzeriaDetailsPage', () => {
       expect(req).toBeDefined();
       for (const r of reqs) {
         try {
-          r.flush(mockPizzas);
+          r.flush(mockPizzasPage);
         } catch {
           /* request may have already been flushed */
         }
@@ -221,7 +388,7 @@ describe('PizzeriaDetailsPage', () => {
       expectPizzeriaRequest().flush(mockPizzeria);
       const req = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
       expect(req.request.params.has('name')).toBe(false);
-      req.flush(mockPizzas);
+      req.flush(mockPizzasPage);
     });
 
     it('should include name param after setting a search value', async () => {
@@ -239,7 +406,7 @@ describe('PizzeriaDetailsPage', () => {
 
       const req = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
       expect(req.request.params.get('name')).toBe('Margherita');
-      req.flush(mockPizzas);
+      req.flush(mockPizzasPage);
     });
 
     it('should trim whitespace from search name', async () => {
@@ -257,7 +424,7 @@ describe('PizzeriaDetailsPage', () => {
 
       const req = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
       expect(req.request.params.get('name')).toBe('Diavola');
-      req.flush(mockPizzas);
+      req.flush(mockPizzasPage);
     });
   });
 });

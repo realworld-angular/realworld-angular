@@ -64,54 +64,64 @@
         </div>
       </form>
 
-      @if (pizzasResource.isLoading()) {
+      @if (pizzasResource.isLoading() && pizzas().length === 0) {
         <div class="loading-center" aria-label="Loading pizzas">
           <rw-spinner />
         </div>
       } @else {
-        @let pizzas = pizzasResource.value() ?? [];
-        @if (pizzas.length === 0) {
+        @let pizzaList = pizzas();
+        @if (pizzaList.length === 0) {
           @if (filterForm().dirty()) {
             <rw-empty-state icon="folder-off" text="No pizzas match your search." />
           } @else {
             <rw-empty-state icon="folder-off" text="No pizzas on the menu yet." />
           }
         } @else {
-          <ul class="pizza-grid" role="list">
-            @for (pizza of pizzas; track pizza.id) {
-              <li>
-                <div class="pizza-card">
-                  <div class="pizza-card__image-wrap">
-                    <img
-                      [ngSrc]="pizza.image | catalogImageUrl: 'pizza'"
-                      alt=""
-                      class="pizza-card__image"
-                      width="400"
-                      height="300"
-                      disableOptimizedSrcset
-                    />
-                  </div>
-                  <div class="pizza-card__body">
-                    <span class="pizza-card__name">{{ pizza.name }}</span>
-                    <div class="pizza-card__footer">
-                      <span class="pizza-card__price">
-                        from <strong>€{{ pizza.basePrice | number: '1.2-2' }}</strong>
-                      </span>
+        <ul class="pizza-grid" role="list">
+          @for (pizza of pizzaList; track pizza.id) {
+            <li>
+              <div class="pizza-card">
+                <div class="pizza-card__image-wrap">
+                  <img
+                    [ngSrc]="pizza.image | catalogImageUrl: 'pizza'"
+                    alt=""
+                    class="pizza-card__image"
+                    width="400"
+                    height="300"
+                    disableOptimizedSrcset
+                  />
+                </div>
+                <div class="pizza-card__body">
+                  <span class="pizza-card__name">{{ pizza.name }}</span>
+                  <div class="pizza-card__footer">
+                    <span class="pizza-card__price">
+                      from <strong>€{{ pizza.basePrice | number: '1.2-2' }}</strong>
+                    </span>
 
-                      <rw-button
-                        *rwRole="['CUSTOMER', 'GUEST']"
-                        type="button"
-                        size="sm"
-                        (click)="openOrderModal(pizza)"
-                      >
-                        Add to cart
-                      </rw-button>
-                    </div>
+                    <rw-button
+                      *rwRole="['CUSTOMER', 'GUEST']"
+                      type="button"
+                      size="sm"
+                      (click)="openOrderModal(pizza)"
+                    >
+                      Add to cart
+                    </rw-button>
                   </div>
                 </div>
-              </li>
-            }
-          </ul>
+              </div>
+            </li>
+          }
+        </ul>
+
+        @if (pizzasResource.isLoading() && pizzas().length > 0) {
+          <div class="loading-center" aria-label="Loading more pizzas">
+            <rw-spinner />
+          </div>
+        }
+
+        <rw-load-more
+          (loadMore)="!pizzasResource.isLoading() && hasMorePages() && loadNextPage()"
+        />
         }
       }
     </div>
