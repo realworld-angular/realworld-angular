@@ -13,6 +13,8 @@ export class OrderApi {
     deliveryAddress: Address;
     billingAddress?: Address;
     notes?: string;
+    tipAmount?: number;
+    scheduledAt?: string;
     items: {
       pizzaId: string;
       quantity: number;

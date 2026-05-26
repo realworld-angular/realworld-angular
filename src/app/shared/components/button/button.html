@@ -4,6 +4,7 @@
   [class]="buttonClasses()"
   [attr.aria-busy]="isLoading() || null"
   [attr.aria-disabled]="isDisabled() || null"
+  (click)="handleClick()"
 >
   @if (isLoading()) {
     <span class="btn-spinner" aria-hidden="true"></span>

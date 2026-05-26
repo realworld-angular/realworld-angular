@@ -20,6 +20,7 @@ import { EmptyState } from '../../../../shared/components/empty-state/empty-stat
 import { Observable } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { StatusBadge } from '../../../../shared/components/status-badge/status-badge';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'rw-order-detail-page',
@@ -47,7 +48,10 @@ export class OrderDetailPage {
     params: () => this.id(),
     stream: ({ params: id }) => {
       return new Observable<Order>((observer) => {
-        const es = new EventSource(`/api/orders/${id}/subscribe`, { withCredentials: true });
+        const es = new EventSource(
+          `${environment.apiBaseUrl}/api/orders/${id}/subscribe`,
+          { withCredentials: true },
+        );
 
         es.onmessage = (event: MessageEvent<string>): void => {
           try {

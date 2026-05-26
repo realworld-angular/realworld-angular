@@ -12,73 +12,37 @@
       </rw-empty-state>
     } @else {
       @let data = cartStore.cart()!;
+
+      <div class="checkout-steps">
+        <rw-checkout-progress-stepper
+          [order]="1"
+          label="Delivery &amp; Billing"
+          [active]="isCurrentStep('delivery')"
+          [status]="wizard.stepStatus()['delivery']"
+        />
+        <span class="checkout-step__arrow" aria-hidden="true">›</span>
+        <rw-checkout-progress-stepper
+          [order]="2"
+          label="Schedule &amp; Notes"
+          [active]="isCurrentStep('schedule')"
+          [status]="wizard.stepStatus()['schedule']"
+        />
+        <span class="checkout-step__arrow" aria-hidden="true">›</span>
+        <rw-checkout-progress-stepper
+          [order]="3"
+          label="Review &amp; Pay"
+          [active]="isCurrentStep('review')"
+          [status]="wizard.stepStatus()['review']"
+        />
+      </div>
+
       <div class="checkout-layout">
         <section>
-          <h2 class="section-heading">Delivery details</h2>
-
-          <form [formRoot]="checkoutForm" class="checkout-form">
-            @if (checkoutForm().errors()[0]; as err) {
+          <form [formRoot]="wizard.checkoutForm" class="checkout-form">
+            @if (wizard.checkoutForm().errors()[0]; as err) {
               <rw-callout variant="error" [message]="err.message!" />
             }
-
-            <fieldset class="address-fieldset">
-              <legend class="address-fieldset__legend">Delivery address</legend>
-              <rw-photon-location-field
-                label="City and country"
-                [formField]="checkoutForm.delivery.location"
-              />
-              <rw-input
-                label="Street address"
-                [formField]="checkoutForm.delivery.street"
-                placeholder="Street, number, building, floor…"
-              />
-            </fieldset>
-
-            <fieldset class="address-fieldset">
-              <legend class="address-fieldset__legend">Billing address</legend>
-              <label class="billing-toggle">
-                <input
-                  type="checkbox"
-                  class="billing-toggle__input"
-                  [formField]="checkoutForm.useSameAsBilling"
-                />
-                <span class="billing-toggle__label">
-                  Same as delivery address
-                  <span class="billing-toggle__hint">
-                    Uncheck to bill to a different address for this order.
-                  </span>
-                </span>
-              </label>
-
-              @if (!model().useSameAsBilling) {
-                <div class="billing-fields">
-                  <rw-photon-location-field
-                    label="City and country"
-                    [formField]="checkoutForm.billing.location"
-                  />
-                  <rw-input
-                    label="Street address"
-                    [formField]="checkoutForm.billing.street"
-                    placeholder="Street, number, building, floor…"
-                  />
-                </div>
-              }
-            </fieldset>
-
-            <rw-textarea
-              label="Order notes"
-              [formField]="checkoutForm.notes"
-              placeholder="Any special instructions?"
-              [maxLength]="300"
-            />
-
-            <rw-button
-              class="submit-button"
-              type="submit"
-              [isLoading]="checkoutForm().submitting()"
-            >
-              Place order
-            </rw-button>
+            <router-outlet />
           </form>
         </section>
 
@@ -95,7 +59,7 @@
           </ul>
           <div class="summary-total">
             <span>Total</span>
-            <strong>€{{ data.total | number: '1.2-2' }}</strong>
+            <strong>€{{ wizard.totalWithTip() | number: '1.2-2' }}</strong>
           </div>
         </aside>
       </div>

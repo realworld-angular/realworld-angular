@@ -27,6 +27,8 @@ export interface Order {
   deliveryAddress: Address;
   billingAddress: Address | null;
   notes: string | null;
+  tipAmount: number;
+  scheduledAt: string | null;
   status: OrderStatus;
   total: number;
   createdAt: string;

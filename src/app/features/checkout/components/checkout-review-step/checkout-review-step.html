@@ -1,0 +1,106 @@
+<h2 class="section-heading">Review your order</h2>
+
+@let data = cartStore.cart()!;
+
+<section class="review-summary">
+  <h3 class="review-summary__title">Items</h3>
+  <ul class="review-summary__list">
+    @for (item of data.items; track item.id) {
+      <li class="review-summary__item">
+        <div class="review-summary__item-main">
+          <span class="review-summary__item-qty">{{ item.quantity }}×</span>
+          <span class="review-summary__item-name">{{ item.pizza.name }}</span>
+          <span class="review-summary__item-price">€{{ item.totalPrice | number: '1.2-2' }}</span>
+        </div>
+        @if (item.size) {
+          <div class="review-summary__item-detail">{{ item.size.label }} — €{{ item.size.price | number: '1.2-2' }}</div>
+        }
+        @if (item.extraToppings.length) {
+          <div class="review-summary__item-detail">
+            @for (topping of item.extraToppings; track topping.id) {
+              <span>+ {{ topping.label }} (€{{ topping.price | number: '1.2-2' }})</span>
+            }
+          </div>
+        }
+      </li>
+    }
+  </ul>
+</section>
+
+<fieldset class="tip-fieldset">
+  <legend class="address-fieldset__legend">Tip (optional)</legend>
+
+  <div class="tip-options">
+    <label class="tip-option">
+      <input
+        type="radio"
+        class="tip-option__input"
+        [formField]="wizard.checkoutForm.tip.type"
+        value="none"
+      />
+      <span class="tip-option__label">No tip</span>
+    </label>
+
+    @for (opt of ['ten', 'fifteen', 'twenty']; track opt) {
+      <label class="tip-option">
+        <input
+          type="radio"
+          class="tip-option__input"
+          [formField]="wizard.checkoutForm.tip.type"
+          [value]="opt"
+        />
+        <span class="tip-option__label">{{ opt === 'ten' ? '10' : opt === 'fifteen' ? '15' : '20' }}%</span>
+      </label>
+    }
+
+    <label class="tip-option">
+      <input
+        type="radio"
+        class="tip-option__input"
+        [formField]="wizard.checkoutForm.tip.type"
+        value="custom"
+      />
+      <span class="tip-option__label">Custom amount</span>
+    </label>
+  </div>
+
+  @if (wizard.checkoutForm.tip.type().value() === 'custom') {
+    <rw-input
+      label="Tip amount (€)"
+      type="number"
+      [formField]="wizard.checkoutForm.tip.customAmount"
+      placeholder="0.00"
+    />
+  }
+</fieldset>
+
+<div class="review-total">
+  <div class="review-total__line">
+    <span>Subtotal</span>
+    <span>€{{ data.total | number: '1.2-2' }}</span>
+  </div>
+  @if (wizard.tipAmount()) {
+    <div class="review-total__line">
+      <span>Tip</span>
+      <span>€{{ wizard.tipAmount() | number: '1.2-2' }}</span>
+    </div>
+  }
+  <div class="review-total__line review-total__line--final">
+    <span>Total</span>
+    <strong>€{{ wizard.totalWithTip() | number: '1.2-2' }}</strong>
+  </div>
+</div>
+
+<div class="step-actions">
+  <rw-button type="button" variant="outlined" palette="primary" (click)="goBack()">
+    Back
+  </rw-button>
+  <rw-button
+    type="submit"
+    variant="plain"
+    palette="primary"
+    [isLoading]="wizard.checkoutForm().submitting()"
+  >
+    Place order — €{{ wizard.totalWithTip() | number: '1.2-2' }}
+  </rw-button>
+</div>

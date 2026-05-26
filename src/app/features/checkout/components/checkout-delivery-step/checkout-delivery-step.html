@@ -1,0 +1,51 @@
+<h2 class="section-heading">Delivery details</h2>
+
+<fieldset class="address-fieldset">
+  <legend class="address-fieldset__legend">Delivery address</legend>
+  <rw-photon-location-field
+    label="City and country"
+    [formField]="wizard.checkoutForm.delivery.location"
+  />
+  <rw-input
+    label="Street address"
+    [formField]="wizard.checkoutForm.delivery.street"
+    placeholder="Street, number, building, floor…"
+  />
+</fieldset>
+
+<fieldset class="address-fieldset">
+  <legend class="address-fieldset__legend">Billing address</legend>
+  <label class="billing-toggle">
+    <input
+      type="checkbox"
+      class="billing-toggle__input"
+      [formField]="wizard.checkoutForm.delivery.useSameAsBilling"
+    />
+    <span class="billing-toggle__label">
+      Same as delivery address
+      <span class="billing-toggle__hint">
+        Uncheck to bill to a different address for this order.
+      </span>
+    </span>
+  </label>
+
+  @if (!wizard.checkoutForm.delivery.useSameAsBilling().value()) {
+    <div class="billing-fields">
+      <rw-photon-location-field
+        label="City and country"
+        [formField]="wizard.checkoutForm.delivery.billingLocation"
+      />
+      <rw-input
+        label="Street address"
+        [formField]="wizard.checkoutForm.delivery.billingStreet"
+        placeholder="Street, number, building, floor…"
+      />
+    </div>
+  }
+</fieldset>
+
+<div class="step-actions">
+  <rw-button type="button" variant="plain" palette="primary" (click)="goNext()" [isError]="!wizard.checkoutForm.delivery().valid()">
+    Next
+  </rw-button>
+</div>

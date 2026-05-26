@@ -1,0 +1,62 @@
+<h2 class="section-heading">Delivery schedule</h2>
+
+<fieldset class="address-fieldset">
+  <legend class="address-fieldset__legend">When should we deliver?</legend>
+
+  <label class="schedule-option">
+    <input
+      type="radio"
+      class="schedule-option__input"
+      [formField]="wizard.checkoutForm.schedule.type"
+      value="asap"
+    />
+    <span class="schedule-option__label">
+      <span class="schedule-option__title">As soon as possible</span>
+      <span class="schedule-option__hint">We'll prepare and deliver your order right away.</span>
+    </span>
+  </label>
+
+  <label class="schedule-option">
+    <input
+      type="radio"
+      class="schedule-option__input"
+      [formField]="wizard.checkoutForm.schedule.type"
+      value="scheduled"
+    />
+    <span class="schedule-option__label">
+      <span class="schedule-option__title">Schedule for later</span>
+      <span class="schedule-option__hint">Pick a specific date and time.</span>
+    </span>
+  </label>
+
+  @if (wizard.checkoutForm.schedule.type().value() === 'scheduled') {
+    <div class="schedule-datetime">
+      <rw-input
+        label="Delivery date"
+        type="date"
+        [formField]="wizard.checkoutForm.schedule.date"
+      />
+      <rw-input
+        label="Delivery time"
+        type="time"
+        [formField]="wizard.checkoutForm.schedule.time"
+      />
+    </div>
+  }
+</fieldset>
+
+<rw-textarea
+  label="Order notes"
+  [formField]="wizard.checkoutForm.notes"
+  placeholder="Allergies, special requests, or anything we should know…"
+  [maxLength]="300"
+/>
+
+<div class="step-actions">
+  <rw-button type="button" variant="outlined" palette="primary" (click)="goBack()">
+    Back
+  </rw-button>
+  <rw-button type="button" variant="plain" palette="primary" (click)="goNext()" [isError]="!wizard.checkoutForm.schedule().valid()">
+    Next
+  </rw-button>
+</div>

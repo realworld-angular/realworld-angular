@@ -1,0 +1,8 @@
+@if (status() === 'error') {
+  <img ngSrc="/icons/error.svg" alt="" width="20" height="20" />
+} @else if (status() === 'success') {
+  <img ngSrc="/icons/check.svg" alt="" width="20" height="20" />
+} @else {
+  <span class="checkout-step__number">{{ order() }}</span>
+}
+<span>{{ label() }}</span>

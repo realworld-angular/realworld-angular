@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { OrderDetailPage } from './order-details-page';
 import { Order } from '../../order.models';
+import { environment } from '../../../../../environments/environment';
 
 const mockOrder: Order = {
   id: 'order1',
@@ -76,7 +77,9 @@ describe('OrderDetailPage', () => {
 
   it('should open an EventSource for the order subscription URL', () => {
     expect(FakeEventSource.instances.length).toBe(1);
-    expect(FakeEventSource.instances[0].url).toContain('/api/orders/order1/subscribe');
+    expect(FakeEventSource.instances[0].url).toBe(
+      `${environment.apiBaseUrl}/api/orders/order1/subscribe`,
+    );
   });
 
   it('should open EventSource with withCredentials true', () => {
