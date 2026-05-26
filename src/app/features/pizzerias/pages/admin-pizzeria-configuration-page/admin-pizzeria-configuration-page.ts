@@ -5,7 +5,6 @@ import {
   signal,
   effect,
   DestroyRef,
-  untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField, form, required, FormRoot } from '@angular/forms/signals';
@@ -88,7 +87,7 @@ export class AdminPizzeriaConfigurationPage {
   public constructor() {
     effect(() => {
       if (this.pizzeriaResource.status() === 'resolved') {
-        const pizzeria = untracked(() => this.pizzeriaResource.value());
+        const pizzeria = this.pizzeriaResource.value();
         if (pizzeria) {
           this.title.setTitle(`Configure your pizzeria - ${pizzeria.name}`);
         }
@@ -97,7 +96,7 @@ export class AdminPizzeriaConfigurationPage {
 
     effect(() => {
       if (this.pizzeriaResource.status() === 'resolved') {
-        const pizzeria = untracked(() => this.pizzeriaResource.value());
+        const pizzeria = this.pizzeriaResource.value();
         if (pizzeria) {
           this.model.update((modelState) => ({
             ...modelState,

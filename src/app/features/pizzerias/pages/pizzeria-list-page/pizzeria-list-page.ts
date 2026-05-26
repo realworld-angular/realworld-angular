@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgOptimizedImage } from '@angular/common';
+import { DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { httpResource } from '@angular/common/http';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
@@ -32,6 +32,8 @@ import { Callout } from '../../../../shared/components/callout/callout';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PizzeriaListPage {
+  private readonly document = inject(DOCUMENT);
+
   // Search input
   protected readonly searchInput = signal('');
   private readonly debouncedSearch = toSignal(
@@ -59,6 +61,6 @@ export class PizzeriaListPage {
 
   protected changePage(page: number): void {
     this.currentPage.set(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.document.defaultView?.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { httpResource } from '@angular/common/http';
 import { PizzaApi } from '../../services/pizza-api';
 import { Callout } from '../../../../shared/components/callout/callout';
@@ -20,6 +21,7 @@ import { AdminPizzaRow } from '../../components/admin-pizza-row/admin-pizza-row'
 export class AdminPizzaListPage {
   private readonly api = inject(PizzaApi);
   private readonly dialog = inject(Dialog);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly pizzasResource = httpResource<Pizza[]>(() => '/api/admin/pizzeria/pizzas');
 
@@ -42,7 +44,7 @@ export class AdminPizzaListPage {
       data: pizza,
     });
 
-    ref.closed.subscribe((event) => {
+    ref.closed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
       if (!event) return;
       const { pizza, mode } = event;
       if (mode === 'edit') {

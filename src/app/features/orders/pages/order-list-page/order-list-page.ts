@@ -16,6 +16,7 @@ import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 import { Callout } from '../../../../shared/components/callout/callout';
+import { DOCUMENT } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { StatusBadge } from '../../../../shared/components/status-badge/status-badge';
 
@@ -38,6 +39,7 @@ import { StatusBadge } from '../../../../shared/components/status-badge/status-b
 export class OrdersListPage {
   private readonly auth = inject(Auth);
   private readonly title = inject(Title);
+  private readonly document = inject(DOCUMENT);
 
   protected readonly heading = computed<string>(() =>
     this.auth.isAdmin() ? 'Orders' : 'My Orders',
@@ -56,6 +58,6 @@ export class OrdersListPage {
 
   protected changePage(page: number): void {
     this.currentPage.set(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.document.defaultView?.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
