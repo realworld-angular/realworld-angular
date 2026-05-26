@@ -8,6 +8,7 @@ import {
   email,
   minLength,
   validateTree,
+  validateHttp,
   FormRoot,
 } from '@angular/forms/signals';
 import { Auth } from '../../../../core/services/auth';
@@ -35,6 +36,17 @@ export class RegisterPage {
     (schema) => {
       required(schema.email, { message: 'Email is required' });
       email(schema.email, { message: 'Enter a valid email' });
+      validateHttp(schema.email, {
+        request: (ctx) =>
+          ctx.value()
+            ? `/api/auth/check-email?email=${encodeURIComponent(ctx.value())}`
+            : undefined,
+        onSuccess: (result) =>
+          (result as { available: boolean }).available
+            ? null
+            : { kind: 'emailTaken', message: 'This email is already registered' },
+        onError: () => ({ kind: 'emailTaken', message: 'Failed to check email availability' }),
+      });
       required(schema.password, { message: 'Password is required' });
       minLength(schema.password, 8, { message: 'Minimum 8 characters' });
       required(schema.confirmPassword, { message: 'Please confirm your password' });
