@@ -64,7 +64,7 @@
       }
 
       <ng-container *rwRole="['CUSTOMER', 'PIZZERIA_ADMIN']; else guestActionsTpl">
-        <a routerLink="/profile" class="user-menu" aria-label="Profile for {{ auth.user()?.name }}">
+        <a routerLink="/profile" class="user-menu" aria-label="Profile for {{ auth.user()!.name }}">
           <rw-avatar [name]="auth.user()!.name" size="sm" />
         </a>
       </ng-container>
