@@ -1,11 +1,13 @@
 import { Injectable, signal, computed, effect, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { form, required, maxLength, submit, FieldTree } from '@angular/forms/signals';
+import { form, required, maxLength, submit, validateAsync, FieldTree, applyWhenValue } from '@angular/forms/signals';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { CartStore } from '../../cart/cart.store';
 import { OrderApi } from '../../orders/order-api';
 import type { LocationValue } from '../../../shared/components/photon-location-field/photon-location-field';
 import type { Address } from '../../../shared/models/address.model';
+import { CouponValidation } from '../../orders/order.models';
 
 export type WizardStep = 'delivery' | 'schedule' | 'review';
 
@@ -29,6 +31,9 @@ export interface CheckoutForm {
     type: 'none' | 'ten' | 'fifteen' | 'twenty' | 'custom';
     customAmount: number;
   };
+  coupon: {
+    code: string;
+  };
 }
 
 @Injectable()
@@ -44,6 +49,8 @@ export class CheckoutWizard {
     schedule: null,
     review: null,
   });
+
+  readonly discount = signal(0);
 
   private readonly model = signal<CheckoutForm>({
     delivery: {
@@ -62,6 +69,9 @@ export class CheckoutWizard {
     tip: {
       type: 'none',
       customAmount: 0,
+    },
+    coupon: {
+      code: '',
     },
   });
 
@@ -93,6 +103,33 @@ export class CheckoutWizard {
         message: 'Choose a delivery time',
         when: ({ valueOf }) => valueOf(schema.schedule.type) === 'scheduled',
       });
+
+      applyWhenValue(
+        schema.coupon.code,
+        value => !!value,
+        path => validateAsync(path, {
+          params: ({ fieldTreeOf }) => ({
+            fieldTreeOf,
+          }),
+          factory: (params) =>
+            rxResource({
+              params,
+              stream: ({ params }) =>
+                this.api.validateCoupon(params.fieldTreeOf(schema.coupon.code)().value(), this.discount),
+            }),
+          onSuccess: (response: CouponValidation) => {
+            if (!response.valid) {
+              return { kind: 'couponInvalid', message: response.message ?? 'Invalid coupon code' };
+            }
+            return null;
+          },
+          onError: () => {
+            this.discount.set(0);
+            return { kind: 'couponError', message: 'Could not validate coupon code' };
+          },
+        })
+      );
+
     },
     {
       submission: {
@@ -122,6 +159,9 @@ export class CheckoutWizard {
                 ).toISOString()
               : undefined;
 
+          const couponCode =
+            this.discountAmount() > 0 ? formValue.coupon.code.trim() || undefined : undefined;
+
           const payload = {
             pizzeriaId: this.cartStore.pizzeria()!.id,
             deliveryAddress: delivery,
@@ -129,6 +169,7 @@ export class CheckoutWizard {
             notes: formValue.notes?.trim() || undefined,
             tipAmount: tipAmount > 0 ? tipAmount : undefined,
             scheduledAt,
+            ...(couponCode ? { couponCode } : {}),
             items: this.cartStore.items().map((item) => ({
               pizzaId: item.pizzaId,
               quantity: item.quantity,
@@ -168,7 +209,14 @@ export class CheckoutWizard {
     }
   });
 
-  readonly totalWithTip = computed(() => this.cartStore.totalPrice() + this.tipAmount());
+  readonly discountAmount = computed(() => {
+    const codeField = this.checkoutForm.coupon.code();
+    const pct = this.discount();
+    if (!codeField.valid() || !codeField.value() || pct <= 0) return 0;
+    return Math.round(this.cartStore.totalPrice() * pct) / 100;
+  });
+
+  readonly totalWithTip = computed(() => this.cartStore.totalPrice() - this.discountAmount() + this.tipAmount());
 
   private readonly nextStep: Record<ValidatableStep, WizardStep> = {
     delivery: 'schedule',

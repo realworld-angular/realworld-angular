@@ -92,4 +92,17 @@ describe('CheckoutReviewStep', () => {
   it('should show total with tip', () => {
     expect(el.textContent).toContain(wizard.totalWithTip().toFixed(2));
   });
+
+  it('should render the coupon code input', () => {
+    expect(el.textContent).toContain('Coupon code');
+    expect(el.querySelector('input[placeholder="Enter coupon code"]')).toBeTruthy();
+  });
+
+  it('should show discount line when a coupon is applied', () => {
+    wizard.couponDiscountPercent.set(20);
+    fixture.detectChanges();
+    expect(wizard.discountAmount()).toBe(6);
+    expect(el.textContent).toContain('Discount');
+    expect(el.textContent).toContain('6.00');
+  });
 });

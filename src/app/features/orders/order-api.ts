@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, WritableSignal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Order } from './order.models';
+import { Observable, tap } from 'rxjs';
+import { CouponValidation, Order } from './order.models';
 import type { Address } from '../../shared/models/address.model';
 
 @Injectable({ providedIn: 'root' })
@@ -15,6 +15,7 @@ export class OrderApi {
     notes?: string;
     tipAmount?: number;
     scheduledAt?: string;
+    couponCode?: string;
     items: {
       pizzaId: string;
       quantity: number;
@@ -23,6 +24,22 @@ export class OrderApi {
     }[];
   }): Observable<Order> {
     return this.http.post<Order>('/api/orders', data);
+  }
+
+  public validateCoupon(code: string, discount: WritableSignal<number>): Observable<CouponValidation> {
+    return this.http.get<CouponValidation>(
+      `/api/coupons/validate/${encodeURIComponent(code)}`,
+    ).pipe(
+      tap({
+        next: (response) => {
+          if (!response.valid) {
+            discount.set(0);
+          } else {
+            discount.set(response.discountPercent);
+          }
+        },
+      })
+    );
   }
 
   public cancelOrder(id: string): Observable<Order> {

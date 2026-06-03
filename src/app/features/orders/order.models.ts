@@ -31,6 +31,7 @@ export interface Order {
   scheduledAt: string | null;
   status: OrderStatus;
   total: number;
+  discountAmount: number | null;
   createdAt: string;
   updatedAt: string;
   pizzeria: { id: string; name: string; city: string; country: string };
@@ -39,3 +40,5 @@ export interface Order {
 }
 
 export type AdminOrderListItem = Omit<Order, 'deliveryAddress' | 'billingAddress' | 'notes'>;
+
+export type CouponValidation = { valid: false; message: string } | { valid: true; discountPercent: number };

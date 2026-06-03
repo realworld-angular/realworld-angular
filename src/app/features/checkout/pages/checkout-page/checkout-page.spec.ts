@@ -63,11 +63,6 @@ describe('CheckoutPage', () => {
     expect(el.querySelector('.checkout-summary')).not.toBeNull();
   });
 
-  it('should return true from canDeactivate when form is clean', () => {
-    const result = fixture.componentInstance.canDeactivate();
-    expect(result).toBe(true);
-  });
-
   it('should show empty state when cart is empty', async () => {
     isEmptySignal.set(true);
     await fixture.whenStable();

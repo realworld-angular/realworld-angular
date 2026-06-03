@@ -47,6 +47,7 @@
 
 .review-summary {
   margin-block-end: var(--space-6);
+  padding-block-start: var(--space-4);
 }
 
 .review-summary__title {
@@ -101,6 +102,139 @@
   color: var(--color-text-muted);
   margin-block-start: var(--space-1);
   padding-inline-start: calc(2ch + var(--space-2));
+}
+
+/* ---- Coupon field ---- */
+
+.coupon-fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  margin: 0 0 var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition:
+    background-color 0.3s,
+    border-color 0.3s;
+}
+
+.coupon-fieldset:has(.coupon-input--valid) {
+  background-color: color-mix(in srgb, var(--color-success, #2e7d32) 6%, transparent);
+  border-color: var(--color-success, #2e7d32);
+}
+
+.coupon-fieldset:has(.coupon-input--invalid) {
+  background-color: color-mix(in srgb, var(--color-danger, #c62828) 6%, transparent);
+  border-color: var(--color-danger, #c62828);
+}
+
+.coupon-input-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.coupon-input {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-family: inherit;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.coupon-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
+
+.coupon-input--valid {
+  border-color: var(--color-success, #2e7d32);
+}
+
+.coupon-input--valid:focus {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-success, #2e7d32) 20%, transparent);
+}
+
+.coupon-input--invalid {
+  border-color: var(--color-danger, #c62828);
+}
+
+.coupon-input--invalid:focus {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-danger, #c62828) 20%, transparent);
+}
+
+.coupon-status-wrapper {
+  min-width: 0;
+}
+
+.coupon-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  animation: coupon-fade-in 0.25s ease-out;
+}
+
+.coupon-status__icon {
+  flex-shrink: 0;
+}
+
+.coupon-status--loading {
+  color: var(--color-text-muted);
+}
+
+.coupon-status--valid {
+  color: var(--color-success, #2e7d32);
+}
+
+.coupon-status--valid .coupon-status__icon {
+  filter: invert(30%) sepia(72%) saturate(412%) hue-rotate(90deg) brightness(96%) contrast(88%);
+}
+
+.coupon-status--invalid {
+  color: var(--color-danger, #c62828);
+}
+
+.coupon-status--invalid .coupon-status__icon {
+  filter: invert(16%) sepia(91%) saturate(7494%) hue-rotate(357deg) brightness(95%) contrast(91%);
+}
+
+.coupon-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-text-muted);
+  border-radius: 50%;
+  animation: coupon-spin 0.6s linear infinite;
+}
+
+@keyframes coupon-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes coupon-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.review-total__line--discount {
+  color: var(--color-success, #2e7d32);
 }
 
 /* ---- Review total breakdown ---- */

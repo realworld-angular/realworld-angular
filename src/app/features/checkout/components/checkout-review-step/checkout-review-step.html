@@ -3,7 +3,6 @@
 @let data = cartStore.cart()!;
 
 <section class="review-summary">
-  <h3 class="review-summary__title">Items</h3>
   <ul class="review-summary__list">
     @for (item of data.items; track item.id) {
       <li class="review-summary__item">
@@ -26,6 +25,39 @@
     }
   </ul>
 </section>
+
+<fieldset class="coupon-fieldset">
+  <legend>Coupon code</legend>
+  <div class="coupon-input-row">
+    <input
+      type="text"
+      class="coupon-input"
+      [class.coupon-input--valid]="wizard.checkoutForm.coupon.code().valid() && wizard.checkoutForm.coupon.code().value()"
+      [class.coupon-input--invalid]="!(wizard.checkoutForm.coupon.code().pending()) && wizard.checkoutForm.coupon.code().errors()"
+      [formField]="wizard.checkoutForm.coupon.code"
+      placeholder="Enter coupon code"
+    />
+    @let codeField = wizard.checkoutForm.coupon.code();
+    <div class="coupon-status-wrapper">
+      @if (codeField.pending()) {
+        <div class="coupon-status coupon-status--loading">
+          <span class="coupon-spinner"></span>
+          Checking…
+        </div>
+      } @else if (codeField.errors() && codeField.dirty()) {
+        <div class="coupon-status coupon-status--invalid">
+          <img ngSrc="/icons/error.svg" alt="" width="16" height="16" class="coupon-status__icon" />
+          {{ codeField.errors()[0].message }}
+        </div>
+      } @else if (codeField.valid() && codeField.value()) {
+        <div class="coupon-status coupon-status--valid">
+          <img ngSrc="/icons/check.svg" alt="" width="16" height="16" class="coupon-status__icon" />
+          {{ wizard.discount() }}% discount applied
+        </div>
+      }
+    </div>
+  </div>
+</fieldset>
 
 <fieldset class="tip-fieldset">
   <legend class="address-fieldset__legend">Tip (optional)</legend>
@@ -79,6 +111,12 @@
     <span>Subtotal</span>
     <span>€{{ data.total | number: '1.2-2' }}</span>
   </div>
+  @if (wizard.discountAmount()) {
+    <div class="review-total__line review-total__line--discount">
+      <span>Discount (-{{ wizard.discount() }}%)</span>
+      <span>-€{{ wizard.discountAmount() | number: '1.2-2' }}</span>
+    </div>
+  }
   @if (wizard.tipAmount()) {
     <div class="review-total__line">
       <span>Tip</span>
