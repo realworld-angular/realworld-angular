@@ -108,6 +108,7 @@ export class CheckoutWizard {
         schema.coupon.code,
         value => !!value,
         path => validateAsync(path, {
+          debounce: 300,
           params: ({ fieldTreeOf }) => ({
             fieldTreeOf,
           }),
