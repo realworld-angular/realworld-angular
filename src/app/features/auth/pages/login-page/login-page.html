@@ -4,8 +4,8 @@
     <p class="auth-card__subtitle">Log in to your account</p>
 
     <form [formRoot]="loginForm" class="auth-form">
-      @if (loginForm().errors()[0]; as err) {
-        <rw-callout variant="error" [message]="err.message!" />
+      @if (loginForm().errors().length) {
+        <rw-callout variant="error" [message]="loginForm().errors()[0].message!" />
       }
       <rw-input label="Email" type="email" autocomplete="email" [formField]="loginForm.email" />
       <rw-input
