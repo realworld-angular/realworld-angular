@@ -3,3 +3,8 @@
   min-height: calc(100vh - var(--nav-height) - 80px);
   outline: none;
 }
+
+.footer-placeholder {
+  margin-block-start: var(--space-16);
+  min-height: 5rem;
+}

@@ -7,4 +7,8 @@
   <router-outlet />
 </main>
 
-<rw-footer />
+@defer (on viewport) {
+  <rw-footer />
+} @placeholder {
+  <div class="footer-placeholder" aria-hidden="true"></div>
+}
