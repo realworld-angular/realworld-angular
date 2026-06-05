@@ -94,6 +94,30 @@ describe('CheckoutWizard', () => {
     });
   });
 
+  describe('discountAmount', () => {
+    it('should return discount amount when code has value and discount is set', () => {
+      cartStoreStub.totalPrice.set(30);
+      service.discount.set(20);
+      service.checkoutForm.coupon.code().value.set('SAVE20');
+      TestBed.flushEffects();
+      expect(service.discountAmount()).toBe(6);
+    });
+
+    it('should return 0 when discount is 0', () => {
+      cartStoreStub.totalPrice.set(30);
+      service.checkoutForm.coupon.code().value.set('SAVE20');
+      TestBed.flushEffects();
+      expect(service.discountAmount()).toBe(0);
+    });
+
+    it('should return 0 when code is empty', () => {
+      cartStoreStub.totalPrice.set(30);
+      service.discount.set(20);
+      TestBed.flushEffects();
+      expect(service.discountAmount()).toBe(0);
+    });
+  });
+
   describe('totalWithTip', () => {
     it('should equal totalPrice when no tip', () => {
       cartStoreStub.totalPrice.set(30);

@@ -98,8 +98,14 @@ describe('CheckoutReviewStep', () => {
     expect(el.querySelector('input[placeholder="Enter coupon code"]')).toBeTruthy();
   });
 
+  it('should show the default coupon hint when idle', () => {
+    expect(el.textContent).toContain('Enter a coupon code to apply a discount to your order.');
+    expect(el.querySelector('#coupon-hint')).toBeTruthy();
+  });
+
   it('should show discount line when a coupon is applied', () => {
-    wizard.couponDiscountPercent.set(20);
+    wizard.discount.set(20);
+    wizard.checkoutForm.coupon.code().value.set('SAVE20');
     fixture.detectChanges();
     expect(wizard.discountAmount()).toBe(6);
     expect(el.textContent).toContain('Discount');

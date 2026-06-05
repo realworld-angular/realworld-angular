@@ -120,11 +120,13 @@ export class CheckoutWizard {
             }),
           onSuccess: (response: CouponValidation) => {
             if (!response.valid) {
+              console.error('Invalid coupon code', response);
               return { kind: 'couponInvalid', message: response.message ?? 'Invalid coupon code' };
             }
             return null;
           },
           onError: () => {
+            console.error('Could not validate coupon code');
             return { kind: 'couponError', message: 'Could not validate coupon code' };
           },
         })
@@ -212,7 +214,7 @@ export class CheckoutWizard {
   readonly discountAmount = computed(() => {
     const codeField = this.checkoutForm.coupon.code();
     const pct = this.discount();
-    if (!codeField.valid() || !codeField.value() || pct <= 0) return 0;
+    if (!codeField.value() || pct <= 0) return 0;
     return Math.round(this.cartStore.totalPrice() * pct) / 100;
   });
 

@@ -135,6 +135,42 @@
   gap: var(--space-3);
 }
 
+.coupon-input-action {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.coupon-refresh-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+
+.coupon-refresh-btn:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-bg, var(--color-surface-alt));
+}
+
+.coupon-refresh-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 .coupon-input {
   flex: 1;
   padding: var(--space-2) var(--space-3);
@@ -169,40 +205,37 @@
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-danger, #c62828) 20%, transparent);
 }
 
-.coupon-status-wrapper {
-  min-width: 0;
-}
-
-.coupon-status {
+.coupon-hint {
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  font-size: var(--text-xs);
-  white-space: nowrap;
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
   animation: coupon-fade-in 0.25s ease-out;
 }
 
-.coupon-status__icon {
+.coupon-hint__icon {
   flex-shrink: 0;
 }
 
-.coupon-status--loading {
+.coupon-hint--loading {
   color: var(--color-text-muted);
 }
 
-.coupon-status--valid {
+.coupon-hint--valid {
   color: var(--color-success, #2e7d32);
 }
 
-.coupon-status--valid .coupon-status__icon {
+.coupon-hint--valid .coupon-hint__icon {
   filter: invert(30%) sepia(72%) saturate(412%) hue-rotate(90deg) brightness(96%) contrast(88%);
 }
 
-.coupon-status--invalid {
+.coupon-hint--invalid {
   color: var(--color-danger, #c62828);
 }
 
-.coupon-status--invalid .coupon-status__icon {
+.coupon-hint--invalid .coupon-hint__icon {
   filter: invert(16%) sepia(91%) saturate(7494%) hue-rotate(357deg) brightness(95%) contrast(91%);
 }
 
