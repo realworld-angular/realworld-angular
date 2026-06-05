@@ -38,6 +38,9 @@ export class OrderApi {
             discount.set(response.discountPercent);
           }
         },
+        error: () => {
+          discount.set(0);
+        },
       })
     );
   }

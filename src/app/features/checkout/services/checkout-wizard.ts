@@ -125,7 +125,6 @@ export class CheckoutWizard {
             return null;
           },
           onError: () => {
-            this.discount.set(0);
             return { kind: 'couponError', message: 'Could not validate coupon code' };
           },
         })
