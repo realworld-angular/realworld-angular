@@ -1,5 +1,8 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { isPhotonApiUrl } from '../services/photon-api';
+
+function isPhotonApiUrl(url: string): boolean {
+  return url.includes('photon.komoot.io');
+}
 
 /** Adds withCredentials to requests so cookies are sent cross-origin (Photon search excluded). */
 export const credentialsInterceptor: HttpInterceptorFn = (req, next) => {

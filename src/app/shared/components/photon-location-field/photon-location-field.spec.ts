@@ -1,39 +1,57 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { Subject } from 'rxjs';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { PhotonLocationField } from './photon-location-field';
-import { PhotonApi, PhotonLocationSuggestion } from '../../../core/services/photon-api';
 
-const mockSuggestions: PhotonLocationSuggestion[] = [
-  { label: 'Rome, Italy', city: 'Rome', country: 'Italy' },
-  { label: 'Rotherham, United Kingdom', city: 'Rotherham', country: 'United Kingdom' },
-];
+const mockGeoJson = {
+  features: [
+    {
+      properties: {
+        name: 'Rome',
+        city: 'Rome',
+        country: 'Italy',
+        type: 'city',
+      },
+    },
+    {
+      properties: {
+        name: 'Rotherham',
+        city: 'Rotherham',
+        country: 'United Kingdom',
+        type: 'town',
+      },
+    },
+  ],
+};
 
 describe('PhotonLocationField', () => {
   let fixture: ComponentFixture<PhotonLocationField>;
   let el: HTMLElement;
-  let searchPlacesFn: ReturnType<typeof vi.fn>;
-  let searchSubject: Subject<PhotonLocationSuggestion[]>;
+  let httpTesting: HttpTestingController;
 
   beforeEach(() => {
-    searchSubject = new Subject<PhotonLocationSuggestion[]>();
-    searchPlacesFn = vi.fn().mockReturnValue(searchSubject);
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClientTesting(),
-        { provide: PhotonApi, useValue: { searchPlaces: searchPlacesFn } },
-      ],
+      providers: [provideHttpClientTesting()],
     });
     fixture = TestBed.createComponent(PhotonLocationField);
     el = fixture.nativeElement;
+    httpTesting = TestBed.inject(HttpTestingController);
     TestBed.flushEffects();
+  });
+
+  afterEach(() => {
+    httpTesting.verify();
   });
 
   function typeSearch(text: string): void {
     const input = el.querySelector<HTMLInputElement>('input[role="combobox"]')!;
     input.value = text;
     input.dispatchEvent(new Event('input'));
+  }
+
+  function flushSearch(): void {
+    const req = httpTesting.expectOne((r) => r.url.includes('photon.komoot.io'));
+    req.flush(mockGeoJson);
   }
 
   it('should render the label', () => {
@@ -48,7 +66,8 @@ describe('PhotonLocationField', () => {
   it('should open suggestions panel when search results arrive', async () => {
     typeSearch('Ro');
     await new Promise((resolve) => setTimeout(resolve, 350));
-    searchSubject.next(mockSuggestions);
+    flushSearch();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(el.querySelector('.photon-location__suggestions')).not.toBeNull();
@@ -57,7 +76,8 @@ describe('PhotonLocationField', () => {
   it('should display suggestion labels', async () => {
     typeSearch('Ro');
     await new Promise((resolve) => setTimeout(resolve, 350));
-    searchSubject.next(mockSuggestions);
+    flushSearch();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(el.textContent).toContain('Rome, Italy');
@@ -67,8 +87,9 @@ describe('PhotonLocationField', () => {
   it('should commit value when suggestion is selected', async () => {
     typeSearch('Ro');
     await new Promise((resolve) => setTimeout(resolve, 350));
-    searchSubject.next(mockSuggestions);
+    flushSearch();
     await fixture.whenStable();
+    fixture.detectChanges();
 
     const firstOption = el.querySelector<HTMLElement>('.photon-location__option')!;
     firstOption.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
@@ -83,17 +104,21 @@ describe('PhotonLocationField', () => {
     fixture.detectChanges();
 
     expect(el.textContent).toContain('Searching');
+    httpTesting.expectOne((r) => r.url.includes('photon.komoot.io'));
   });
 
   it('should close panel on Escape key', async () => {
     typeSearch('Ro');
     await new Promise((resolve) => setTimeout(resolve, 350));
-    searchSubject.next(mockSuggestions);
+    flushSearch();
+    await fixture.whenStable();
     fixture.detectChanges();
 
+    expect(el.querySelector('.photon-location__suggestions')).not.toBeNull();
+
     const input = el.querySelector<HTMLInputElement>('input')!;
-    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-    await fixture.whenStable();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    fixture.detectChanges();
 
     expect(el.querySelector('.photon-location__suggestions')).toBeNull();
   });

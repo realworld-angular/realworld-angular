@@ -2,19 +2,23 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   effect,
-  inject,
   input,
   model,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
-import { PhotonApi, PhotonLocationSuggestion } from '../../../core/services/photon-api';
+import { httpResource } from '@angular/common/http';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { FormValueControl, ValidationError, WithOptionalFieldTree } from '@angular/forms/signals';
 
 export interface LocationValue {
+  city: string;
+  country: string;
+}
+
+export interface PhotonLocationSuggestion {
+  label: string;
   city: string;
   country: string;
 }
@@ -28,8 +32,6 @@ let nextFieldId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhotonLocationField implements FormValueControl<LocationValue | null> {
-  private readonly photon = inject(PhotonApi);
-  private readonly destroyRef = inject(DestroyRef);
   private readonly fieldId = `rw-photon-location-${++nextFieldId}`;
 
   // --- FormValueControl ---
@@ -46,10 +48,45 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
   protected readonly listboxId = `${this.fieldId}-listbox`;
 
   protected readonly displayText = signal('');
-  protected readonly suggestions = signal<PhotonLocationSuggestion[]>([]);
   protected readonly panelOpen = signal(false);
-  protected readonly isLoading = signal(false);
   protected readonly activeIndex = signal(-1);
+
+  private readonly searchInput = signal('');
+
+  private readonly debouncedSearch = toSignal(
+    toObservable(this.searchInput).pipe(
+      debounceTime(280),
+      map((s) => s.trim()),
+      distinctUntilChanged(),
+    ),
+    { initialValue: '' },
+  );
+
+  protected readonly suggestionsResource = httpResource<PhotonLocationSuggestion[]>(
+    () => {
+      const query = this.debouncedSearch();
+      if (query.length < 2) return undefined;
+      return {
+        url: 'https://photon.komoot.io/api/',
+        params: { q: query, lang: 'en', limit: '10' },
+      };
+    },
+    {
+      defaultValue: [],
+      parse: parsePhotonGeoJson,
+    },
+  );
+
+  protected readonly isLoading = computed(() => {
+    return this.searchInput().trim().length >= 2 && this.suggestionsResource.isLoading();
+  });
+
+  protected readonly suggestions = computed(() => {
+    if(this.suggestionsResource.hasValue()) {
+      return this.suggestionsResource.value();
+    }
+    return [];
+  });
 
   protected readonly showPanel = computed(
     () => this.panelOpen() && (this.isLoading() || this.suggestions().length > 0),
@@ -57,24 +94,12 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
 
   /** Label of the last committed suggestion (or external value sync). */
   private readonly pickedLabel = signal<string | null>(null);
-  private readonly search$ = new Subject<string>();
 
   constructor() {
-    this.search$
-      .pipe(
-        debounceTime(280),
-        distinctUntilChanged(),
-        switchMap((query) => {
-          this.isLoading.set(query.trim().length >= 2);
-          return this.photon.searchPlaces(query);
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((list) => {
-        this.isLoading.set(false);
-        this.suggestions.set(list);
-        this.activeIndex.set(list.length > 0 ? 0 : -1);
-      });
+    effect(() => {
+      const list = this.suggestions();
+      this.activeIndex.set(list.length > 0 ? 0 : -1);
+    });
 
     effect(() => {
       const location = this.value();
@@ -88,8 +113,7 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
       if (location === null && this.pickedLabel() !== null) {
         this.pickedLabel.set(null);
         this.displayText.set('');
-        this.suggestions.set([]);
-        this.isLoading.set(false);
+        this.searchInput.set('');
       }
     });
   }
@@ -105,13 +129,7 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
       this.value.set(null);
     }
 
-    const trimmed = text.trim();
-    if (trimmed.length >= 2) {
-      this.search$.next(text);
-    } else {
-      this.isLoading.set(false);
-      this.suggestions.set([]);
-    }
+    this.searchInput.set(text);
   }
 
   protected onFocus(): void {
@@ -129,8 +147,6 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
     this.closePanel();
     if (!this.value() && this.displayText().trim()) {
       this.displayText.set('');
-      this.suggestions.set([]);
-      this.isLoading.set(false);
     }
   }
 
@@ -179,11 +195,64 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
   private closePanel(): void {
     this.panelOpen.set(false);
     this.activeIndex.set(-1);
-    this.suggestions.set([]);
-    this.isLoading.set(false);
   }
 }
 
 function formatLocationLabel(location: LocationValue): string {
   return `${location.city}, ${location.country}`;
+}
+
+function pickCity(props: Record<string, string | undefined>): string {
+  const fromAdmin = (
+    props['city'] ??
+    props['town'] ??
+    props['village'] ??
+    props['locality'] ??
+    props['district'] ??
+    props['county'] ??
+    ''
+  ).trim();
+  if (fromAdmin) {
+    return fromAdmin;
+  }
+  const type = (props['type'] ?? '').toLowerCase();
+  const name = (props['name'] ?? '').trim();
+  if (
+    name &&
+    (type === 'city' || type === 'town' || type === 'village' || type === 'locality' || type === 'district')
+  ) {
+    return name;
+  }
+  return name;
+}
+
+function buildLabel(props: Record<string, string | undefined>, city: string, country: string): string {
+  const name = (props['name'] ?? '').trim();
+  const parts: string[] = [];
+  if (name && name.toLowerCase() !== city.toLowerCase()) {
+    parts.push(name);
+  }
+  if (city) {
+    parts.push(city);
+  }
+  if (country) {
+    parts.push(country);
+  }
+  return [...new Set(parts)].join(', ');
+}
+
+function parsePhotonGeoJson(raw: unknown): PhotonLocationSuggestion[] {
+  const doc = raw as {
+    features?: {
+      properties?: Record<string, string | undefined>;
+    }[];
+  };
+  return (doc.features ?? [])
+    .map((f) => {
+      const props = f.properties ?? {};
+      const city = pickCity(props);
+      const country = (props['country'] ?? '').trim();
+      return { label: buildLabel(props, city, country), city, country };
+    })
+    .filter((s) => s.city && s.country);
 }
