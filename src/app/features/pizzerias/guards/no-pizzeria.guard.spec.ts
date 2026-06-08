@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Router, provideRouter, UrlTree, Route, UrlSegment } from '@angular/router';
+import { Router, provideRouter, UrlTree, PartialMatchRouteSnapshot } from '@angular/router';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Observable } from 'rxjs';
@@ -38,7 +38,7 @@ describe('noPizzeriaGuard', () => {
     let result: unknown;
     (
       TestBed.runInInjectionContext(() =>
-        noPizzeriaGuard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+        noPizzeriaGuard({ path: '' }, [], {} as PartialMatchRouteSnapshot),
       ) as Observable<boolean | UrlTree>
     ).subscribe((r) => (result = r));
     httpTesting.expectOne('/api/pizzerias/admin/pizzeria').flush(mockPizzeria);
@@ -50,7 +50,7 @@ describe('noPizzeriaGuard', () => {
     let result: unknown;
     (
       TestBed.runInInjectionContext(() =>
-        noPizzeriaGuard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+        noPizzeriaGuard({ path: '' }, [], {} as PartialMatchRouteSnapshot),
       ) as Observable<boolean | UrlTree>
     ).subscribe((r) => (result = r));
     httpTesting.expectOne('/api/pizzerias/admin/pizzeria').flush('Not found', {
@@ -64,7 +64,7 @@ describe('noPizzeriaGuard', () => {
     let result: unknown;
     (
       TestBed.runInInjectionContext(() =>
-        noPizzeriaGuard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+        noPizzeriaGuard({ path: '' }, [], {} as PartialMatchRouteSnapshot),
       ) as Observable<boolean | UrlTree>
     ).subscribe((r) => (result = r));
     httpTesting.expectOne('/api/pizzerias/admin/pizzeria').flush('error', {

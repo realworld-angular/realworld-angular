@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Router, provideRouter, Route, UrlSegment } from '@angular/router';
+import { Router, provideRouter, PartialMatchRouteSnapshot } from '@angular/router';
 import { signal } from '@angular/core';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { roleGuard } from './role.guard';
@@ -27,7 +27,7 @@ describe('roleGuard', () => {
   it('should return UrlTree to /auth/login when no user is set', () => {
     const guard = roleGuard('CUSTOMER');
     const result = TestBed.runInInjectionContext(() =>
-      guard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+      guard({ path: '' }, [], {} as PartialMatchRouteSnapshot),
     );
     expect(result).toBeInstanceOf(UrlTree);
     expect(router.serializeUrl(result as UrlTree)).toBe('/auth/login');
@@ -37,7 +37,7 @@ describe('roleGuard', () => {
     userSignal.set({ id: '1', email: 'a@b.com', role: 'CUSTOMER', name: 'Test' });
     const guard = roleGuard('CUSTOMER');
     const result = TestBed.runInInjectionContext(() =>
-      guard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+      guard({ path: '' }, [], {} as PartialMatchRouteSnapshot),
     );
     expect(result).toBe(true);
   });
@@ -46,7 +46,7 @@ describe('roleGuard', () => {
     userSignal.set({ id: '1', email: 'a@b.com', role: 'PIZZERIA_ADMIN', name: 'Admin' });
     const guard = roleGuard('CUSTOMER');
     const result = TestBed.runInInjectionContext(() =>
-      guard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+      guard({ path: '' }, [], {} as PartialMatchRouteSnapshot),
     );
     expect(result).toBeInstanceOf(UrlTree);
     expect(router.serializeUrl(result as UrlTree)).toBe('/unauthorized');
@@ -56,7 +56,7 @@ describe('roleGuard', () => {
     userSignal.set({ id: '1', email: 'a@b.com', role: 'PIZZERIA_ADMIN', name: 'Admin' });
     const guard = roleGuard('CUSTOMER', 'PIZZERIA_ADMIN');
     const result = TestBed.runInInjectionContext(() =>
-      guard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+      guard({ path: '' }, [], {} as PartialMatchRouteSnapshot),
     );
     expect(result).toBe(true);
   });

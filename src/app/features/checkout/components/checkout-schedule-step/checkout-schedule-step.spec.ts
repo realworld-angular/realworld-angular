@@ -5,14 +5,14 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CheckoutScheduleStep } from './checkout-schedule-step';
 import { CheckoutWizard } from '../../services/checkout-wizard';
 import { checkoutRoutes } from '../../checkout.routes';
-import { CartStore } from '../../../cart/cart.store';
+import { CartStore, CartItem, CartData } from '../../../cart/cart.store';
 import { OrderApi } from '../../../orders/order-api';
 
 const cartStoreStub = {
   totalPrice: signal(0),
   pizzeria: signal<{ id: string } | null>(null),
-  items: signal([] as any[]),
-  cart: signal<any>(null),
+  items: signal<CartItem[]>([]),
+  cart: signal<CartData | null>(null),
   isEmpty: signal(true),
   clear: vi.fn(),
 };
@@ -50,13 +50,14 @@ describe('CheckoutScheduleStep', () => {
 
   it('should set activeStep back to delivery on goBack', () => {
     wizard.activeStep.set('schedule');
-    (fixture.componentInstance as any).goBack();
+    (el.querySelectorAll('rw-button')[0] as HTMLElement).click();
     expect(wizard.activeStep()).toBe('delivery');
   });
 
   it('should call wizard.validateStep on goNext', async () => {
     const spy = vi.spyOn(wizard, 'validateStep');
-    await (fixture.componentInstance as any).goNext();
+    (el.querySelectorAll('rw-button')[1] as HTMLElement).click();
+    await fixture.whenStable();
     expect(spy).toHaveBeenCalledWith('schedule');
   });
 });

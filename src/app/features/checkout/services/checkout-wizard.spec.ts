@@ -4,14 +4,14 @@ import { signal } from '@angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CheckoutWizard } from './checkout-wizard';
 import { checkoutRoutes } from '../checkout.routes';
-import { CartStore } from '../../cart/cart.store';
+import { CartStore, CartItem, CartData } from '../../cart/cart.store';
 import { OrderApi } from '../../orders/order-api';
 
 const cartStoreStub = {
   totalPrice: signal(0),
   pizzeria: signal<{ id: string } | null>(null),
-  items: signal([] as any[]),
-  cart: signal<any>(null),
+  items: signal<CartItem[]>([]),
+  cart: signal<CartData | null>(null),
   isEmpty: signal(true),
   clear: vi.fn(),
 };

@@ -1,18 +1,18 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router, Routes, UrlTree } from '@angular/router';
+import { PartialMatchRouteSnapshot, provideRouter, Router, Routes, UrlTree } from '@angular/router';
 import { signal } from '@angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { checkoutStepGuard } from './checkout-step.guard';
 import { CheckoutWizard } from '../services/checkout-wizard';
 import { checkoutRoutes } from '../checkout.routes';
-import { CartStore } from '../../cart/cart.store';
+import { CartStore, CartItem, CartData } from '../../cart/cart.store';
 import { OrderApi } from '../../orders/order-api';
 
 const cartStoreStub = {
   totalPrice: signal(0),
   pizzeria: signal<{ id: string } | null>(null),
-  items: signal([] as any[]),
-  cart: signal<any>(null),
+  items: signal<CartItem[]>([]),
+  cart: signal<CartData | null>(null),
   isEmpty: signal(false),
   clear: vi.fn(),
 };
@@ -42,14 +42,14 @@ describe('checkoutStepGuard', () => {
   });
 
   it('should allow delivery when prerequisites are empty', () => {
-    const result = TestBed.runInInjectionContext(() => checkoutStepGuard('delivery')({}, []));
+    const result = TestBed.runInInjectionContext(() => checkoutStepGuard('delivery')({}, [], {} as PartialMatchRouteSnapshot));
     expect(result).toBe(true);
     expect(wizard.activeStep()).toBe('delivery');
   });
 
   it('should redirect schedule to delivery when delivery is invalid', async () => {
     const result = TestBed.runInInjectionContext(() =>
-      checkoutStepGuard('schedule')({}, []),
+      checkoutStepGuard('schedule')({}, [], {} as PartialMatchRouteSnapshot),
     );
     expect(result).toBeInstanceOf(UrlTree);
     expect(router.serializeUrl(result as UrlTree)).toBe('/checkout/delivery');
@@ -61,7 +61,7 @@ describe('checkoutStepGuard', () => {
     TestBed.flushEffects();
 
     const result = TestBed.runInInjectionContext(() =>
-      checkoutStepGuard('schedule')({}, []),
+      checkoutStepGuard('schedule')({}, [], {} as PartialMatchRouteSnapshot),
     );
     expect(result).toBe(true);
     expect(wizard.activeStep()).toBe('schedule');
@@ -69,7 +69,7 @@ describe('checkoutStepGuard', () => {
 
   it('should redirect review to delivery when delivery is invalid', () => {
     const result = TestBed.runInInjectionContext(() =>
-      checkoutStepGuard('review')({}, []),
+      checkoutStepGuard('review')({}, [], {} as PartialMatchRouteSnapshot),
     );
     expect(result).toBeInstanceOf(UrlTree);
     expect(router.serializeUrl(result as UrlTree)).toBe('/checkout/delivery');
@@ -81,7 +81,7 @@ describe('checkoutStepGuard', () => {
     TestBed.flushEffects();
 
     const result = TestBed.runInInjectionContext(() =>
-      checkoutStepGuard('review')({}, []),
+      checkoutStepGuard('review')({}, [], {} as PartialMatchRouteSnapshot),
     );
     expect(result).toBeInstanceOf(UrlTree);
     expect(router.serializeUrl(result as UrlTree)).toBe('/checkout/schedule');

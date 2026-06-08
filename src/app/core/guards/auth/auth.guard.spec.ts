@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Router, provideRouter, Route, UrlSegment } from '@angular/router';
+import { Router, provideRouter, PartialMatchRouteSnapshot } from '@angular/router';
 import { describe, it, expect, beforeEach, vi, type Mocked } from 'vitest';
 import { authGuard, guestGuard } from './auth.guard';
 import { Auth } from '../../services/auth';
@@ -22,7 +22,7 @@ describe('authGuard', () => {
   it('should return true when user is authenticated', () => {
     authStub.isAuthenticated.mockReturnValue(true);
     const result = TestBed.runInInjectionContext(() =>
-      authGuard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+      authGuard({ path: '' }, [], {} as PartialMatchRouteSnapshot),
     );
     expect(result).toBe(true);
   });
@@ -30,7 +30,7 @@ describe('authGuard', () => {
   it('should return a UrlTree to /auth/login when not authenticated', () => {
     authStub.isAuthenticated.mockReturnValue(false);
     const result = TestBed.runInInjectionContext(() =>
-      authGuard({ path: '' } as Route, [] as unknown as UrlSegment[]),
+      authGuard({ path: '' }, [], {} as PartialMatchRouteSnapshot),
     );
     expect(result).toBeInstanceOf(UrlTree);
     expect(router.serializeUrl(result as UrlTree)).toBe('/auth/login');
@@ -49,13 +49,13 @@ describe('guestGuard', () => {
 
   it('should return true when user is not authenticated', () => {
     authStub.isAuthenticated.mockReturnValue(false);
-    const result = TestBed.runInInjectionContext(() => guestGuard({}, []));
+    const result = TestBed.runInInjectionContext(() => guestGuard({}, [], {} as PartialMatchRouteSnapshot));
     expect(result).toBe(true);
   });
 
   it('should return a UrlTree to / when authenticated', () => {
     authStub.isAuthenticated.mockReturnValue(true);
-    const result = TestBed.runInInjectionContext(() => guestGuard({}, []));
+    const result = TestBed.runInInjectionContext(() => guestGuard({}, [], {} as PartialMatchRouteSnapshot));
     expect(result).toBeInstanceOf(UrlTree);
     expect(router.serializeUrl(result as UrlTree)).toBe('/');
   });

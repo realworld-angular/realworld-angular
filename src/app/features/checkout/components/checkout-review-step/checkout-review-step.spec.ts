@@ -76,7 +76,7 @@ describe('CheckoutReviewStep', () => {
 
   it('should set activeStep back to schedule on goBack', () => {
     wizard.activeStep.set('review');
-    (fixture.componentInstance as any).goBack();
+    (el.querySelectorAll('rw-button')[0] as HTMLElement).click();
     expect(wizard.activeStep()).toBe('schedule');
   });
 

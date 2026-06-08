@@ -5,14 +5,14 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CheckoutDeliveryStep } from './checkout-delivery-step';
 import { CheckoutWizard } from '../../services/checkout-wizard';
 import { checkoutRoutes } from '../../checkout.routes';
-import { CartStore } from '../../../cart/cart.store';
+import { CartStore, CartItem, CartData } from '../../../cart/cart.store';
 import { OrderApi } from '../../../orders/order-api';
 
 const cartStoreStub = {
   totalPrice: signal(0),
   pizzeria: signal<{ id: string } | null>(null),
-  items: signal([] as any[]),
-  cart: signal<any>(null),
+  items: signal<CartItem[]>([]),
+  cart: signal<CartData | null>(null),
   isEmpty: signal(true),
   clear: vi.fn(),
 };
@@ -49,7 +49,8 @@ describe('CheckoutDeliveryStep', () => {
   it('should call wizard.validateStep on goNext', async () => {
     const wizard = TestBed.inject(CheckoutWizard);
     const spy = vi.spyOn(wizard, 'validateStep');
-    await (fixture.componentInstance as any).goNext();
+    (el.querySelector('rw-button') as HTMLElement).click();
+    await fixture.whenStable();
     expect(spy).toHaveBeenCalledWith('delivery');
   });
 });
