@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
-import { httpResource } from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
-import { PizzeriaDetail } from '../../models/pizzeria.models';
+import { PizzeriaApi } from '../../services/pizzeria-api';
 import { RoleDirective } from '../../../../shared/directives/role.directive';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { Callout } from '../../../../shared/components/callout/callout';
@@ -25,10 +24,9 @@ import { Callout } from '../../../../shared/components/callout/callout';
 })
 export class AdminPizzeriaDetailsPage {
   private readonly title = inject(Title);
+  private readonly pizzeriaApi = inject(PizzeriaApi);
 
-  protected readonly pizzeriaResource = httpResource<PizzeriaDetail>(
-    () => '/api/pizzerias/admin/pizzeria',
-  );
+  protected readonly pizzeriaResource = this.pizzeriaApi.getMyPizzeriaResource();
 
   public constructor() {
     effect(() => {

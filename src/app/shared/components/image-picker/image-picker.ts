@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
-import { httpResource } from '@angular/common/http';
 import { FormValueControl, ValidationError } from '@angular/forms/signals';
 import { CatalogImageKind, CatalogImageUrlPipe } from '../../pipes/catalog-image-url.pipe';
+import { PizzeriaApi } from '../../../features/pizzerias/services/pizzeria-api';
 import { Spinner } from '../spinner/spinner';
 
 @Component({
@@ -13,6 +13,7 @@ import { Spinner } from '../spinner/spinner';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImagePicker implements FormValueControl<string | null> {
+  private readonly pizzeriaApi = inject(PizzeriaApi);
   public readonly category = input.required<string>();
   public readonly label = input.required<string>();
 
@@ -28,9 +29,7 @@ export class ImagePicker implements FormValueControl<string | null> {
     this.category() === 'pizzeria' ? 'pizzeria' : 'pizza',
   );
 
-  protected readonly filenamesResource = httpResource<string[]>(() =>
-    this.category() === 'pizzeria' ? '/api/pizzerias/images' : '/api/pizzas/images',
-  );
+  protected readonly filenamesResource = this.pizzeriaApi.imagesResource;
 
   protected select(filename: string): void {
     if (this.disabled()) {

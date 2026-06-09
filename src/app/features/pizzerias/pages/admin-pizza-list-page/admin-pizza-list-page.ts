@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { httpResource } from '@angular/common/http';
 import { PizzaApi } from '../../services/pizza-api';
 import { Callout } from '../../../../shared/components/callout/callout';
 import { Pizza } from '../../models/pizza.models';
@@ -23,7 +22,7 @@ export class AdminPizzaListPage {
   private readonly dialog = inject(Dialog);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly pizzasResource = httpResource<Pizza[]>(() => '/api/admin/pizzeria/pizzas');
+  protected readonly pizzasResource = this.api.getPizzasResource();
 
   protected readonly deleteError = signal('');
 

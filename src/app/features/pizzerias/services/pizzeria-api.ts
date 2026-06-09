@@ -1,11 +1,17 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, inject, Signal, ResourceRef } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { PizzeriaDetail } from '../models/pizzeria.models';
+import { Page } from '../../../core/models/pagination.model';
+import { PizzeriaDetail, PizzeriaSummary } from '../models/pizzeria.models';
+import { Pizza } from '../models/pizza.models';
 
 @Injectable({ providedIn: 'root' })
 export class PizzeriaApi {
   private readonly http = inject(HttpClient);
+
+  public readonly imagesResource = httpResource<string[]>(() => '/api/pizzerias/images', {
+    defaultValue: [],
+  });
 
   public getMyPizzeria(): Observable<PizzeriaDetail> {
     return this.http.get<PizzeriaDetail>('/api/pizzerias/admin/pizzeria');
@@ -29,5 +35,45 @@ export class PizzeriaApi {
 
   public deleteMyPizzeria(): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>('/api/pizzerias/admin/pizzeria');
+  }
+
+  public getPizzeriaByIdResource(id: Signal<string>): ResourceRef<PizzeriaDetail | undefined> {
+    return httpResource<PizzeriaDetail>(() => `/api/pizzerias/${id()}`);
+  }
+
+  public getMyPizzeriaResource(): ResourceRef<PizzeriaDetail | undefined> {
+    return httpResource<PizzeriaDetail>(() => '/api/pizzerias/admin/pizzeria');
+  }
+
+  public getPizzeriaListResource(
+    page: Signal<number>,
+    limit: number,
+    search: Signal<string>,
+  ): ResourceRef<Page<PizzeriaSummary> | undefined> {
+    return httpResource<Page<PizzeriaSummary>>(() => ({
+      url: '/api/pizzerias',
+      params: {
+        page: search() ? 1 : page(),
+        limit,
+        ...(search() ? { search: search() } : {}),
+      },
+    }));
+  }
+
+  public getPizzeriaPizzasResource(
+    pizzeriaId: Signal<string>,
+    page: Signal<number>,
+    filterParams: Signal<Record<string, string | number | boolean>>,
+  ): ResourceRef<Page<Pizza> | undefined> {
+    return httpResource<Page<Pizza>>(() => {
+      return {
+        url: `/api/pizzerias/${pizzeriaId()}/pizzas`,
+        params: {
+          page: page(),
+          limit: 8,
+          ...filterParams(),
+        },
+      };
+    });
   }
 }

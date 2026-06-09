@@ -7,12 +7,11 @@ import {
   signal,
 } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { httpResource } from '@angular/common/http';
 import { form, FormField, required, disabled, FormRoot, submit, min } from '@angular/forms/signals';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { PizzaApi } from '../../services/pizza-api';
 import { Callout } from '../../../../shared/components/callout/callout';
-import { Pizza, PizzaOption } from '../../models/pizza.models';
+import { Pizza } from '../../models/pizza.models';
 import { Input } from '../../../../shared/components/input/input';
 import { Button } from '../../../../shared/components/button/button';
 import { ImagePicker } from '../../../../shared/components/image-picker/image-picker';
@@ -51,9 +50,7 @@ export class AdminPizzaFormDialog {
 
   protected readonly isEditMode = this.data !== null;
 
-  protected readonly toppingsResource = httpResource<PizzaOption[]>(() => '/api/options/toppings', {
-    defaultValue: [],
-  });
+  protected readonly toppingsResource = this.api.toppingsResource;
 
   protected readonly model = signal<AdminPizzaFormModel>({
     basePrice: this.data?.basePrice ?? 10,

@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { httpResource } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Callout } from '../../../../shared/components/callout/callout';
-import { Page } from '../../../../core/models/pagination.model';
+import { OrderApi } from '../../order-api';
 import { AdminOrderListItem } from '../../order.models';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
@@ -16,12 +15,13 @@ import { AdminOrderRow } from './admin-order-row/admin-order-row';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminOrderListPage {
-  public readonly ordersResource = httpResource<Page<AdminOrderListItem>>(
-    () => `/api/orders?page=${this.currentPage()}&limit=${this.limit}`,
-  );
+  private readonly orderApi = inject(OrderApi);
 
   protected readonly currentPage = signal(1);
   protected readonly limit = 15;
+
+  public readonly ordersResource =
+    this.orderApi.getOrdersResource<AdminOrderListItem>(this.currentPage, this.limit);
   protected readonly cancelFeedback = signal<{
     variant: 'error' | 'success';
     message: string;

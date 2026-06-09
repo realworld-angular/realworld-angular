@@ -1,11 +1,15 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, ResourceRef, inject } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Pizza } from '../models/pizza.models';
+import { Pizza, PizzaOption } from '../models/pizza.models';
 
 @Injectable({ providedIn: 'root' })
 export class PizzaApi {
   private readonly http = inject(HttpClient);
+
+  public readonly toppingsResource = httpResource<PizzaOption[]>(() => '/api/options/toppings', {
+    defaultValue: [],
+  });
 
   /** Admin: create a pizza in the current admin's pizzeria. */
   public createPizza(data: {
@@ -27,5 +31,11 @@ export class PizzaApi {
   /** Admin: delete a pizza from the current admin's pizzeria. */
   public deletePizza(pizzaId: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`/api/admin/pizzeria/pizzas/${pizzaId}`);
+  }
+
+  public getPizzasResource(): ResourceRef<Pizza[]> {
+    return httpResource<Pizza[]>(() => '/api/admin/pizzeria/pizzas', {
+      defaultValue: [],
+    });
   }
 }

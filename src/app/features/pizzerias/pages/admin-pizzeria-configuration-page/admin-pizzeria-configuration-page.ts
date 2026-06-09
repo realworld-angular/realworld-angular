@@ -8,13 +8,11 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField, form, required, FormRoot } from '@angular/forms/signals';
-import { httpResource } from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
 import { filter, firstValueFrom, switchMap, finalize } from 'rxjs';
 import { Router } from '@angular/router';
 import { PizzeriaApi } from '../../services/pizzeria-api';
 import { Callout } from '../../../../shared/components/callout/callout';
-import { PizzeriaDetail } from '../../models/pizzeria.models';
 import { Button } from '../../../../shared/components/button/button';
 import { ImagePicker } from '../../../../shared/components/image-picker/image-picker';
 import { PhotonLocationField } from '../../../../shared/components/photon-location-field/photon-location-field';
@@ -41,9 +39,7 @@ export class AdminPizzeriaConfigurationPage {
   private readonly dialog = inject(Dialog);
   private readonly title = inject(Title);
 
-  protected readonly pizzeriaResource = httpResource<PizzeriaDetail>(
-    () => '/api/pizzerias/admin/pizzeria',
-  );
+  protected readonly pizzeriaResource = this.pizzeriaApi.getMyPizzeriaResource();
 
   protected readonly isDeleting = signal(false);
   protected readonly submitSuccess = signal(false);

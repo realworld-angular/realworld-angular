@@ -1,12 +1,18 @@
-import { Injectable, WritableSignal, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, ResourceRef, Signal, WritableSignal, inject } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { CouponValidation, Order } from './order.models';
+import { Page } from '../../core/models/pagination.model';
+import { PizzaOption } from '../pizzerias/models/pizza.models';
 import type { Address } from '../../shared/models/address.model';
 
 @Injectable({ providedIn: 'root' })
 export class OrderApi {
   private readonly http = inject(HttpClient);
+
+  public readonly sizesResource = httpResource<PizzaOption[]>(() => '/api/options/sizes', {
+    defaultValue: [],
+  });
 
   public createOrder(data: {
     pizzeriaId: string;
@@ -51,5 +57,12 @@ export class OrderApi {
 
   public deliverOrder(id: string): Observable<Order> {
     return this.http.patch<Order>(`/api/orders/${id}/delivered`, {});
+  }
+
+  public getOrdersResource<T = Order>(
+    page: Signal<number>,
+    limit: number,
+  ): ResourceRef<Page<T> | undefined> {
+    return httpResource<Page<T>>(() => `/api/orders?page=${page()}&limit=${limit}`);
   }
 }

@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DOCUMENT, NgOptimizedImage } from '@angular/common';
-import { httpResource } from '@angular/common/http';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
-import { Page } from '../../../../core/models/pagination.model';
-import { PizzeriaSummary } from '../../models/pizzeria.models';
+import { PizzeriaApi } from '../../services/pizzeria-api';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
@@ -33,6 +31,7 @@ import { Callout } from '../../../../shared/components/callout/callout';
 })
 export class PizzeriaListPage {
   private readonly document = inject(DOCUMENT);
+  private readonly pizzeriaApi = inject(PizzeriaApi);
 
   // Search input
   protected readonly searchInput = signal('');
@@ -50,14 +49,8 @@ export class PizzeriaListPage {
   protected readonly currentPage = signal(1);
   protected readonly limit = 12;
 
-  protected readonly pizzeriasResource = httpResource<Page<PizzeriaSummary>>(() => ({
-    url: '/api/pizzerias',
-    params: {
-      page: this.hasActiveSearch() ? 1 : this.currentPage(),
-      limit: this.limit,
-      ...(this.hasActiveSearch() ? { search: this.debouncedSearch() } : {}),
-    },
-  }));
+  protected readonly pizzeriasResource =
+    this.pizzeriaApi.getPizzeriaListResource(this.currentPage, this.limit, this.debouncedSearch);
 
   protected changePage(page: number): void {
     this.currentPage.set(page);

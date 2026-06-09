@@ -8,10 +8,8 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DecimalPipe, DatePipe } from '@angular/common';
-import { httpResource } from '@angular/common/http';
 import { Auth } from '../../../../core/services/auth';
-import { Page } from '../../../../core/models/pagination.model';
-import { Order } from '../../order.models';
+import { OrderApi } from '../../order-api';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
@@ -38,6 +36,7 @@ import { StatusBadge } from '../../../../shared/components/status-badge/status-b
 })
 export class OrdersListPage {
   private readonly auth = inject(Auth);
+  private readonly orderApi = inject(OrderApi);
   private readonly title = inject(Title);
   private readonly document = inject(DOCUMENT);
 
@@ -46,9 +45,7 @@ export class OrdersListPage {
   );
 
   protected readonly currentPage = signal(1);
-  protected readonly ordersResource = httpResource<Page<Order>>(
-    () => `/api/orders?page=${this.currentPage()}&limit=10`,
-  );
+  protected readonly ordersResource = this.orderApi.getOrdersResource(this.currentPage, 10);
 
   public constructor() {
     effect(() => {

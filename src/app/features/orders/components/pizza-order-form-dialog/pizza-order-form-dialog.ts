@@ -7,11 +7,12 @@ import {
   signal,
 } from '@angular/core';
 import { DecimalPipe, NgOptimizedImage } from '@angular/common';
-import { httpResource } from '@angular/common/http';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { form, FormField, FormRoot, min, required } from '@angular/forms/signals';
 import { CartStore } from '../../../cart/cart.store';
 import { PizzaOption } from '../../../pizzerias/models/pizza.models';
+import { PizzaApi } from '../../../pizzerias/services/pizza-api';
+import { OrderApi } from '../../order-api';
 import { PizzaOrderFormDialogData } from '../../order.models';
 import { Button } from '../../../../shared/components/button/button';
 import { Modal } from '../../../../shared/components/modal/modal';
@@ -47,14 +48,12 @@ interface PizzaOrderFormModel {
 export class PizzaOrderFormDialog {
   private readonly cartStore = inject(CartStore);
   private readonly dialogRef = inject(DialogRef);
+  private readonly pizzaApi = inject(PizzaApi);
+  private readonly orderApi = inject(OrderApi);
   protected readonly data = inject<PizzaOrderFormDialogData>(DIALOG_DATA);
 
-  protected readonly sizesResource = httpResource<PizzaOption[]>(() => '/api/options/sizes', {
-    defaultValue: [],
-  });
-  protected readonly toppingsResource = httpResource<PizzaOption[]>(() => '/api/options/toppings', {
-    defaultValue: [],
-  });
+  protected readonly sizesResource = this.orderApi.sizesResource;
+  protected readonly toppingsResource = this.pizzaApi.toppingsResource;
 
   public readonly defaultToppings = this.data.pizza.toppings
     .map((topping) => topping.label)

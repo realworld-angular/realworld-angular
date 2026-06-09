@@ -11,13 +11,12 @@ import {
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { DecimalPipe, NgOptimizedImage } from '@angular/common';
-import { httpResource } from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
-import { PizzeriaDetail } from '../../models/pizzeria.models';
 import { Pizza } from '../../models/pizza.models';
 import { Page } from '../../../../core/models/pagination.model';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { RoleDirective } from '../../../../shared/directives/role.directive';
+import { PizzeriaApi } from '../../services/pizzeria-api';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 import { PizzaOrderFormDialog } from '../../../orders/components/pizza-order-form-dialog/pizza-order-form-dialog';
 import { PizzaOrderFormDialogData } from '../../../orders/order.models';
@@ -60,6 +59,7 @@ export class PizzeriaDetailsPage {
   private readonly dialog = inject(Dialog);
   private readonly title = inject(Title);
   private readonly router = inject(Router);
+  private readonly pizzeriaApi = inject(PizzeriaApi);
 
   public readonly id = input.required<string>();
   public readonly maxPrice = input<string>();
@@ -67,9 +67,7 @@ export class PizzeriaDetailsPage {
   private readonly showBanner$ = new Subject<void>();
   private readonly dismissBanner$ = new Subject<void>();
 
-  protected readonly pizzeriaResource = httpResource<PizzeriaDetail>(
-    () => `/api/pizzerias/${this.id()}`,
-  );
+  protected readonly pizzeriaResource = this.pizzeriaApi.getPizzeriaByIdResource(this.id);
 
   protected readonly model = signal<FilterFormModel>({
     searchName: '',
@@ -82,7 +80,6 @@ export class PizzeriaDetailsPage {
   });
 
   protected readonly page = signal(1);
-  protected readonly limit = 8;
 
   private readonly filterParams = computed(() => ({
     ...(this.filterForm.searchName().value().trim().length > 0
@@ -93,14 +90,11 @@ export class PizzeriaDetailsPage {
       : {}),
   }));
 
-  protected readonly pizzasResource = httpResource<Page<Pizza>>(() => ({
-    url: `/api/pizzerias/${this.id()}/pizzas`,
-    params: {
-      page: this.page(),
-      limit: this.limit,
-      ...this.filterParams(),
-    },
-  }));
+  protected readonly pizzasResource = this.pizzeriaApi.getPizzeriaPizzasResource(
+    this.id,
+    this.page,
+    this.filterParams
+  );
 
   protected readonly pizzas = linkedSignal<
     Page<Pizza> | undefined,
