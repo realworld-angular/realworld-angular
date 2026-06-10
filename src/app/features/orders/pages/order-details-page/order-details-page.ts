@@ -11,7 +11,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { OrderApi } from '../../order-api';
+import { OrderApi } from '../../services/order-api';
 import { Callout } from '../../../../shared/components/callout/callout';
 import { Order } from '../../order.models';
 import { Spinner } from '../../../../shared/components/spinner/spinner';

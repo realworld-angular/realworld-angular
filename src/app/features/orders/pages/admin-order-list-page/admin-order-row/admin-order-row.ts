@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe, DecimalPipe, NgOptimizedImage } from '@angular/common';
-import { OrderApi } from '../../../order-api';
+import { OrderApi } from '../../../services/order-api';
 import { AdminOrderListItem } from '../../../order.models';
 import { Dialog } from '@angular/cdk/dialog';
 import { filter, switchMap } from 'rxjs/operators';

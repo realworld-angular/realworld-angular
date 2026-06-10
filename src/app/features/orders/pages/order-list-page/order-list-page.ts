@@ -9,7 +9,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { DecimalPipe, DatePipe } from '@angular/common';
 import { Auth } from '../../../../core/services/auth';
-import { OrderApi } from '../../order-api';
+import { OrderApi } from '../../services/order-api';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Callout } from '../../../../shared/components/callout/callout';
-import { OrderApi } from '../../order-api';
+import { OrderApi } from '../../services/order-api';
 import { AdminOrderListItem } from '../../order.models';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
