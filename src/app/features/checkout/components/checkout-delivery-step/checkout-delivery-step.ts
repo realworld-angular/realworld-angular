@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormField } from '@angular/forms/signals';
 import { CheckoutWizard } from '../../services/checkout-wizard';
 import { Input } from '../../../../shared/components/input/input';
