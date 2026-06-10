@@ -54,14 +54,7 @@ describe('AdminPizzeriaFormPage', () => {
       ],
     }).overrideComponent(AdminPizzeriaFormPage, {
       set: {
-        imports: [
-          Button,
-          Callout,
-          MockImagePicker,
-          MockPhotonLocationField,
-          FormRoot,
-          FormField,
-        ],
+        imports: [Button, Callout, MockImagePicker, MockPhotonLocationField, FormRoot, FormField],
       },
     });
     fixture = TestBed.createComponent(AdminPizzeriaFormPage);

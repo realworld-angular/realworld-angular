@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal, inject, DestroyRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  signal,
+  inject,
+  DestroyRef,
+} from '@angular/core';
 
 /** Surface treatment: filled, border, or minimal. */
 export type ButtonVariant = 'plain' | 'outlined' | 'ghost';

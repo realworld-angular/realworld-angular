@@ -30,17 +30,14 @@ export class LoadMore {
 
       const checkNearBottom = (): void => {
         const doc = this.document.documentElement;
-        const nearBottom =
-          win.scrollY + win.innerHeight >= doc.scrollHeight - this.threshold();
+        const nearBottom = win.scrollY + win.innerHeight >= doc.scrollHeight - this.threshold();
         if (nearBottom) {
           this.loadMore.emit();
         }
       };
 
       win.addEventListener('scroll', checkNearBottom, { passive: true });
-      this.destroyRef.onDestroy(() =>
-        win.removeEventListener('scroll', checkNearBottom),
-      );
+      this.destroyRef.onDestroy(() => win.removeEventListener('scroll', checkNearBottom));
 
       const resizeObserver = new ResizeObserver(() => checkNearBottom());
       resizeObserver.observe(this.document.documentElement);

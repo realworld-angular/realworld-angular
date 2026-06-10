@@ -174,7 +174,9 @@ describe('CheckoutWizard', () => {
 
   describe('billing fields effect', () => {
     it('should clear billing fields when useSameAsBilling is enabled', () => {
-      service.checkoutForm.delivery.billingLocation().value.set({ city: 'Milan', country: 'Italy' });
+      service.checkoutForm.delivery
+        .billingLocation()
+        .value.set({ city: 'Milan', country: 'Italy' });
       service.checkoutForm.delivery.billingStreet().value.set('456 Oak Ave');
       TestBed.flushEffects();
 

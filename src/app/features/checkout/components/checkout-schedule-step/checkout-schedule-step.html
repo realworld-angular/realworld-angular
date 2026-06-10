@@ -31,16 +31,8 @@
 
   @if (wizard.checkoutForm.schedule.type().value() === 'scheduled') {
     <div class="schedule-datetime">
-      <rw-input
-        label="Delivery date"
-        type="date"
-        [formField]="wizard.checkoutForm.schedule.date"
-      />
-      <rw-input
-        label="Delivery time"
-        type="time"
-        [formField]="wizard.checkoutForm.schedule.time"
-      />
+      <rw-input label="Delivery date" type="date" [formField]="wizard.checkoutForm.schedule.date" />
+      <rw-input label="Delivery time" type="time" [formField]="wizard.checkoutForm.schedule.time" />
     </div>
   }
 </fieldset>
@@ -56,7 +48,13 @@
   <rw-button type="button" variant="outlined" palette="primary" (click)="goBack()">
     Back
   </rw-button>
-  <rw-button type="button" variant="plain" palette="primary" (click)="goNext()" [isError]="!wizard.checkoutForm.schedule().valid()">
+  <rw-button
+    type="button"
+    variant="plain"
+    palette="primary"
+    (click)="goNext()"
+    [isError]="!wizard.checkoutForm.schedule().valid()"
+  >
     Next
   </rw-button>
 </div>

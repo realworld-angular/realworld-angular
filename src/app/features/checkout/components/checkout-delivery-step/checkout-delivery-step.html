@@ -45,7 +45,13 @@
 </fieldset>
 
 <div class="step-actions">
-  <rw-button type="button" variant="plain" palette="primary" (click)="goNext()" [isError]="!wizard.checkoutForm.delivery().valid()">
+  <rw-button
+    type="button"
+    variant="plain"
+    palette="primary"
+    (click)="goNext()"
+    [isError]="!wizard.checkoutForm.delivery().valid()"
+  >
     Next
   </rw-button>
 </div>

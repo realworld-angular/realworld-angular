@@ -1,7 +1,15 @@
 import { Injectable, signal, computed, effect, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { form, required, maxLength, submit, validateAsync, FieldTree, applyWhenValue } from '@angular/forms/signals';
+import {
+  form,
+  required,
+  maxLength,
+  submit,
+  validateAsync,
+  FieldTree,
+  applyWhenValue,
+} from '@angular/forms/signals';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { CartStore } from '../../cart/cart.store';
 import { OrderApi } from '../../orders/order-api';
@@ -106,32 +114,38 @@ export class CheckoutWizard {
 
       applyWhenValue(
         schema.coupon.code,
-        value => !!value,
-        path => validateAsync(path, {
-          debounce: 300,
-          params: ({ fieldTreeOf }) => ({
-            fieldTreeOf,
-          }),
-          factory: (params) =>
-            rxResource({
-              params,
-              stream: ({ params }) =>
-                this.api.validateCoupon(params.fieldTreeOf(schema.coupon.code)().value(), this.discount),
+        (value) => !!value,
+        (path) =>
+          validateAsync(path, {
+            debounce: 300,
+            params: ({ fieldTreeOf }) => ({
+              fieldTreeOf,
             }),
-          onSuccess: (response: CouponValidation) => {
-            if (!response.valid) {
-              console.error('Invalid coupon code', response);
-              return { kind: 'couponInvalid', message: response.message ?? 'Invalid coupon code' };
-            }
-            return null;
-          },
-          onError: () => {
-            console.error('Could not validate coupon code');
-            return { kind: 'couponError', message: 'Could not validate coupon code' };
-          },
-        })
+            factory: (params) =>
+              rxResource({
+                params,
+                stream: ({ params }) =>
+                  this.api.validateCoupon(
+                    params.fieldTreeOf(schema.coupon.code)().value(),
+                    this.discount,
+                  ),
+              }),
+            onSuccess: (response: CouponValidation) => {
+              if (!response.valid) {
+                console.error('Invalid coupon code', response);
+                return {
+                  kind: 'couponInvalid',
+                  message: response.message ?? 'Invalid coupon code',
+                };
+              }
+              return null;
+            },
+            onError: () => {
+              console.error('Could not validate coupon code');
+              return { kind: 'couponError', message: 'Could not validate coupon code' };
+            },
+          }),
       );
-
     },
     {
       submission: {
@@ -156,9 +170,7 @@ export class CheckoutWizard {
             formValue.schedule.type === 'scheduled' &&
             formValue.schedule.date &&
             formValue.schedule.time
-              ? new Date(
-                  `${formValue.schedule.date}T${formValue.schedule.time}`,
-                ).toISOString()
+              ? new Date(`${formValue.schedule.date}T${formValue.schedule.time}`).toISOString()
               : undefined;
 
           const couponCode =
@@ -218,7 +230,9 @@ export class CheckoutWizard {
     return Math.round(this.cartStore.totalPrice() * pct) / 100;
   });
 
-  readonly totalWithTip = computed(() => this.cartStore.totalPrice() - this.discountAmount() + this.tipAmount());
+  readonly totalWithTip = computed(
+    () => this.cartStore.totalPrice() - this.discountAmount() + this.tipAmount(),
+  );
 
   private readonly nextStep: Record<ValidatableStep, WizardStep> = {
     delivery: 'schedule',
@@ -249,17 +263,14 @@ export class CheckoutWizard {
     return fieldTree().valid();
   }
 
-  async validateStep(
-    step: ValidatableStep,
-  ): Promise<void> {
+  async validateStep(step: ValidatableStep): Promise<void> {
     const success = await this.submitValidatableStep(step);
 
     if (success) {
-
-    this.stepStatus.update((status) => ({ ...status, [step]: 'success' }));
-    const next = this.nextStep[step];
-    this.activeStep.set(next);
-    await this.router.navigate(['/checkout', next]);
+      this.stepStatus.update((status) => ({ ...status, [step]: 'success' }));
+      const next = this.nextStep[step];
+      this.activeStep.set(next);
+      await this.router.navigate(['/checkout', next]);
     }
   }
 

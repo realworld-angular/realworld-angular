@@ -42,7 +42,9 @@ describe('checkoutStepGuard', () => {
   });
 
   it('should allow delivery when prerequisites are empty', () => {
-    const result = TestBed.runInInjectionContext(() => checkoutStepGuard('delivery')({}, [], {} as PartialMatchRouteSnapshot));
+    const result = TestBed.runInInjectionContext(() =>
+      checkoutStepGuard('delivery')({}, [], {} as PartialMatchRouteSnapshot),
+    );
     expect(result).toBe(true);
     expect(wizard.activeStep()).toBe('delivery');
   });
