@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { OrderApi } from './order-api';
-import { Order } from './order.models';
+import { Order } from '../order.models';
 
 const mockOrder: Order = {
   id: 'order1',
