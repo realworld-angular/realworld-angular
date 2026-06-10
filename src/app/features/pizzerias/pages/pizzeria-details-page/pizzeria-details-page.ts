@@ -85,21 +85,16 @@ export class PizzeriaDetailsPage {
     ...(this.filterForm.searchName().value().trim().length > 0
       ? { name: this.filterForm.searchName().value().trim() }
       : {}),
-    ...(this.filterForm.maxPrice().dirty()
-      ? { maxPrice: this.filterForm.maxPrice().value() }
-      : {}),
+    ...(this.filterForm.maxPrice().dirty() ? { maxPrice: this.filterForm.maxPrice().value() } : {}),
   }));
 
   protected readonly pizzasResource = this.pizzeriaApi.getPizzeriaPizzasResource(
     this.id,
     this.page,
-    this.filterParams
+    this.filterParams,
   );
 
-  protected readonly pizzas = linkedSignal<
-    Page<Pizza> | undefined,
-    Pizza[]
-  >({
+  protected readonly pizzas = linkedSignal<Page<Pizza> | undefined, Pizza[]>({
     source: () =>
       this.pizzasResource.error()
         ? { items: [], total: 0, page: 0, limit: 0, totalPages: 0 }
@@ -108,29 +103,23 @@ export class PizzeriaDetailsPage {
       const previousItems = previous?.value || [];
 
       if (data?.items) {
-        if (
-          data.items.length === 0
-        ) {
+        if (data.items.length === 0) {
           return [];
         }
 
-        return this.page() === 1
-          ? data.items
-          : [...previousItems, ...data.items];
+        return this.page() === 1 ? data.items : [...previousItems, ...data.items];
       }
 
       return previousItems;
     },
   });
 
-  protected readonly hasMorePages = computed(
-    () => {
-      if (this.pizzeriaResource.status() === 'resolved') {
-        return this.pizzasResource.hasValue() && this.pizzasResource.value().totalPages > this.page();
-      }
-      return false;
+  protected readonly hasMorePages = computed(() => {
+    if (this.pizzeriaResource.status() === 'resolved') {
+      return this.pizzasResource.hasValue() && this.pizzasResource.value().totalPages > this.page();
     }
-  );
+    return false;
+  });
 
   protected readonly addedToCartBannerVisible = toSignal(
     merge(
@@ -169,7 +158,6 @@ export class PizzeriaDetailsPage {
         replaceUrl: true,
       });
     });
-
   }
 
   protected loadNextPage(): void {

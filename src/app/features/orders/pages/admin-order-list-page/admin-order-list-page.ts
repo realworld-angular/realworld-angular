@@ -20,8 +20,10 @@ export class AdminOrderListPage {
   protected readonly currentPage = signal(1);
   protected readonly limit = 15;
 
-  public readonly ordersResource =
-    this.orderApi.getOrdersResource<AdminOrderListItem>(this.currentPage, this.limit);
+  public readonly ordersResource = this.orderApi.getOrdersResource<AdminOrderListItem>(
+    this.currentPage,
+    this.limit,
+  );
   protected readonly cancelFeedback = signal<{
     variant: 'error' | 'success';
     message: string;

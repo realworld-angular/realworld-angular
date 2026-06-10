@@ -23,13 +23,17 @@ describe('cartNotEmptyGuard', () => {
 
   it('should return true when cart is not empty', () => {
     isEmptySignal.set(false);
-    const result = TestBed.runInInjectionContext(() => cartNotEmptyGuard({}, [], {} as PartialMatchRouteSnapshot));
+    const result = TestBed.runInInjectionContext(() =>
+      cartNotEmptyGuard({}, [], {} as PartialMatchRouteSnapshot),
+    );
     expect(result).toBe(true);
   });
 
   it('should redirect to /pizzerias when cart is empty', () => {
     isEmptySignal.set(true);
-    const result = TestBed.runInInjectionContext(() => cartNotEmptyGuard({}, [], {} as PartialMatchRouteSnapshot));
+    const result = TestBed.runInInjectionContext(() =>
+      cartNotEmptyGuard({}, [], {} as PartialMatchRouteSnapshot),
+    );
     expect(result).toBeInstanceOf(UrlTree);
     expect(router.serializeUrl(result as UrlTree)).toBe('/pizzerias');
   });

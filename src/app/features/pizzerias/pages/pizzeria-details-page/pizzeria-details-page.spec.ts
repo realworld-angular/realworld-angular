@@ -258,22 +258,24 @@ describe('PizzeriaDetailsPage', () => {
     fixture.detectChanges();
 
     expect(el.querySelector('[aria-label="Loading more pizzas"]')).not.toBeNull();
-    httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas')).flush({
-      items: [
-        {
-          id: 'pizza3',
-          name: 'Quattro Formaggi',
-          basePrice: 15.5,
-          image: 'quattro.jpg',
-          createdAt: '2024-01-01',
-          toppings: [],
-        },
-      ],
-      total: 10,
-      page: 2,
-      limit: 8,
-      totalPages: 2,
-    });
+    httpTesting
+      .expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'))
+      .flush({
+        items: [
+          {
+            id: 'pizza3',
+            name: 'Quattro Formaggi',
+            basePrice: 15.5,
+            image: 'quattro.jpg',
+            createdAt: '2024-01-01',
+            toppings: [],
+          },
+        ],
+        total: 10,
+        page: 2,
+        limit: 8,
+        totalPages: 2,
+      });
   });
 
   it('should show error state when pizzeria request fails', async () => {

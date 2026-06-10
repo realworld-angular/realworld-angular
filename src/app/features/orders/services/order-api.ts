@@ -32,23 +32,26 @@ export class OrderApi {
     return this.http.post<Order>('/api/orders', data);
   }
 
-  public validateCoupon(code: string, discount: WritableSignal<number>): Observable<CouponValidation> {
-    return this.http.get<CouponValidation>(
-      `/api/coupons/validate/${encodeURIComponent(code)}`,
-    ).pipe(
-      tap({
-        next: (response) => {
-          if (!response.valid) {
+  public validateCoupon(
+    code: string,
+    discount: WritableSignal<number>,
+  ): Observable<CouponValidation> {
+    return this.http
+      .get<CouponValidation>(`/api/coupons/validate/${encodeURIComponent(code)}`)
+      .pipe(
+        tap({
+          next: (response) => {
+            if (!response.valid) {
+              discount.set(0);
+            } else {
+              discount.set(response.discountPercent);
+            }
+          },
+          error: () => {
             discount.set(0);
-          } else {
-            discount.set(response.discountPercent);
-          }
-        },
-        error: () => {
-          discount.set(0);
-        },
-      })
-    );
+          },
+        }),
+      );
   }
 
   public cancelOrder(id: string): Observable<Order> {
