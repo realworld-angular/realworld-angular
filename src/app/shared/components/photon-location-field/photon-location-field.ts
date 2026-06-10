@@ -2,15 +2,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
+  effect, injectAsync,
   input,
   model,
   signal,
 } from '@angular/core';
-import { httpResource } from '@angular/common/http';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { rxResource, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { debounceTime, distinctUntilChanged, from, map, of } from 'rxjs';
 import { FormValueControl, ValidationError, WithOptionalFieldTree } from '@angular/forms/signals';
+import { PhotonQuery } from '../../../core/models/photon-query.model';
+import { switchMap } from 'rxjs/operators';
 
 export interface LocationValue {
   city: string;
@@ -51,6 +52,9 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
   protected readonly panelOpen = signal(false);
   protected readonly activeIndex = signal(-1);
 
+  private readonly photonApiService = injectAsync(() =>
+    import('../../../core/services/photon-api.service').then((m) => m.PhotonApiService),
+  );
   private readonly searchInput = signal('');
 
   private readonly debouncedSearch = toSignal(
@@ -62,20 +66,23 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
     { initialValue: '' },
   );
 
-  protected readonly suggestionsResource = httpResource<PhotonLocationSuggestion[]>(
-    () => {
+  protected readonly suggestionsResource = rxResource<PhotonLocationSuggestion[], PhotonQuery | undefined>({
+    params: () => {
       const query = this.debouncedSearch();
       if (query.length < 2) return undefined;
-      return {
-        url: 'https://photon.komoot.io/api/',
-        params: { q: query, lang: 'en', limit: '10' },
-      };
+      return { q: query, lang: 'en', limit: 10 };
     },
-    {
-      defaultValue: [],
-      parse: parsePhotonGeoJson,
+    stream: ({ params }) => {
+      if (!params) {
+        return of([]);
+      }
+
+      return from(this.photonApiService()).pipe(
+        switchMap((service) => service.search(params)),
+      );
     },
-  );
+    defaultValue: [],
+  })
 
   protected readonly isLoading = computed(() => {
     return this.searchInput().trim().length >= 2 && this.suggestionsResource.isLoading();
@@ -200,59 +207,4 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
 
 function formatLocationLabel(location: LocationValue): string {
   return `${location.city}, ${location.country}`;
-}
-
-function pickCity(props: Record<string, string | undefined>): string {
-  const fromAdmin = (
-    props['city'] ??
-    props['town'] ??
-    props['village'] ??
-    props['locality'] ??
-    props['district'] ??
-    props['county'] ??
-    ''
-  ).trim();
-  if (fromAdmin) {
-    return fromAdmin;
-  }
-  const type = (props['type'] ?? '').toLowerCase();
-  const name = (props['name'] ?? '').trim();
-  if (
-    name &&
-    (type === 'city' || type === 'town' || type === 'village' || type === 'locality' || type === 'district')
-  ) {
-    return name;
-  }
-  return name;
-}
-
-function buildLabel(props: Record<string, string | undefined>, city: string, country: string): string {
-  const name = (props['name'] ?? '').trim();
-  const parts: string[] = [];
-  if (name && name.toLowerCase() !== city.toLowerCase()) {
-    parts.push(name);
-  }
-  if (city) {
-    parts.push(city);
-  }
-  if (country) {
-    parts.push(country);
-  }
-  return [...new Set(parts)].join(', ');
-}
-
-function parsePhotonGeoJson(raw: unknown): PhotonLocationSuggestion[] {
-  const doc = raw as {
-    features?: {
-      properties?: Record<string, string | undefined>;
-    }[];
-  };
-  return (doc.features ?? [])
-    .map((f) => {
-      const props = f.properties ?? {};
-      const city = pickCity(props);
-      const country = (props['country'] ?? '').trim();
-      return { label: buildLabel(props, city, country), city, country };
-    })
-    .filter((s) => s.city && s.country);
 }
