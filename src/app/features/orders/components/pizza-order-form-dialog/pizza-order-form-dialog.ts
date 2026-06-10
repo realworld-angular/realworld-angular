@@ -12,7 +12,7 @@ import { form, FormField, FormRoot, min, required } from '@angular/forms/signals
 import { CartStore } from '../../../cart/cart.store';
 import { PizzaOption } from '../../../pizzerias/models/pizza.models';
 import { PizzaApi } from '../../../pizzerias/services/pizza-api';
-import { OrderApi } from '../../order-api';
+import { OrderApi } from '../../services/order-api';
 import { PizzaOrderFormDialogData } from '../../order.models';
 import { Button } from '../../../../shared/components/button/button';
 import { Modal } from '../../../../shared/components/modal/modal';

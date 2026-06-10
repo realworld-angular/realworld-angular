@@ -1,13 +1,13 @@
-import { Injectable, signal, computed, effect, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
-import { form, required, maxLength, submit, validateAsync, FieldTree, applyWhenValue } from '@angular/forms/signals';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { CartStore } from '../../cart/cart.store';
-import { OrderApi } from '../../orders/order-api';
-import type { LocationValue } from '../../../shared/components/photon-location-field/photon-location-field';
-import type { Address } from '../../../shared/models/address.model';
-import { CouponValidation } from '../../orders/order.models';
+import {Injectable, signal, computed, effect, inject, Service} from '@angular/core';
+import {Router} from '@angular/router';
+import {firstValueFrom} from 'rxjs';
+import {form, required, maxLength, submit, validateAsync, FieldTree, applyWhenValue} from '@angular/forms/signals';
+import {rxResource} from '@angular/core/rxjs-interop';
+import {CartStore} from '../../cart/cart.store';
+import {OrderApi} from '../../orders/services/order-api';
+import type {LocationValue} from '../../../shared/components/photon-location-field/photon-location-field';
+import type {Address} from '../../../shared/models/address.model';
+import {CouponValidation} from '../../orders/order.models';
 
 export type WizardStep = 'delivery' | 'schedule' | 'review';
 
@@ -36,7 +36,7 @@ export interface CheckoutForm {
   };
 }
 
-@Injectable()
+@Service({autoProvided: false})
 export class CheckoutWizard {
   private readonly cartStore = inject(CartStore);
   private readonly api = inject(OrderApi);
@@ -80,28 +80,28 @@ export class CheckoutWizard {
   readonly checkoutForm = form(
     this.model,
     (schema) => {
-      required(schema.delivery.street, { message: 'Street address is required' });
-      maxLength(schema.delivery.street, 250, { message: 'Max 250 characters' });
-      required(schema.delivery.location, { message: 'Choose a location from the list' });
-      maxLength(schema.notes, 300, { message: 'Max 300 characters' });
+      required(schema.delivery.street, {message: 'Street address is required'});
+      maxLength(schema.delivery.street, 250, {message: 'Max 250 characters'});
+      required(schema.delivery.location, {message: 'Choose a location from the list'});
+      maxLength(schema.notes, 300, {message: 'Max 300 characters'});
 
       required(schema.delivery.billingStreet, {
         message: 'Street address is required',
-        when: ({ valueOf }) => !valueOf(schema.delivery.useSameAsBilling),
+        when: ({valueOf}) => !valueOf(schema.delivery.useSameAsBilling),
       });
-      maxLength(schema.delivery.billingStreet, 250, { message: 'Max 250 characters' });
+      maxLength(schema.delivery.billingStreet, 250, {message: 'Max 250 characters'});
       required(schema.delivery.billingLocation, {
         message: 'Choose a location from the list',
-        when: ({ valueOf }) => !valueOf(schema.delivery.useSameAsBilling),
+        when: ({valueOf}) => !valueOf(schema.delivery.useSameAsBilling),
       });
 
       required(schema.schedule.date, {
         message: 'Choose a delivery date',
-        when: ({ valueOf }) => valueOf(schema.schedule.type) === 'scheduled',
+        when: ({valueOf}) => valueOf(schema.schedule.type) === 'scheduled',
       });
       required(schema.schedule.time, {
         message: 'Choose a delivery time',
-        when: ({ valueOf }) => valueOf(schema.schedule.type) === 'scheduled',
+        when: ({valueOf}) => valueOf(schema.schedule.type) === 'scheduled',
       });
 
       applyWhenValue(
@@ -109,25 +109,25 @@ export class CheckoutWizard {
         value => !!value,
         path => validateAsync(path, {
           debounce: 300,
-          params: ({ fieldTreeOf }) => ({
+          params: ({fieldTreeOf}) => ({
             fieldTreeOf,
           }),
           factory: (params) =>
             rxResource({
               params,
-              stream: ({ params }) =>
+              stream: ({params}) =>
                 this.api.validateCoupon(params.fieldTreeOf(schema.coupon.code)().value(), this.discount),
             }),
           onSuccess: (response: CouponValidation) => {
             if (!response.valid) {
               console.error('Invalid coupon code', response);
-              return { kind: 'couponInvalid', message: response.message ?? 'Invalid coupon code' };
+              return {kind: 'couponInvalid', message: response.message ?? 'Invalid coupon code'};
             }
             return null;
           },
           onError: () => {
             console.error('Could not validate coupon code');
-            return { kind: 'couponError', message: 'Could not validate coupon code' };
+            return {kind: 'couponError', message: 'Could not validate coupon code'};
           },
         })
       );
@@ -145,10 +145,10 @@ export class CheckoutWizard {
           };
           const billing: Address | undefined = !formValue.delivery.useSameAsBilling
             ? {
-                street: formValue.delivery.billingStreet.trim(),
-                city: formValue.delivery.billingLocation!.city.trim(),
-                country: formValue.delivery.billingLocation!.country.trim(),
-              }
+              street: formValue.delivery.billingStreet.trim(),
+              city: formValue.delivery.billingLocation!.city.trim(),
+              country: formValue.delivery.billingLocation!.country.trim(),
+            }
             : undefined;
 
           const tipAmount = this.tipAmount();
@@ -157,8 +157,8 @@ export class CheckoutWizard {
             formValue.schedule.date &&
             formValue.schedule.time
               ? new Date(
-                  `${formValue.schedule.date}T${formValue.schedule.time}`,
-                ).toISOString()
+                `${formValue.schedule.date}T${formValue.schedule.time}`,
+              ).toISOString()
               : undefined;
 
           const couponCode =
@@ -167,11 +167,11 @@ export class CheckoutWizard {
           const payload = {
             pizzeriaId: this.cartStore.pizzeria()!.id,
             deliveryAddress: delivery,
-            ...(billing ? { billingAddress: billing } : {}),
+            ...(billing ? {billingAddress: billing} : {}),
             notes: formValue.notes?.trim() || undefined,
             tipAmount: tipAmount > 0 ? tipAmount : undefined,
             scheduledAt,
-            ...(couponCode ? { couponCode } : {}),
+            ...(couponCode ? {couponCode} : {}),
             items: this.cartStore.items().map((item) => ({
               pizzaId: item.pizzaId,
               quantity: item.quantity,
@@ -186,7 +186,7 @@ export class CheckoutWizard {
             this.submitted.set(true);
             void this.router.navigate(['/orders', order.id]);
           } catch {
-            return { kind: 'serverError', message: 'Order failed. Please try again.' };
+            return {kind: 'serverError', message: 'Order failed. Please try again.'};
           }
           return null;
         },
@@ -233,7 +233,7 @@ export class CheckoutWizard {
         if (current.delivery.billingLocation !== null || current.delivery.billingStreet !== '') {
           this.model.update((m) => ({
             ...m,
-            delivery: { ...m.delivery, billingLocation: null, billingStreet: '' },
+            delivery: {...m.delivery, billingLocation: null, billingStreet: ''},
           }));
         }
       }
@@ -256,10 +256,10 @@ export class CheckoutWizard {
 
     if (success) {
 
-    this.stepStatus.update((status) => ({ ...status, [step]: 'success' }));
-    const next = this.nextStep[step];
-    this.activeStep.set(next);
-    await this.router.navigate(['/checkout', next]);
+      this.stepStatus.update((status) => ({...status, [step]: 'success'}));
+      const next = this.nextStep[step];
+      this.activeStep.set(next);
+      await this.router.navigate(['/checkout', next]);
     }
   }
 

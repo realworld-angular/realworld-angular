@@ -1,12 +1,12 @@
-import { Injectable, ResourceRef, Signal, WritableSignal, inject } from '@angular/core';
-import { HttpClient, httpResource } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
-import { CouponValidation, Order } from './order.models';
-import { Page } from '../../core/models/pagination.model';
-import { PizzaOption } from '../pizzerias/models/pizza.models';
-import type { Address } from '../../shared/models/address.model';
+import {ResourceRef, Signal, WritableSignal, inject, Service} from '@angular/core';
+import {HttpClient, httpResource} from '@angular/common/http';
+import {Observable, tap} from 'rxjs';
+import {CouponValidation, Order} from '../order.models';
+import {Page} from '../../../core/models/pagination.model';
+import {PizzaOption} from '../../pizzerias/models/pizza.models';
+import type {Address} from '../../../shared/models/address.model';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class OrderApi {
   private readonly http = inject(HttpClient);
 

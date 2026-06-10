@@ -1,9 +1,9 @@
-import { Injectable, ResourceRef, inject } from '@angular/core';
-import { HttpClient, httpResource } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Pizza, PizzaOption } from '../models/pizza.models';
+import {ResourceRef, inject, Service} from '@angular/core';
+import {HttpClient, httpResource} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {Pizza, PizzaOption} from '../models/pizza.models';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class PizzaApi {
   private readonly http = inject(HttpClient);
 
