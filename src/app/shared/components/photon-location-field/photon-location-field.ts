@@ -65,7 +65,10 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
     { initialValue: '' },
   );
 
-  protected readonly suggestionsResource = rxResource<PhotonLocationSuggestion[], PhotonQuery | undefined>({
+  protected readonly suggestionsResource = rxResource<
+    PhotonLocationSuggestion[],
+    PhotonQuery | undefined
+  >({
     params: () => {
       const query = this.debouncedSearch();
       if (query.length < 2) return undefined;
@@ -76,12 +79,10 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
         return of([]);
       }
 
-      return from(this.photonApiService()).pipe(
-        switchMap((service) => service.search(params)),
-      );
+      return from(this.photonApiService()).pipe(switchMap((service) => service.search(params)));
     },
     defaultValue: [],
-  })
+  });
 
   protected readonly isLoading = computed(() => {
     return this.searchInput().trim().length >= 2 && this.suggestionsResource.isLoading();
