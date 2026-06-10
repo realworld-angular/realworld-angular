@@ -6,7 +6,7 @@ import { CheckoutDeliveryStep } from './checkout-delivery-step';
 import { CheckoutWizard } from '../../services/checkout-wizard';
 import { checkoutRoutes } from '../../checkout.routes';
 import { CartStore, CartItem, CartData } from '../../../cart/cart.store';
-import { OrderApi } from '../../../orders/order-api';
+import { OrderApi } from '../../../orders/services/order-api';
 
 const cartStoreStub = {
   totalPrice: signal(0),
