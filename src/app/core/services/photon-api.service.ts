@@ -13,13 +13,15 @@ export class PhotonApiService {
   public readonly user = signal<User | null>(null);
 
   public search(params: PhotonQuery): Observable<PhotonLocationSuggestion[]> {
-    return this.http.get<PhotonLocationSuggestion[]>(this.baseUrl + '/api', {
-      params: {
-        q: params.q,
-        lang: params.lang,
-        limit: params.limit
-      }
-    }).pipe(map(parsePhotonGeoJson));
+    return this.http
+      .get<PhotonLocationSuggestion[]>(this.baseUrl + '/api', {
+        params: {
+          q: params.q,
+          lang: params.lang,
+          limit: params.limit,
+        },
+      })
+      .pipe(map(parsePhotonGeoJson));
   }
 }
 
@@ -56,14 +58,22 @@ function pickCity(props: Record<string, string | undefined>): string {
   const name = (props['name'] ?? '').trim();
   if (
     name &&
-    (type === 'city' || type === 'town' || type === 'village' || type === 'locality' || type === 'district')
+    (type === 'city' ||
+      type === 'town' ||
+      type === 'village' ||
+      type === 'locality' ||
+      type === 'district')
   ) {
     return name;
   }
   return name;
 }
 
-function buildLabel(props: Record<string, string | undefined>, city: string, country: string): string {
+function buildLabel(
+  props: Record<string, string | undefined>,
+  city: string,
+  country: string,
+): string {
   const name = (props['name'] ?? '').trim();
   const parts: string[] = [];
   if (name && name.toLowerCase() !== city.toLowerCase()) {
