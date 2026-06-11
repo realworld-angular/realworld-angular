@@ -13,6 +13,7 @@ import { debounceTime, distinctUntilChanged, from, map, of } from 'rxjs';
 import { FormValueControl, ValidationError, WithOptionalFieldTree } from '@angular/forms/signals';
 import { PhotonQuery } from '../../../core/models/photon-query.model';
 import { switchMap } from 'rxjs/operators';
+import { PhotonApiService } from '../../../core/services/photon-api.service';
 
 export interface LocationValue {
   city: string;
@@ -32,8 +33,13 @@ let nextFieldId = 0;
   templateUrl: './photon-location-field.html',
   styleUrl: './photon-location-field.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [PhotonApiService]
 })
 export class PhotonLocationField implements FormValueControl<LocationValue | null> {
+  private readonly photonApiService = injectAsync(() =>
+    import('../../../core/services/photon-api.service').then((m) => m.PhotonApiService),
+  );
+
   private readonly fieldId = `rw-photon-location-${++nextFieldId}`;
 
   // --- FormValueControl ---
@@ -53,9 +59,6 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
   protected readonly panelOpen = signal(false);
   protected readonly activeIndex = signal(-1);
 
-  private readonly photonApiService = injectAsync(() =>
-    import('../../../core/services/photon-api.service').then((m) => m.PhotonApiService),
-  );
   private readonly searchInput = signal('');
 
   private readonly debouncedSearch = toSignal(
