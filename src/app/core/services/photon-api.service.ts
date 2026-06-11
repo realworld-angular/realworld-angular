@@ -5,7 +5,7 @@ import { User } from '../models/user.model';
 import { PhotonLocationSuggestion } from '../../shared/components/photon-location-field/photon-location-field';
 import { PhotonQuery } from '../models/photon-query.model';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class PhotonApiService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = 'https://photon.komoot.io';
