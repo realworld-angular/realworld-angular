@@ -83,6 +83,7 @@ describe('CartStore', () => {
 
     it('should trigger a POST to /api/orders/cart after adding item', () => {
       store.addItem('pizza1', 1, 's1', [], 'p1');
+      void store.cart();
       TestBed.flushEffects();
       const req = httpTesting.expectOne((r) => r.url.includes('/api/orders/cart'));
       expect(req.request.method).toBe('POST');
@@ -176,6 +177,7 @@ describe('CartStore', () => {
   describe('cart value from httpResource', () => {
     it('should post cart body with correct pizzeriaId and items', () => {
       store.addItem('pizza1', 2, 's1', ['t1'], 'p1');
+      void store.cart();
       TestBed.flushEffects();
       const req = httpTesting.expectOne((r) => r.url.includes('/api/orders/cart'));
       expect(req.request.body.pizzeriaId).toBe('p1');
