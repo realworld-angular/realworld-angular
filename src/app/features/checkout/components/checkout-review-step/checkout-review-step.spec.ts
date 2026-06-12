@@ -95,7 +95,7 @@ describe('CheckoutReviewStep', () => {
 
   it('should render the coupon code input', () => {
     expect(el.textContent).toContain('Coupon code');
-    expect(el.querySelector('input[placeholder="Enter coupon code"]')).toBeTruthy();
+    expect(el.querySelector('input[aria-describedby="coupon-hint"]')).toBeTruthy();
   });
 
   it('should show the default coupon hint when idle', () => {

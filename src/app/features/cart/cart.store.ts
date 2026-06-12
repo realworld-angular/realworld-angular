@@ -1,4 +1,4 @@
-import {signal, computed, Service, ResourceRef} from '@angular/core';
+import {signal, computed, Service} from '@angular/core';
 import {httpResource} from '@angular/common/http';
 
 export interface CartPizzeria {
@@ -46,8 +46,7 @@ export class CartStore {
   public readonly pizzeria = signal<CartPizzeria | null>(null);
   public readonly items = signal<CartItem[]>([]);
 
-  public getCartResource(): ResourceRef<CartData | undefined> {
-    return httpResource<CartData | undefined>(() => {
+  private readonly cartResource = httpResource<CartData | undefined>(() => {
     const currentItems = this.items();
     const currentPizzeria = this.pizzeria();
 
@@ -69,10 +68,9 @@ export class CartStore {
       },
     };
   });
-  }
 
-  public readonly cart = computed<CartData | null>(() => this.getCartResource().value() ?? null);
-  public readonly isLoading = computed<boolean>(() => this.getCartResource().isLoading());
+  public readonly cart = computed<CartData | null>(() => this.cartResource.value() ?? null);
+  public readonly isLoading = computed<boolean>(() => this.cartResource.isLoading());
 
   public readonly totalPrice = computed<number>(() => this.cart()?.total ?? 0);
 

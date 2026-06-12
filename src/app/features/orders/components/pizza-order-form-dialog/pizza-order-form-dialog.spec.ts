@@ -6,6 +6,7 @@ import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { PizzaOrderFormDialog } from './pizza-order-form-dialog';
 import { PizzaOrderFormDialogData } from '../../order.models';
 import { Pizza } from '../../../pizzerias/models/pizza.models';
+import { CartStore } from '../../../cart/cart.store';
 import { CatalogImageUrlPipe } from '../../../../shared/pipes/catalog-image-url.pipe';
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { Button } from '../../../../shared/components/button/button';
@@ -31,6 +32,12 @@ const dialogData: PizzaOrderFormDialogData = {
 
 const mockSize = { id: 's1', label: 'Medium', price: 1.0, sortOrder: 1 };
 
+const cartStoreStub = {
+  hasItemsForOtherPizzeria: vi.fn().mockReturnValue(false),
+  addItem: vi.fn(),
+  clear: vi.fn(),
+};
+
 describe('PizzaOrderFormDialog', () => {
   let fixture: ComponentFixture<PizzaOrderFormDialog>;
   let el: HTMLElement;
@@ -40,11 +47,15 @@ describe('PizzaOrderFormDialog', () => {
   beforeEach(() => {
     TestBed.resetTestingModule();
     closeFn = vi.fn();
+    cartStoreStub.addItem.mockClear();
+    cartStoreStub.clear.mockClear();
+    cartStoreStub.hasItemsForOtherPizzeria.mockReturnValue(false);
     TestBed.configureTestingModule({
       providers: [
         provideHttpClientTesting(),
         { provide: DialogRef, useValue: { close: closeFn } },
         { provide: DIALOG_DATA, useValue: dialogData },
+        { provide: CartStore, useValue: cartStoreStub },
       ],
     }).overrideComponent(PizzaOrderFormDialog, {
       set: {
@@ -129,19 +140,19 @@ describe('PizzaOrderFormDialog', () => {
   it('should close dialog on form submission', async () => {
     httpTesting.expectOne('/api/options/sizes').flush([mockSize]);
     httpTesting.expectOne('/api/options/toppings').flush([]);
-    await fixture.whenStable();
+    fixture.detectChanges();
     TestBed.flushEffects();
 
-    const sizeDe = fixture.debugElement.query(
-      (de) => de.componentInstance instanceof SizeOptionField,
-    );
-    sizeDe.componentInstance.value.set({ id: 's1', label: 'Medium', price: 1 });
+    fixture.componentInstance['orderForm'].selectedSize().value.set(mockSize);
+    fixture.detectChanges();
     TestBed.flushEffects();
 
     el.querySelector<HTMLButtonElement>('button[type="submit"]')!.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
     TestBed.flushEffects();
-    httpTesting.expectOne('/api/orders/cart').flush({});
 
+    expect(cartStoreStub.addItem).toHaveBeenCalledWith('pizza1', 1, 's1', [], 'p1');
     expect(closeFn).toHaveBeenCalled();
   });
 });

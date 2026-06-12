@@ -1,10 +1,17 @@
+import { Component } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
+import { Dialog } from '@angular/cdk/dialog';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CheckoutPage } from './checkout-page';
 import { CartStore, CartData, CartItem } from '../../../cart/cart.store';
+import { CheckoutWizard } from '../../services/checkout-wizard';
+import { OrderApi } from '../../../orders/services/order-api';
+
+@Component({ template: '' })
+class CheckoutRouteStub {}
 
 const mockCartData: CartData = {
   pizzeria: { id: 'p1', name: 'Roma', image: 'roma.jpg' },
@@ -21,6 +28,7 @@ const cartStoreStub = {
   cart: cartDataSignal,
   isEmpty: isEmptySignal,
   isLoading: signal(false),
+  totalPrice: signal(0),
   pizzeria: pizzeriaSignal,
   items: itemsSignal,
   clear: vi.fn(),
@@ -37,13 +45,21 @@ describe('CheckoutPage', () => {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClientTesting(),
-        provideRouter([]),
+        provideRouter([
+          { path: 'checkout/delivery', component: CheckoutRouteStub },
+          { path: 'checkout/schedule', component: CheckoutRouteStub },
+          { path: 'checkout/review', component: CheckoutRouteStub },
+        ]),
+        CheckoutWizard,
         { provide: CartStore, useValue: cartStoreStub },
+        { provide: OrderApi, useValue: { createOrder: vi.fn() } },
+        { provide: Dialog, useValue: { open: vi.fn() } },
       ],
     }).overrideComponent(CheckoutPage, { set: { schemas: [NO_ERRORS_SCHEMA] } });
 
     fixture = TestBed.createComponent(CheckoutPage);
     el = fixture.nativeElement;
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 
@@ -65,12 +81,14 @@ describe('CheckoutPage', () => {
 
   it('should show empty state when cart is empty', async () => {
     isEmptySignal.set(true);
+    fixture.detectChanges();
     await fixture.whenStable();
     expect(el.querySelector('rw-empty-state')).not.toBeNull();
   });
 
   it('should hide progress steps when cart is empty', async () => {
     isEmptySignal.set(true);
+    fixture.detectChanges();
     await fixture.whenStable();
     expect(el.querySelector('.checkout-steps')).toBeNull();
   });
