@@ -52,8 +52,8 @@ export class PizzaOrderFormDialog {
   private readonly orderApi = inject(OrderApi);
   protected readonly data = inject<PizzaOrderFormDialogData>(DIALOG_DATA);
 
-  protected readonly sizesResource = this.orderApi.sizesResource;
-  protected readonly toppingsResource = this.pizzaApi.toppingsResource;
+  protected readonly sizesResource = this.orderApi.getSizesResource();
+  protected readonly toppingsResource = this.pizzaApi.getToppingsResource();
 
   public readonly defaultToppings = this.data.pizza.toppings
     .map((topping) => topping.label)

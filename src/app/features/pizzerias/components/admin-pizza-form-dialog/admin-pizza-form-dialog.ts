@@ -50,7 +50,7 @@ export class AdminPizzaFormDialog {
 
   protected readonly isEditMode = this.data !== null;
 
-  protected readonly toppingsResource = this.api.toppingsResource;
+  protected readonly toppingsResource = this.api.getToppingsResource();
 
   protected readonly model = signal<AdminPizzaFormModel>({
     basePrice: this.data?.basePrice ?? 10,
