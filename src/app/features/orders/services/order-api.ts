@@ -10,9 +10,11 @@ import type {Address} from '../../../shared/models/address.model';
 export class OrderApi {
   private readonly http = inject(HttpClient);
 
-  public readonly sizesResource = httpResource<PizzaOption[]>(() => '/api/options/sizes', {
-    defaultValue: [],
-  });
+  public getSizesResource(): ResourceRef<PizzaOption[]> {
+    return httpResource<PizzaOption[]>(() => '/api/options/sizes', {
+      defaultValue: [],
+    });
+  }
 
   public createOrder(data: {
     pizzeriaId: string;

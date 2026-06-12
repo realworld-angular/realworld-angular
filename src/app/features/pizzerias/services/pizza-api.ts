@@ -7,9 +7,11 @@ import {Pizza, PizzaOption} from '../models/pizza.models';
 export class PizzaApi {
   private readonly http = inject(HttpClient);
 
-  public readonly toppingsResource = httpResource<PizzaOption[]>(() => '/api/options/toppings', {
-    defaultValue: [],
-  });
+  public getToppingsResource(): ResourceRef<PizzaOption[]> {
+    return httpResource<PizzaOption[]>(() => '/api/options/toppings', {
+      defaultValue: [],
+    });
+  }
 
   /** Admin: create a pizza in the current admin's pizzeria. */
   public createPizza(data: {
