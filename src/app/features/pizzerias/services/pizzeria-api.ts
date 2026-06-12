@@ -1,9 +1,9 @@
-import {inject, Signal, ResourceRef, Service} from '@angular/core';
-import {HttpClient, httpResource} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Page} from '../../../core/models/pagination.model';
-import {PizzeriaDetail, PizzeriaSummary} from '../models/pizzeria.models';
-import {Pizza} from '../models/pizza.models';
+import { inject, Signal, ResourceRef, Service } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Page } from '../../../core/models/pagination.model';
+import { PizzeriaDetail, PizzeriaSummary } from '../models/pizzeria.models';
+import { Pizza } from '../models/pizza.models';
 
 @Service()
 export class PizzeriaApi {
@@ -57,7 +57,7 @@ export class PizzeriaApi {
       params: {
         page: search() ? 1 : page(),
         limit,
-        ...(search() ? {search: search()} : {}),
+        ...(search() ? { search: search() } : {}),
       },
     }));
   }

@@ -49,13 +49,17 @@ describe('guestGuard', () => {
 
   it('should return true when user is not authenticated', () => {
     authStub.isAuthenticated.mockReturnValue(false);
-    const result = TestBed.runInInjectionContext(() => guestGuard({}, [], {} as PartialMatchRouteSnapshot));
+    const result = TestBed.runInInjectionContext(() =>
+      guestGuard({}, [], {} as PartialMatchRouteSnapshot),
+    );
     expect(result).toBe(true);
   });
 
   it('should return a UrlTree to / when authenticated', () => {
     authStub.isAuthenticated.mockReturnValue(true);
-    const result = TestBed.runInInjectionContext(() => guestGuard({}, [], {} as PartialMatchRouteSnapshot));
+    const result = TestBed.runInInjectionContext(() =>
+      guestGuard({}, [], {} as PartialMatchRouteSnapshot),
+    );
     expect(result).toBeInstanceOf(UrlTree);
     expect(router.serializeUrl(result as UrlTree)).toBe('/');
   });

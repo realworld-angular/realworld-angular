@@ -1,5 +1,5 @@
-import {signal, computed, Service} from '@angular/core';
-import {httpResource} from '@angular/common/http';
+import { signal, computed, Service } from '@angular/core';
+import { httpResource } from '@angular/common/http';
 
 export interface CartPizzeria {
   id: string;
@@ -96,7 +96,7 @@ export class CartStore {
       this.clear();
     }
 
-    this.pizzeria.set({id: pizzeriaId});
+    this.pizzeria.set({ id: pizzeriaId });
 
     const itemId = this.generateItemId(pizzaId, selectedSizeId, selectedOptionIds);
 
@@ -104,7 +104,7 @@ export class CartStore {
       const existing = items.find((item) => item.id === itemId);
       if (existing) {
         return items.map((item) =>
-          item.id === itemId ? {...item, quantity: item.quantity + quantity} : item,
+          item.id === itemId ? { ...item, quantity: item.quantity + quantity } : item,
         );
       }
 
@@ -126,7 +126,7 @@ export class CartStore {
       this.removeItem(itemId);
     } else {
       this.items.update((items) =>
-        items.map((item) => (item.id === itemId ? {...item, quantity} : item)),
+        items.map((item) => (item.id === itemId ? { ...item, quantity } : item)),
       );
     }
   }

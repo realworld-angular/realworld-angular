@@ -82,7 +82,7 @@ export class PhotonLocationField implements FormValueControl<LocationValue | nul
   });
 
   protected readonly suggestions = computed(() => {
-    if(this.suggestionsResource.hasValue()) {
+    if (this.suggestionsResource.hasValue()) {
       return this.suggestionsResource.value();
     }
     return [];
@@ -219,14 +219,22 @@ function pickCity(props: Record<string, string | undefined>): string {
   const name = (props['name'] ?? '').trim();
   if (
     name &&
-    (type === 'city' || type === 'town' || type === 'village' || type === 'locality' || type === 'district')
+    (type === 'city' ||
+      type === 'town' ||
+      type === 'village' ||
+      type === 'locality' ||
+      type === 'district')
   ) {
     return name;
   }
   return name;
 }
 
-function buildLabel(props: Record<string, string | undefined>, city: string, country: string): string {
+function buildLabel(
+  props: Record<string, string | undefined>,
+  city: string,
+  country: string,
+): string {
   const name = (props['name'] ?? '').trim();
   const parts: string[] = [];
   if (name && name.toLowerCase() !== city.toLowerCase()) {
