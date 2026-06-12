@@ -71,9 +71,15 @@ describe('PizzeriaDetailsPage', () => {
     vi.stubGlobal(
       'ResizeObserver',
       class {
-        public observe(): void {}
-        public disconnect(): void {}
-        public unobserve(): void {}
+        public observe(): void {
+          return;
+        }
+        public disconnect(): void {
+          return;
+        }
+        public unobserve(): void {
+          return;
+        }
       },
     );
   });

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
@@ -10,7 +10,7 @@ import { CartStore, CartData, CartItem } from '../../../cart/cart.store';
 import { CheckoutWizard } from '../../services/checkout-wizard';
 import { OrderApi } from '../../../orders/services/order-api';
 
-@Component({ template: '' })
+@Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
 class CheckoutRouteStub {}
 
 const mockCartData: CartData = {

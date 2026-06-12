@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import {
+  GuardResult,
+  MaybeAsync,
   PartialMatchRouteSnapshot,
   provideRouter,
   Router,
@@ -15,7 +17,7 @@ import { CheckoutWizard } from '../services/checkout-wizard';
 import { CartStore, CartItem, CartData } from '../../cart/cart.store';
 import { OrderApi } from '../../orders/services/order-api';
 
-@Component({ template: '<router-outlet />', imports: [RouterOutlet] })
+@Component({ template: '<router-outlet />', imports: [RouterOutlet], changeDetection: ChangeDetectionStrategy.OnPush })
 class CheckoutShell {}
 
 const mockCartData: CartData = {
@@ -80,7 +82,7 @@ describe('checkoutStepGuard', () => {
   let router: Router;
   let wizard: CheckoutWizard;
 
-  function runGuard(step: 'delivery' | 'schedule' | 'review') {
+  function runGuard(step: 'delivery' | 'schedule' | 'review'): MaybeAsync<GuardResult> {
     return TestBed.runInInjectionContext(() =>
       checkoutStepGuard(step)({}, [], {} as PartialMatchRouteSnapshot),
     );
