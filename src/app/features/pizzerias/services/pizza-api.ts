@@ -1,7 +1,7 @@
-import {ResourceRef, inject, Service} from '@angular/core';
-import {HttpClient, httpResource} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Pizza, PizzaOption} from '../models/pizza.models';
+import { ResourceRef, inject, Service } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Pizza, PizzaOption } from '../models/pizza.models';
 
 @Service()
 export class PizzaApi {

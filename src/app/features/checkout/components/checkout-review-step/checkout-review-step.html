@@ -12,7 +12,9 @@
           <span class="review-summary__item-price">€{{ item.totalPrice | number: '1.2-2' }}</span>
         </div>
         @if (item.size) {
-          <div class="review-summary__item-detail">{{ item.size.label }} — €{{ item.size.price | number: '1.2-2' }}</div>
+          <div class="review-summary__item-detail">
+            {{ item.size.label }} — €{{ item.size.price | number: '1.2-2' }}
+          </div>
         }
         @if (item.extraToppings.length) {
           <div class="review-summary__item-detail">
@@ -59,9 +61,13 @@
     id="coupon-hint"
     class="coupon-hint"
     [class.coupon-hint--loading]="codeField.pending()"
-    [class.coupon-hint--invalid]="!codeField.pending() && codeField.errors().length && codeField.dirty()"
+    [class.coupon-hint--invalid]="
+      !codeField.pending() && codeField.errors().length && codeField.dirty()
+    "
     [class.coupon-hint--valid]="wizard.discount() > 0 && codeField.value()"
-    [attr.role]="!codeField.pending() && codeField.errors().length && codeField.dirty() ? 'alert' : 'status'"
+    [attr.role]="
+      !codeField.pending() && codeField.errors().length && codeField.dirty() ? 'alert' : 'status'
+    "
     aria-live="polite"
   >
     @if (codeField.pending()) {
@@ -100,7 +106,9 @@
           [formField]="wizard.checkoutForm.tip.type"
           [value]="opt"
         />
-        <span class="tip-option__label">{{ opt === 'ten' ? '10' : opt === 'fifteen' ? '15' : '20' }}%</span>
+        <span class="tip-option__label"
+          >{{ opt === 'ten' ? '10' : opt === 'fifteen' ? '15' : '20' }}%</span
+        >
       </label>
     }
 

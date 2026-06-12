@@ -19,8 +19,7 @@ function checkoutDeactivateGuard(): boolean | Observable<boolean> {
   const ref = dialog.open<ConfirmDialogResult, ConfirmDialogData>(ConfirmDialog, {
     data: {
       title: 'Leave checkout?',
-      message:
-        'You have entered checkout details. Leave this page? Your draft will not be saved.',
+      message: 'You have entered checkout details. Leave this page? Your draft will not be saved.',
       cancelLabel: 'Stay',
       confirmLabel: 'Leave',
     },
@@ -42,17 +41,26 @@ export const checkoutRoutes: Routes = [
           { path: '', redirectTo: 'delivery', pathMatch: 'full' },
           {
             path: 'delivery',
-            loadComponent: () => import('./components/checkout-delivery-step/checkout-delivery-step').then(m => m.CheckoutDeliveryStep),
+            loadComponent: () =>
+              import('./components/checkout-delivery-step/checkout-delivery-step').then(
+                (m) => m.CheckoutDeliveryStep,
+              ),
             canMatch: [checkoutStepGuard('delivery')],
           },
           {
             path: 'schedule',
-            loadComponent: () => import('./components/checkout-schedule-step/checkout-schedule-step').then(m => m.CheckoutScheduleStep),
+            loadComponent: () =>
+              import('./components/checkout-schedule-step/checkout-schedule-step').then(
+                (m) => m.CheckoutScheduleStep,
+              ),
             canMatch: [checkoutStepGuard('schedule')],
           },
           {
             path: 'review',
-            loadComponent: () => import('./components/checkout-review-step/checkout-review-step').then(m => m.CheckoutReviewStep),
+            loadComponent: () =>
+              import('./components/checkout-review-step/checkout-review-step').then(
+                (m) => m.CheckoutReviewStep,
+              ),
             canMatch: [checkoutStepGuard('review')],
           },
         ],

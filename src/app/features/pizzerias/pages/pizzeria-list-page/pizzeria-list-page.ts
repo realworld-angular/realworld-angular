@@ -49,8 +49,11 @@ export class PizzeriaListPage {
   protected readonly currentPage = signal(1);
   protected readonly limit = 12;
 
-  protected readonly pizzeriasResource =
-    this.pizzeriaApi.getPizzeriaListResource(this.currentPage, this.limit, this.debouncedSearch);
+  protected readonly pizzeriasResource = this.pizzeriaApi.getPizzeriaListResource(
+    this.currentPage,
+    this.limit,
+    this.debouncedSearch,
+  );
 
   protected changePage(page: number): void {
     this.currentPage.set(page);

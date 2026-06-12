@@ -48,10 +48,9 @@ export class OrderDetailPage {
     params: () => this.id(),
     stream: ({ params: id }) => {
       return new Observable<Order>((observer) => {
-        const es = new EventSource(
-          `${environment.apiBaseUrl}/api/orders/${id}/subscribe`,
-          { withCredentials: true },
-        );
+        const es = new EventSource(`${environment.apiBaseUrl}/api/orders/${id}/subscribe`, {
+          withCredentials: true,
+        });
 
         es.onmessage = (event: MessageEvent<string>): void => {
           try {

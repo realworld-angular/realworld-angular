@@ -15,13 +15,11 @@ import { Button } from '../../../../shared/components/button/button';
 export class CheckoutScheduleStep {
   protected readonly wizard = inject(CheckoutWizard);
 
-
   protected goBack(): void {
     this.wizard.activeStep.set('delivery');
   }
 
   protected async goNext(): Promise<void> {
     await this.wizard.validateStep('schedule');
-
   }
 }

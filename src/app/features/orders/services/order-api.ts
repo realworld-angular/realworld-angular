@@ -1,10 +1,10 @@
-import {ResourceRef, Signal, WritableSignal, inject, Service} from '@angular/core';
-import {HttpClient, httpResource} from '@angular/common/http';
-import {Observable, tap} from 'rxjs';
-import {CouponValidation, Order} from '../order.models';
-import {Page} from '../../../core/models/pagination.model';
-import {PizzaOption} from '../../pizzerias/models/pizza.models';
-import type {Address} from '../../../shared/models/address.model';
+import { ResourceRef, Signal, WritableSignal, inject, Service } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { CouponValidation, Order } from '../order.models';
+import { Page } from '../../../core/models/pagination.model';
+import { PizzaOption } from '../../pizzerias/models/pizza.models';
+import type { Address } from '../../../shared/models/address.model';
 
 @Service()
 export class OrderApi {
@@ -34,23 +34,26 @@ export class OrderApi {
     return this.http.post<Order>('/api/orders', data);
   }
 
-  public validateCoupon(code: string, discount: WritableSignal<number>): Observable<CouponValidation> {
-    return this.http.get<CouponValidation>(
-      `/api/coupons/validate/${encodeURIComponent(code)}`,
-    ).pipe(
-      tap({
-        next: (response) => {
-          if (!response.valid) {
+  public validateCoupon(
+    code: string,
+    discount: WritableSignal<number>,
+  ): Observable<CouponValidation> {
+    return this.http
+      .get<CouponValidation>(`/api/coupons/validate/${encodeURIComponent(code)}`)
+      .pipe(
+        tap({
+          next: (response) => {
+            if (!response.valid) {
+              discount.set(0);
+            } else {
+              discount.set(response.discountPercent);
+            }
+          },
+          error: () => {
             discount.set(0);
-          } else {
-            discount.set(response.discountPercent);
-          }
-        },
-        error: () => {
-          discount.set(0);
-        },
-      })
-    );
+          },
+        }),
+      );
   }
 
   public cancelOrder(id: string): Observable<Order> {

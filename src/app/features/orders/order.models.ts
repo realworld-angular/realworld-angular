@@ -41,4 +41,6 @@ export interface Order {
 
 export type AdminOrderListItem = Omit<Order, 'deliveryAddress' | 'billingAddress' | 'notes'>;
 
-export type CouponValidation = { valid: false; message: string } | { valid: true; discountPercent: number };
+export type CouponValidation =
+  | { valid: false; message: string }
+  | { valid: true; discountPercent: number };
