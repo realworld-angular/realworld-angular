@@ -17,7 +17,11 @@ import { CheckoutWizard } from '../services/checkout-wizard';
 import { CartStore, CartItem, CartData } from '../../cart/cart.store';
 import { OrderApi } from '../../orders/services/order-api';
 
-@Component({ template: '<router-outlet />', imports: [RouterOutlet], changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({
+  template: '<router-outlet />',
+  imports: [RouterOutlet],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 class CheckoutShell {}
 
 const mockCartData: CartData = {
