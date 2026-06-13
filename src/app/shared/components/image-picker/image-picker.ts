@@ -29,7 +29,7 @@ export class ImagePicker implements FormValueControl<string | null> {
     this.category() === 'pizzeria' ? 'pizzeria' : 'pizza',
   );
 
-  protected readonly filenamesResource = this.pizzeriaApi.imagesResource;
+  protected readonly filenamesResource = this.pizzeriaApi.getImagesResource();
 
   protected select(filename: string): void {
     if (this.disabled()) {

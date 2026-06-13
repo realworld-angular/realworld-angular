@@ -1,15 +1,17 @@
-import {ResourceRef, inject, Service} from '@angular/core';
-import {HttpClient, httpResource} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Pizza, PizzaOption} from '../models/pizza.models';
+import { ResourceRef, inject, Service } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Pizza, PizzaOption } from '../models/pizza.models';
 
 @Service()
 export class PizzaApi {
   private readonly http = inject(HttpClient);
 
-  public readonly toppingsResource = httpResource<PizzaOption[]>(() => '/api/options/toppings', {
-    defaultValue: [],
-  });
+  public getToppingsResource(): ResourceRef<PizzaOption[]> {
+    return httpResource<PizzaOption[]>(() => '/api/options/toppings', {
+      defaultValue: [],
+    });
+  }
 
   /** Admin: create a pizza in the current admin's pizzeria. */
   public createPizza(data: {

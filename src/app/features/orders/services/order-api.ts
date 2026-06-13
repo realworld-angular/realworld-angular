@@ -1,18 +1,20 @@
-import {ResourceRef, Signal, WritableSignal, inject, Service} from '@angular/core';
-import {HttpClient, httpResource} from '@angular/common/http';
-import {Observable, tap} from 'rxjs';
-import {CouponValidation, Order} from '../order.models';
-import {Page} from '../../../core/models/pagination.model';
-import {PizzaOption} from '../../pizzerias/models/pizza.models';
-import type {Address} from '../../../shared/models/address.model';
+import { ResourceRef, Signal, WritableSignal, inject, Service } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { CouponValidation, Order } from '../order.models';
+import { Page } from '../../../core/models/pagination.model';
+import { PizzaOption } from '../../pizzerias/models/pizza.models';
+import type { Address } from '../../../shared/models/address.model';
 
 @Service()
 export class OrderApi {
   private readonly http = inject(HttpClient);
 
-  public readonly sizesResource = httpResource<PizzaOption[]>(() => '/api/options/sizes', {
-    defaultValue: [],
-  });
+  public getSizesResource(): ResourceRef<PizzaOption[]> {
+    return httpResource<PizzaOption[]>(() => '/api/options/sizes', {
+      defaultValue: [],
+    });
+  }
 
   public createOrder(data: {
     pizzeriaId: string;
