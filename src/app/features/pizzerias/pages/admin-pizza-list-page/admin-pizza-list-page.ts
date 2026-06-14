@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PizzaApi } from '../../services/pizza-api';
 import { Callout } from '../../../../shared/components/callout/callout';
@@ -15,7 +15,6 @@ import { AdminPizzaRow } from '../../components/admin-pizza-row/admin-pizza-row'
   imports: [Button, Spinner, Callout, EmptyState, AdminPizzaRow],
   templateUrl: './admin-pizza-list-page.html',
   styleUrl: './admin-pizza-list-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminPizzaListPage {
   private readonly api = inject(PizzaApi);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Callout } from '../../../../shared/components/callout/callout';
 import { OrderApi } from '../../services/order-api';
 import { AdminOrderListItem } from '../../order.models';
@@ -12,7 +12,6 @@ import { AdminOrderRow } from './admin-order-row/admin-order-row';
   imports: [Spinner, Pagination, Callout, EmptyState, AdminOrderRow],
   templateUrl: './admin-order-list-page.html',
   styleUrl: './admin-order-list-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminOrderListPage {
   private readonly orderApi = inject(OrderApi);

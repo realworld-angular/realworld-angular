@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import {
@@ -21,7 +21,6 @@ import { Button } from '../../../../shared/components/button/button';
   imports: [RouterLink, FormField, Input, Button, Callout, FormRoot],
   templateUrl: './register-page.html',
   styleUrl: './register-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterPage {
   private readonly auth = inject(Auth);

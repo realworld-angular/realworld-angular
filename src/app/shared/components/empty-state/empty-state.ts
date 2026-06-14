@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'rw-empty-state',
   templateUrl: './empty-state.html',
   styleUrl: './empty-state.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyState {
   public readonly title = input<string>('');

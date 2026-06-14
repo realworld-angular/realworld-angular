@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormField, form, required, FormRoot } from '@angular/forms/signals';
 import { PizzeriaApi } from '../../services/pizzeria-api';
@@ -19,7 +19,6 @@ interface PizzeriaForm {
   imports: [Button, FormField, ImagePicker, Callout, PhotonLocationField, FormRoot],
   templateUrl: './admin-pizzeria-form-page.html',
   styleUrl: './admin-pizzeria-form-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminPizzeriaFormPage {
   private readonly api = inject(PizzeriaApi);

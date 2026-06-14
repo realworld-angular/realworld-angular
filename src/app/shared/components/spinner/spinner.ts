@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { PizzaLogo } from '../pizza-logo/pizza-logo';
 
 @Component({
@@ -6,6 +6,5 @@ import { PizzaLogo } from '../pizza-logo/pizza-logo';
   imports: [PizzaLogo],
   templateUrl: './spinner.html',
   styleUrl: './spinner.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Spinner {}

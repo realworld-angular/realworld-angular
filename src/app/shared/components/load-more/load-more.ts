@@ -1,19 +1,10 @@
-import {
-  afterNextRender,
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  input,
-  output,
-} from '@angular/core';
+import { afterNextRender, Component, DestroyRef, inject, input, output } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'rw-load-more',
   templateUrl: './load-more.html',
   styleUrl: './load-more.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadMore {
   private readonly destroyRef = inject(DestroyRef);

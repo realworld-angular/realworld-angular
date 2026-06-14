@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  input,
-  model,
-  signal,
-} from '@angular/core';
+import { Component, computed, effect, input, model, signal } from '@angular/core';
 import { httpResource } from '@angular/common/http';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
@@ -29,7 +21,6 @@ let nextFieldId = 0;
   selector: 'rw-photon-location-field',
   templateUrl: './photon-location-field.html',
   styleUrl: './photon-location-field.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhotonLocationField implements FormValueControl<LocationValue | null> {
   private readonly fieldId = `rw-photon-location-${++nextFieldId}`;

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, model } from '@angular/core';
+import { Component, computed, inject, input, model } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { FormValueControl, ValidationError } from '@angular/forms/signals';
 import { CatalogImageKind, CatalogImageUrlPipe } from '../../pipes/catalog-image-url.pipe';
@@ -10,7 +10,6 @@ import { Spinner } from '../spinner/spinner';
   imports: [NgOptimizedImage, Spinner, CatalogImageUrlPipe],
   templateUrl: './image-picker.html',
   styleUrl: './image-picker.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImagePicker implements FormValueControl<string | null> {
   private readonly pizzeriaApi = inject(PizzeriaApi);

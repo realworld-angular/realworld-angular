@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Modal } from '../modal/modal';
 import { ModalFooter } from '../modal/modal-footer';
@@ -18,7 +18,6 @@ export type ConfirmDialogResult = 'confirmed' | 'dismissed';
   imports: [Modal, ModalFooter, Button],
   templateUrl: './confirm-dialog.html',
   styleUrl: './confirm-dialog.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmDialog {
   private readonly dialogRef = inject(DialogRef<ConfirmDialogResult>);

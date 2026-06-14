@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, computed } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 import { FieldTree, FormField } from '@angular/forms/signals';
 
 @Component({
@@ -6,7 +6,6 @@ import { FieldTree, FormField } from '@angular/forms/signals';
   imports: [FormField],
   templateUrl: './textarea.html',
   styleUrl: './textarea.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Textarea {
   private static nextId = 0;

@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  signal,
-  inject,
-  DestroyRef,
-} from '@angular/core';
+import { Component, computed, input, signal, inject, DestroyRef } from '@angular/core';
 
 /** Surface treatment: filled, border, or minimal. */
 export type ButtonVariant = 'plain' | 'outlined' | 'ghost';
@@ -19,7 +11,6 @@ export type ButtonSize = 'sm' | 'md';
   selector: 'rw-button',
   templateUrl: './button.html',
   styleUrl: './button.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Button {
   public readonly variant = input<ButtonVariant>('plain');

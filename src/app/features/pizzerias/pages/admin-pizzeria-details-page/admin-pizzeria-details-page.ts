@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 import { Title } from '@angular/platform-browser';
@@ -20,7 +20,6 @@ import { Callout } from '../../../../shared/components/callout/callout';
   ],
   templateUrl: './admin-pizzeria-details-page.html',
   styleUrl: './admin-pizzeria-details-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminPizzeriaDetailsPage {
   private readonly title = inject(Title);
