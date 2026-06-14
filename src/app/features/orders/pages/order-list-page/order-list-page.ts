@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-  computed,
-  effect,
-} from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DecimalPipe, DatePipe } from '@angular/common';
 import { Auth } from '../../../../core/services/auth';
@@ -32,7 +25,6 @@ import { StatusBadge } from '../../../../shared/components/status-badge/status-b
   ],
   templateUrl: './order-list-page.html',
   styleUrl: './order-list-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrdersListPage {
   private readonly auth = inject(Auth);

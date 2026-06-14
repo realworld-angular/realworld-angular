@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  input,
-  output,
-} from '@angular/core';
+import { Component, DestroyRef, inject, input, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe, DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { OrderApi } from '../../../services/order-api';
@@ -23,7 +16,6 @@ import { StatusBadge } from '../../../../../shared/components/status-badge/statu
   selector: 'tr[rw-admin-order-row]',
   imports: [DecimalPipe, DatePipe, NgOptimizedImage, StatusBadge],
   templateUrl: './admin-order-row.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminOrderRow {
   private readonly api = inject(OrderApi);

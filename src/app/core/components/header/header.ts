@@ -1,12 +1,5 @@
 import { DOCUMENT, NgOptimizedImage } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  effect,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, HostListener, effect, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Auth } from '../../services/auth';
 import { Avatar } from '../../../shared/components/avatar/avatar';
@@ -19,7 +12,6 @@ import { RoleDirective } from '../../../shared/directives/role.directive';
   imports: [RouterLink, RouterLinkActive, NgOptimizedImage, Avatar, PizzaLogo, RoleDirective],
   templateUrl: './header.html',
   styleUrl: './header.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Header {
   protected readonly auth = inject(Auth);

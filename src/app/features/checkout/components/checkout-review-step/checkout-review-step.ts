@@ -1,5 +1,5 @@
 import { DecimalPipe, NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormField } from '@angular/forms/signals';
 import { CheckoutWizard } from '../../services/checkout-wizard';
 import { CartStore } from '../../../cart/cart.store';
@@ -11,7 +11,6 @@ import { Button } from '../../../../shared/components/button/button';
   imports: [DecimalPipe, NgOptimizedImage, FormField, Input, Button],
   templateUrl: './checkout-review-step.html',
   styleUrl: './checkout-review-step.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckoutReviewStep {
   protected readonly wizard = inject(CheckoutWizard);

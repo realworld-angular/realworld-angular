@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
+import { Component, input, model } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormValueControl, ValidationError } from '@angular/forms/signals';
 import { PizzaOption, SelectedPizzaOption } from '../../../pizzerias/models/pizza.models';
@@ -8,7 +8,6 @@ import { PizzaOption, SelectedPizzaOption } from '../../../pizzerias/models/pizz
   imports: [DecimalPipe],
   templateUrl: './pizza-size-option-field.html',
   styleUrl: './pizza-size-option-field.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SizeOptionField implements FormValueControl<SelectedPizzaOption | null> {
   public readonly options = input.required<PizzaOption[]>();

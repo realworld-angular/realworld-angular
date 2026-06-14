@@ -33,7 +33,6 @@ module.exports = defineConfig([
         },
       ],
       '@angular-eslint/no-output-native': 'off',
-      '@angular-eslint/prefer-on-push-component-change-detection': 'error',
       '@typescript-eslint/explicit-function-return-type': 'error',
     },
   },

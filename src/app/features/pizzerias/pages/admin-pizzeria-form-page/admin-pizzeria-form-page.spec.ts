@@ -1,6 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
+import { Component, input, model } from '@angular/core';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { AdminPizzeriaFormPage } from './admin-pizzeria-form-page';
 import { provideRouter } from '@angular/router';
@@ -9,13 +9,12 @@ import { LocationValue } from '../../../../shared/components/photon-location-fie
 import { Button } from '../../../../shared/components/button/button';
 import { Callout } from '../../../../shared/components/callout/callout';
 
-@Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({ template: '' })
 class StubComponent {}
 
 @Component({
   selector: 'rw-image-picker',
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockImagePicker implements FormValueControl<string | null> {
   readonly value = model<string | null>(null);
@@ -31,7 +30,6 @@ class MockImagePicker implements FormValueControl<string | null> {
 @Component({
   selector: 'rw-photon-location-field',
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockPhotonLocationField implements FormValueControl<LocationValue | null> {
   readonly value = model<LocationValue | null>(null);

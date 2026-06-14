@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-  input,
-  DestroyRef,
-  effect,
-} from '@angular/core';
+import { Component, computed, inject, signal, input, DestroyRef, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -37,7 +28,6 @@ import { environment } from '../../../../../environments/environment';
   ],
   templateUrl: './order-details-page.html',
   styleUrl: './order-details-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderDetailPage {
   private readonly api = inject(OrderApi);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormField } from '@angular/forms/signals';
 import { CheckoutWizard } from '../../services/checkout-wizard';
 import { Input } from '../../../../shared/components/input/input';
@@ -10,7 +10,6 @@ import { PhotonLocationField } from '../../../../shared/components/photon-locati
   imports: [FormField, Input, Button, PhotonLocationField],
   templateUrl: './checkout-delivery-step.html',
   styleUrl: './checkout-delivery-step.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckoutDeliveryStep {
   protected readonly wizard = inject(CheckoutWizard);

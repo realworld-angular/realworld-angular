@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 
 export type CheckoutProgressStepperStatus = 'success' | 'error' | null;
@@ -8,7 +8,6 @@ export type CheckoutProgressStepperStatus = 'success' | 'error' | null;
   imports: [NgOptimizedImage],
   templateUrl: './checkout-progress-stepper.html',
   styleUrl: './checkout-progress-stepper.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'checkout-step',
     '[class.checkout-step--active]': 'active()',

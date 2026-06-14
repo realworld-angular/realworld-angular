@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   inject,
@@ -52,7 +51,6 @@ interface FilterFormModel {
   ],
   templateUrl: './pizzeria-details-page.html',
   styleUrl: './pizzeria-details-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PizzeriaDetailsPage {
   private readonly destroyRef = inject(DestroyRef);

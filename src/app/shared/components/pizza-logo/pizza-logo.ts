@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 interface Slice {
   readonly index: number;
@@ -81,7 +81,6 @@ const SLICES = buildSlices();
   host: {
     '[class.is-animated]': 'animated()',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PizzaLogo {
   public readonly size = input<number>(24);

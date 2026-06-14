@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { form, FormField, required, disabled, FormRoot, submit, min } from '@angular/forms/signals';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
@@ -41,7 +34,6 @@ interface AdminPizzaFormModel {
   ],
   templateUrl: './admin-pizza-form-dialog.html',
   styleUrl: './admin-pizza-form-dialog.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminPizzaFormDialog {
   private readonly api = inject(PizzaApi);

@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { Component, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { Dialog } from '@angular/cdk/dialog';
 import { filter, switchMap } from 'rxjs/operators';
@@ -24,7 +16,6 @@ import {
   imports: [DecimalPipe, NgOptimizedImage],
   templateUrl: './admin-pizza-row.html',
   styleUrl: './admin-pizza-row.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '[attr.aria-label]': '"Pizza: " + pizza().name' },
 })
 export class AdminPizzaRow {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, computed } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 import type { OrderStatus } from '../../../features/orders/order.models';
 
 export type BadgeVariant = 'default' | 'primary' | 'success' | 'warning' | 'error' | 'info';
@@ -15,7 +15,6 @@ const STATUS_CONFIG: Record<OrderStatus, { label: string; variant: BadgeVariant 
   selector: 'rw-status-badge',
   templateUrl: './status-badge.html',
   styleUrl: './status-badge.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class]': 'badgeClasses()',
   },

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { FieldTree, FormField } from '@angular/forms/signals';
 
 @Component({
@@ -6,7 +6,6 @@ import { FieldTree, FormField } from '@angular/forms/signals';
   imports: [FormField],
   templateUrl: './input.html',
   styleUrl: './input.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Input {
   public readonly label = input<string>('');

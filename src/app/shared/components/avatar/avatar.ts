@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, computed } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 
 @Component({
   selector: 'rw-avatar',
   templateUrl: './avatar.html',
   styleUrl: './avatar.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Avatar {
   public readonly name = input.required<string>();

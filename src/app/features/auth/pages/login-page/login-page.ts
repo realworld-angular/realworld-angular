@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
@@ -14,7 +14,6 @@ import { firstValueFrom } from 'rxjs';
   imports: [RouterLink, FormField, Input, Button, Callout, FormRoot],
   templateUrl: './login-page.html',
   styleUrl: './login-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPage {
   private readonly auth = inject(Auth);

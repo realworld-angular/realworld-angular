@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { form, FormField, FormRoot, min, required } from '@angular/forms/signals';
@@ -43,7 +36,6 @@ interface PizzaOrderFormModel {
   ],
   templateUrl: './pizza-order-form-dialog.html',
   styleUrl: './pizza-order-form-dialog.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PizzaOrderFormDialog {
   private readonly cartStore = inject(CartStore);

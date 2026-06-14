@@ -1,6 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
+import { Component, input, model } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
@@ -25,7 +25,6 @@ const mockPizza: Pizza = {
 @Component({
   selector: 'rw-image-picker',
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class MockImagePicker implements FormValueControl<string | null> {
   readonly value = model<string | null>(null);

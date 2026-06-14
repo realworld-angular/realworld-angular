@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgOptimizedImage, DecimalPipe } from '@angular/common';
 import { Title } from '@angular/platform-browser';
@@ -22,7 +22,6 @@ import { CatalogImageUrlPipe } from '../../../../shared/pipes/catalog-image-url.
   ],
   templateUrl: './cart-page.html',
   styleUrl: './cart-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartPage {
   private readonly title = inject(Title);

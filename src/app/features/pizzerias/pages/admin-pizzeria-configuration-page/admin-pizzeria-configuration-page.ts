@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-  effect,
-  DestroyRef,
-} from '@angular/core';
+import { Component, inject, signal, effect, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField, form, required, FormRoot } from '@angular/forms/signals';
 import { Title } from '@angular/platform-browser';
@@ -30,7 +23,6 @@ import {
   imports: [Button, FormField, FormRoot, ImagePicker, Callout, PhotonLocationField, Spinner],
   templateUrl: './admin-pizzeria-configuration-page.html',
   styleUrl: './admin-pizzeria-configuration-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminPizzeriaConfigurationPage {
   private readonly pizzeriaApi = inject(PizzeriaApi);
