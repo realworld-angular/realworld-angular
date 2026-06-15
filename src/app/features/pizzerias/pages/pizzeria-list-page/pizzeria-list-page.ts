@@ -1,8 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  debounced,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DOCUMENT, NgOptimizedImage } from '@angular/common';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { PizzeriaApi } from '../../services/pizzeria-api';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
@@ -35,15 +40,10 @@ export class PizzeriaListPage {
 
   // Search input
   protected readonly searchInput = signal('');
-  private readonly debouncedSearch = toSignal(
-    toObservable(this.searchInput).pipe(
-      debounceTime(300),
-      map((search: string) => search.trim()),
-      distinctUntilChanged(),
-    ),
-    { initialValue: '' },
+  private readonly debouncedSearch = debounced(() => this.searchInput().trim(), 300);
+  protected readonly hasActiveSearch = computed<boolean>(
+    () => this.debouncedSearch.value().length > 0,
   );
-  protected readonly hasActiveSearch = computed<boolean>(() => this.debouncedSearch().length > 0);
 
   // Pagination
   protected readonly currentPage = signal(1);
@@ -52,7 +52,7 @@ export class PizzeriaListPage {
   protected readonly pizzeriasResource = this.pizzeriaApi.getPizzeriaListResource(
     this.currentPage,
     this.limit,
-    this.debouncedSearch,
+    this.debouncedSearch.value,
   );
 
   protected changePage(page: number): void {
