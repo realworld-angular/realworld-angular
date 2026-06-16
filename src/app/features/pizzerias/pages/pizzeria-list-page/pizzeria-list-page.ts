@@ -4,6 +4,7 @@ import {
   computed,
   debounced,
   inject,
+  linkedSignal,
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -46,13 +47,17 @@ export class PizzeriaListPage {
   );
 
   // Pagination
-  protected readonly currentPage = signal(1);
+  protected readonly currentPage = linkedSignal({
+    source: this.debouncedSearch.value,
+    computation: () => 1,
+  });
   protected readonly limit = 12;
 
   protected readonly pizzeriasResource = this.pizzeriaApi.getPizzeriaListResource(
     this.currentPage,
     this.limit,
     this.debouncedSearch.value,
+    this.searchInput,
   );
 
   protected changePage(page: number): void {

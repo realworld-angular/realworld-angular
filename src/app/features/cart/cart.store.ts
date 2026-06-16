@@ -1,4 +1,4 @@
-import { signal, computed, Service } from '@angular/core';
+import { signal, computed, Service, ResourceParamsStatus } from '@angular/core';
 import { httpResource } from '@angular/common/http';
 
 export interface CartPizzeria {
@@ -51,7 +51,7 @@ export class CartStore {
     const currentPizzeria = this.pizzeria();
 
     if (currentItems.length === 0 || !currentPizzeria) {
-      return undefined;
+      throw ResourceParamsStatus.IDLE;
     }
 
     return {

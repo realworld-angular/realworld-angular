@@ -88,6 +88,7 @@ export class PizzeriaDetailsPage {
 
   protected readonly pizzasResource = this.pizzeriaApi.getPizzeriaPizzasResource(
     this.id,
+    this.pizzeriaResource,
     this.page,
     this.filterParams,
   );
