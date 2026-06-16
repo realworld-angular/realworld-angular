@@ -123,24 +123,26 @@ describe('PizzeriaDetailsPage', () => {
     }
   }
 
-  function flushInitialData(): void {
+  async function flushInitialData(): Promise<void> {
     expectPizzeriaRequest().flush(mockPizzeria);
+    await Promise.resolve();
+    TestBed.flushEffects();
     flushPizzaRequests();
   }
 
-  it('should show loading indicator before response', () => {
+  it('should show loading indicator before response', async () => {
     expect(el.querySelector('[aria-label="Loading pizzeria"]')).not.toBeNull();
-    flushInitialData();
+    await flushInitialData();
   });
 
   it('should render pizzeria name after successful responses', async () => {
-    flushInitialData();
+    await flushInitialData();
     await fixture.whenStable();
     expect(el.textContent).toContain('Roma');
   });
 
   it('should render pizza names in the catalog', async () => {
-    flushInitialData();
+    await flushInitialData();
     await fixture.whenStable();
     expect(el.textContent).toContain('Margherita');
     expect(el.textContent).toContain('Diavola');
@@ -155,6 +157,8 @@ describe('PizzeriaDetailsPage', () => {
 
   it('should load the next page when load more is triggered and more pages exist', async () => {
     expectPizzeriaRequest().flush(mockPizzeria);
+    await Promise.resolve();
+    TestBed.flushEffects();
     const page1 = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
     page1.flush({
       ...mockPizzasPage,
@@ -195,6 +199,8 @@ describe('PizzeriaDetailsPage', () => {
 
   it('should not request another page when load more fires while pizzas are loading', async () => {
     expectPizzeriaRequest().flush(mockPizzeria);
+    await Promise.resolve();
+    TestBed.flushEffects();
     const page1 = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
     page1.flush({
       ...mockPizzasPage,
@@ -236,7 +242,7 @@ describe('PizzeriaDetailsPage', () => {
   });
 
   it('should not load the next page when there are no more pages', async () => {
-    flushInitialData();
+    await flushInitialData();
     TestBed.flushEffects();
     await fixture.whenStable();
     fixture.detectChanges();
@@ -250,6 +256,8 @@ describe('PizzeriaDetailsPage', () => {
 
   it('should show a spinner while loading more pizzas', async () => {
     expectPizzeriaRequest().flush(mockPizzeria);
+    await Promise.resolve();
+    TestBed.flushEffects();
     const page1 = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
     page1.flush({
       ...mockPizzasPage,
@@ -295,6 +303,8 @@ describe('PizzeriaDetailsPage', () => {
 
   it('should show empty state when no pizzas returned', async () => {
     expectPizzeriaRequest().flush(mockPizzeria);
+    await Promise.resolve();
+    TestBed.flushEffects();
     httpTesting
       .match((r) => r.url.includes('/api/pizzerias/p1/pizzas'))
       .forEach((r) => r.flush({ items: [], total: 0, page: 1, limit: 8, totalPages: 0 }));
@@ -303,15 +313,17 @@ describe('PizzeriaDetailsPage', () => {
   });
 
   describe('maxPrice filter', () => {
-    it('should not send maxPrice param at default value', () => {
+    it('should not send maxPrice param at default value', async () => {
       expectPizzeriaRequest().flush(mockPizzeria);
+      await Promise.resolve();
+      TestBed.flushEffects();
       const req = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
       expect(req.request.params.has('maxPrice')).toBe(false);
       req.flush(mockPizzasPage);
     });
 
     it('should include maxPrice param when maxPrice is changed', async () => {
-      flushInitialData();
+      await flushInitialData();
       TestBed.flushEffects();
       fixture.detectChanges();
       await fixture.whenStable();
@@ -336,7 +348,7 @@ describe('PizzeriaDetailsPage', () => {
     });
 
     it('should include maxPrice param when name is also changed', async () => {
-      flushInitialData();
+      await flushInitialData();
       TestBed.flushEffects();
       fixture.detectChanges();
       await fixture.whenStable();
@@ -364,7 +376,7 @@ describe('PizzeriaDetailsPage', () => {
     });
 
     it('should sync maxPrice to URL query params', async () => {
-      flushInitialData();
+      await flushInitialData();
       TestBed.flushEffects();
       fixture.detectChanges();
       await fixture.whenStable();
@@ -392,15 +404,17 @@ describe('PizzeriaDetailsPage', () => {
   });
 
   describe('name search filter', () => {
-    it('should not send name param when search is empty', () => {
+    it('should not send name param when search is empty', async () => {
       expectPizzeriaRequest().flush(mockPizzeria);
+      await Promise.resolve();
+      TestBed.flushEffects();
       const req = httpTesting.expectOne((r) => r.url.includes('/api/pizzerias/p1/pizzas'));
       expect(req.request.params.has('name')).toBe(false);
       req.flush(mockPizzasPage);
     });
 
     it('should include name param after setting a search value', async () => {
-      flushInitialData();
+      await flushInitialData();
       TestBed.flushEffects();
       fixture.detectChanges();
       await fixture.whenStable();
@@ -418,7 +432,7 @@ describe('PizzeriaDetailsPage', () => {
     });
 
     it('should trim whitespace from search name', async () => {
-      flushInitialData();
+      await flushInitialData();
       TestBed.flushEffects();
       fixture.detectChanges();
       await fixture.whenStable();

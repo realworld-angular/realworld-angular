@@ -1,4 +1,4 @@
-import { inject, Signal, ResourceRef, Service } from '@angular/core';
+import { inject, Signal, ResourceRef, ResourceParamsStatus, Service } from '@angular/core';
 import { HttpClient, httpResource } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Page } from '../../../core/models/pagination.model';
@@ -51,23 +51,31 @@ export class PizzeriaApi {
     page: Signal<number>,
     limit: number,
     search: Signal<string>,
+    pendingSearch: Signal<string>,
   ): ResourceRef<Page<PizzeriaSummary> | undefined> {
-    return httpResource<Page<PizzeriaSummary>>(() => ({
-      url: '/api/pizzerias',
-      params: {
-        page: search() ? 1 : page(),
-        limit,
-        ...(search() ? { search: search() } : {}),
-      },
-    }));
+    return httpResource<Page<PizzeriaSummary>>(() => {
+      if (pendingSearch().trim() !== search()) {
+        throw ResourceParamsStatus.LOADING;
+      }
+      return {
+        url: '/api/pizzerias',
+        params: {
+          page: page(),
+          limit,
+          ...(search() ? { search: search() } : {}),
+        },
+      };
+    });
   }
 
   public getPizzeriaPizzasResource(
     pizzeriaId: Signal<string>,
+    pizzeriaResource: ResourceRef<PizzeriaDetail | undefined>,
     page: Signal<number>,
     filterParams: Signal<Record<string, string | number | boolean>>,
   ): ResourceRef<Page<Pizza> | undefined> {
-    return httpResource<Page<Pizza>>(() => {
+    return httpResource<Page<Pizza>>(({ chain }) => {
+      chain(pizzeriaResource);
       return {
         url: `/api/pizzerias/${pizzeriaId()}/pizzas`,
         params: {
