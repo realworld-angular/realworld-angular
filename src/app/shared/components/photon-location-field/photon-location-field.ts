@@ -1,12 +1,4 @@
-import {
-  Component,
-  computed,
-  effect,
-  injectAsync,
-  input,
-  model,
-  signal,
-} from '@angular/core';
+import { Component, computed, effect, injectAsync, input, model, signal } from '@angular/core';
 import { rxResource, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, from, map, of } from 'rxjs';
 import { FormValueControl, ValidationError, WithOptionalFieldTree } from '@angular/forms/signals';
@@ -31,7 +23,7 @@ let nextFieldId = 0;
   selector: 'rw-photon-location-field',
   templateUrl: './photon-location-field.html',
   styleUrl: './photon-location-field.css',
-  providers: [PhotonApiService]
+  providers: [PhotonApiService],
 })
 export class PhotonLocationField implements FormValueControl<LocationValue | null> {
   private readonly photonApiService = injectAsync(() =>
