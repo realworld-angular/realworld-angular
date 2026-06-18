@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(
       routes,
-      withComponentInputBinding(),
+      withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
       withExperimentalAutoCleanupInjectors(),
       withInMemoryScrolling({
         scrollPositionRestoration: 'enabled',
