@@ -58,7 +58,13 @@
           >
             <img ngSrc="/icons/remove.svg" alt="" width="24" height="24" aria-hidden="true" />
           </button>
-          <rw-input class="quantity-input" type="number" [formField]="orderForm.quantity" />
+
+          <rw-input
+            class="quantity-input"
+            type="text"
+            inputmode="decimal"
+            [formField]="orderForm.quantity"
+          />
           <button
             type="button"
             class="quantity-btn"

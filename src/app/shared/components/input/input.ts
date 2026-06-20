@@ -14,4 +14,5 @@ export class Input {
   public readonly hint = input<string>('');
   public readonly autocomplete = input<string | undefined>(undefined);
   public readonly formField = input.required<FieldTree<string | number | null>>();
+  public readonly inputmode = input<string>();
 }

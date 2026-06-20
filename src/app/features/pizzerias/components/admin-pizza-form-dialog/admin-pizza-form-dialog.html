@@ -14,7 +14,12 @@
       "
     />
 
-    <rw-input label="Base price (€)" type="number" [formField]="pizzaForm.basePrice" />
+    <rw-input
+      label="Base price (€)"
+      type="text"
+      inputmode="decimal"
+      [formField]="pizzaForm.basePrice"
+    />
 
     <rw-image-picker category="pizza" label="Pizza image" [formField]="pizzaForm.image" />
 
