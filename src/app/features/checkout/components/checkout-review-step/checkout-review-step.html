@@ -126,7 +126,8 @@
   @if (wizard.checkoutForm.tip.type().value() === 'custom') {
     <rw-input
       label="Tip amount (€)"
-      type="number"
+      type="text"
+      inputmode="decimal"
       [formField]="wizard.checkoutForm.tip.customAmount"
       placeholder="0.00"
     />
