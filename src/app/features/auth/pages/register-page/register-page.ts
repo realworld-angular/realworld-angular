@@ -10,6 +10,7 @@ import {
   validateTree,
   validateHttp,
   FormRoot,
+  debounce,
 } from '@angular/forms/signals';
 import { Auth } from '../../../../core/services/auth';
 import { Callout } from '../../../../shared/components/callout/callout';
@@ -35,6 +36,7 @@ export class RegisterPage {
     (schema) => {
       required(schema.email, { message: 'Email is required' });
       email(schema.email, { message: 'Enter a valid email' });
+      debounce(schema.email, 'blur');
       validateHttp(schema.email, {
         request: (ctx) =>
           ctx.value()
