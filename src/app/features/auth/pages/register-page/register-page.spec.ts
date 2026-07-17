@@ -43,4 +43,25 @@ describe('RegisterPage', () => {
     await fixture.whenStable();
     expect(fixture.componentInstance.registerAsPizzeriaOwner()).toBe(true);
   });
+
+  it('should not trigger HTTP validation while typing email character by character', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const emailInput = el.querySelector('input[type="email"]') as HTMLInputElement;
+    expect(emailInput).not.toBeNull();
+
+    // Type email character by character
+    const emailChars = 'test@example.com'.split('');
+    for (const char of emailChars) {
+      emailInput.value += char;
+      emailInput.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+    }
+
+    await fixture.whenStable();
+
+    // Should not have made any HTTP requests during typing
+    httpTesting.expectNone((req) => req.url.includes('/api/auth/check-email'));
+  });
 });
