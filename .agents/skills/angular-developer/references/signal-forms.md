@@ -667,7 +667,7 @@ export class App {
 
     <label>
       Age
-      <input type="number" [formField]="bookingForm.personalInfo.age" />
+      <input type="text" inputmode="decimal" [formField]="bookingForm.personalInfo.age" />
       @if (bookingForm.personalInfo.age().touched() &&
       bookingForm.personalInfo.age().errors().length) {
       <span>{{ bookingForm.personalInfo.age().errors()[0].message }}</span>

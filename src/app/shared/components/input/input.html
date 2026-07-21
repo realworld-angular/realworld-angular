@@ -9,6 +9,7 @@
     <div class="field__control">
       <input
         [type]="type()"
+        [attr.inputmode]="inputmode()"
         [placeholder]="placeholder()"
         [formField]="formField()"
         [attr.autocomplete]="autocomplete() ?? null"
