@@ -7,19 +7,20 @@
   </label>
 
   <div class="photon-location__wrap" (focusout)="onWrapFocusOut($event)">
+    <!-- prettier-ignore -->
     <input
       [id]="inputId"
       type="text"
       class="field__input"
-      [value]="displayText()"
-      (input)="onInput($event)"
-      (focus)="onFocus()"
-      (keydown)="onKeydown($event)"
-      [disabled]="disabled()"
-      [readonly]="readonly()"
+      [value]="displayText()"       // controlled value from signal (not ngModel)
+      (input)="onInput($event)"     // updates query signal & fetches suggestions
+      (focus)="onFocus()"           // opens suggestion panel
+      (keydown)="onKeydown($event)" // keyboard navigation: arrows, escape, enter
+      [disabled]="disabled()"       // signal-driven disabled state
+      [readonly]="readonly()"       // separate from disabled per combobox pattern
       placeholder="Start typing a city or place…"
-      autocomplete="off"
-      role="combobox"
+      autocomplete="off"            // prevent browser autofill interfering with combobox
+      role="combobox"               // WAI-ARIA combobox control
       [attr.aria-expanded]="showPanel()"
       [attr.aria-controls]="showPanel() ? listboxId : null"
     />
